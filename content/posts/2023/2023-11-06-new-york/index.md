@@ -1,7 +1,6 @@
 ---
 title: "New York - First Visit"
-slug: "new-york-first-visit"
-permalink: /new-york-first-visit/
+permalink: "new-york-first-visit"
 date: 2023-11-06T23:00:00+0000
 original_start: 2023-10-31
 toc: false

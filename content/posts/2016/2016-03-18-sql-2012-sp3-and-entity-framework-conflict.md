@@ -4,7 +4,7 @@ tags:
 - entity-framework
 - sql-server
 title: "SQL 2012 SP3 and entity framework conflict"
-slug: "sql-2012-sp3-and-entity-framework-conflict"
+permalink: "sql-2012-sp3-and-entity-framework-conflict"
 ---
 
 ## the problem

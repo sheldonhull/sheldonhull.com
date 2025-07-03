@@ -2,7 +2,7 @@
 
 date: 2023-11-09T22:57:25+0000
 title: Ventilation Systems
-slug: ventilation-systems
+permalink: ventilation-systems
 tags:
 - microblog
 - travel

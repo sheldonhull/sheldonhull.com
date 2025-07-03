@@ -5,7 +5,6 @@ toc: true
 summary: >-
   A cheatsheet to update with what I pickup with Go that I likely need to
   reference again as a new gopher.
-slug: go
 permalink: /notes/go
 comments: true
 tags:

@@ -1,7 +1,7 @@
 ---
 date: 2021-03-10T21:01:09Z
 title: Fix Terraform Provider Path in State
-slug: fix-terraform-provider-path-in-state
+permalink: fix-terraform-provider-path-in-state
 tags:
   - tech
   - development

@@ -9,7 +9,7 @@ tags:
 - powershell
 - tech
 title: "ANTS Performance Profiler for the SQL Server Dev"
-slug: "ants-performance-profiler-for-the-sql-server-dev"
+permalink: "ants-performance-profiler-for-the-sql-server-dev"
 ---
 
 > [!info] 2019-11-10+

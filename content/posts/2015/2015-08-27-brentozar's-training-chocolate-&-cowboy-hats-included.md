@@ -3,7 +3,7 @@ date: "2015-08-27T00:00:00Z"
 tags:
 - sql-server
 title: "Brentozar''s Training: Chocolate & Cowboy Hats Included"
-slug: "brentozar's-training-chocolate-&-cowboy-hats-included"
+permalink: "brentozar's-training-chocolate-&-cowboy-hats-included"
 ---
 
 It was entertaining to listen to a technical wizard fighting the obsession with waiting to eat chocolate with 3k viewers watching. Kendra wore about 4-5 cowboy hats in an effort to help those of us who wear many hats feel welcome.... Now that's the kinda of training I enjoy! No pretense, just honest real, and insightful training with enjoyable humor included for free

@@ -6,7 +6,7 @@ tags:
 - tech
 - sql-server
 title: "Dynamically Set Powershell Variables from json"
-slug: "dynamically-set-powershell-variables-from-json"
+permalink: "dynamically-set-powershell-variables-from-json"
 ---
 
 I created this small snippet to allow a list of values from a json file be turned into variables to work with. For working with a fixed list of configuration values, this might be helpful to reduce some coding effort.

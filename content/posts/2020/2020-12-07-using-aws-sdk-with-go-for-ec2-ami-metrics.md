@@ -1,7 +1,7 @@
 ---
 date: 2020-12-07T17:08:14-06:00
 title: Using AWS SDK With Go for EC2 AMI Metrics
-slug: using-aws-sdk-with-go-for-ec2-ami-metrics
+permalink: using-aws-sdk-with-go-for-ec2-ami-metrics
 summary:
   How I used the AWS SDK with Go to generate metrics for AWS EC2 Instances and AMI's associated to them
 tags:

@@ -1,7 +1,7 @@
 ---
 date: 2019-06-17T14:00:00+00:00
 title: Bump nuspec file version with powershell
-slug: bump-nuspec-file-version-with-powershell
+permalink: bump-nuspec-file-version-with-powershell
 summary: " This snippet should help give you a way to bump a nuspec file version programmatically."
 tags:
 - chocolatey

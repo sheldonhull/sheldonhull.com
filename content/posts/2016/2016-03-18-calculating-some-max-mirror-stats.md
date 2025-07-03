@@ -3,7 +3,7 @@ date: "2016-03-18T00:00:00Z"
 tags:
 - sql-server
 title: "Calculating Some Max Mirror Stats"
-slug: "calculating-some-max-mirror-stats"
+permalink: "calculating-some-max-mirror-stats"
 alias: ['temp-slug-72']
 ---
 

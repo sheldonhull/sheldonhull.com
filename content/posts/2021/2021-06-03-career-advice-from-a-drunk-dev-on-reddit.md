@@ -1,7 +1,7 @@
 ---
 date: 2021-06-03T10:14:33-05:00
 title: Career Advice From a Drunk Dev on Reddit
-slug: career-advice-from-a-drunk-dev-on-reddit
+permalink: career-advice-from-a-drunk-dev-on-reddit
 tags:
   - tech
   - development

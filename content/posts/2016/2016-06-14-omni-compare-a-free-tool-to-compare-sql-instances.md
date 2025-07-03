@@ -4,7 +4,7 @@ tags:
 - cool-tools
 - sql-server
 title: "OmniCompare: A free tool to compare SQL Instances"
-slug: "omni-compare-a-free-tool-to-compare-sql-instances"
+permalink: "omni-compare-a-free-tool-to-compare-sql-instances"
 toc: true
 ---
 

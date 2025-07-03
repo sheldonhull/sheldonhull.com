@@ -2,7 +2,7 @@
 
 date: 2023-11-19T00:04:10+0000
 title: Potato Chips Taste Better in France
-slug: potato-chips-taste-better-in-france
+permalink: potato-chips-taste-better-in-france
 tags:
 
 - microblog

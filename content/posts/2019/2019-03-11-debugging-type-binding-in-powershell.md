@@ -7,7 +7,7 @@ tags:
 - powershell
 - deep-dive
 title: "Debugging Type Binding in PowerShell"
-slug: "debugging-type-binding-in-powershell"
+permalink: "debugging-type-binding-in-powershell"
 toc: false
 ---
 

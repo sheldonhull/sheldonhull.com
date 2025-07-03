@@ -1,7 +1,7 @@
 ---
 date: 2021-06-11T11:58:51-05:00
 title: GitPod User Feedback
-slug: gitpod-user-feedback
+permalink: gitpod-user-feedback
 tags:
   - development
   - microblog

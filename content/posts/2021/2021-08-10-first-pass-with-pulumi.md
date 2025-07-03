@@ -2,7 +2,7 @@
 
 date: 2021-08-10T20:43:06Z
 title: First Pass With Pulumi
-slug: first-pass-with-pulumi
+permalink: first-pass-with-pulumi
 summary: Here's a first look at using Pulumi to deploy AWS resources with Go.
 tags:
 - tech

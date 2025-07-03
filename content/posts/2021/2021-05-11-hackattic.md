@@ -1,7 +1,7 @@
 ---
 date: 2021-05-11T15:59:56-05:00
 title: Hackattic
-slug: hackattic
+permalink: hackattic
 tags:
   - tech
   - development

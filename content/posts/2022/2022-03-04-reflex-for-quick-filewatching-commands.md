@@ -2,7 +2,7 @@
 
 date: 2022-03-04T22:40:24+0000
 title: Reflex for Quick Filewatching Commands
-slug: reflex-for-quick-filewatching-commands
+permalink: reflex-for-quick-filewatching-commands
 tags:
 
 - tech

@@ -1,7 +1,7 @@
 ---
 date: 2020-09-16T19:45:04-05:00
 title: Improve Your Cloudwatch Debugging Experience With Cw
-slug: improve-your-cloudwatch-debugging-experience-with-cw
+permalink: improve-your-cloudwatch-debugging-experience-with-cw
 tags:
     - tech
     - development

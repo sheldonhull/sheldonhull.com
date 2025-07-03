@@ -1,7 +1,7 @@
 ---
 date: 2021-05-24T17:55:12-05:00
 title: Value Local Art
-slug: value-local-art
+permalink: value-local-art
 summary: Embrace local art and performances with flaws
 tags:
   - ramblings

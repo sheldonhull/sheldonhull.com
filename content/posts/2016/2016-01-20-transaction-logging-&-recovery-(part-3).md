@@ -3,7 +3,7 @@ date: "2016-01-20T00:00:00Z"
 tags:
 - sql-server
 title: "Transaction Logging & Recovery (part 3)"
-slug: "transaction-logging-&-recovery-(part-3)"
+permalink: "transaction-logging-&-recovery-(part-3)"
 toc: true
 ---
 

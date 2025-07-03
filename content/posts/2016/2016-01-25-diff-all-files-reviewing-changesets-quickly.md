@@ -5,7 +5,7 @@ tags:
 - cool-tools
 - sql-server
 title: "Diff All Files - Reviewing Changesets Quickly"
-slug: "diff-all-files-reviewing-changesets-quickly"
+permalink: "diff-all-files-reviewing-changesets-quickly"
 toc: true
 ---
 

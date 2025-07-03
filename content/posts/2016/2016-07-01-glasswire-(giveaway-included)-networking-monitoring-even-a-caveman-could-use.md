@@ -4,7 +4,7 @@ tags:
 - cool-tools
 - sql-server
 title: "Glasswire: (Giveaway Included) Networking Monitoring even a caveman could"
-slug: "glasswire-(giveaway-included)-networking-monitoring-even-a-caveman-could-use"
+permalink: "glasswire-(giveaway-included)-networking-monitoring-even-a-caveman-could-use"
 toc: true
 ---
 

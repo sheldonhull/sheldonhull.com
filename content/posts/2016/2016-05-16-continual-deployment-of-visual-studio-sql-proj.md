@@ -4,7 +4,7 @@ tags:
 - sql-server
 - cool-tools
 title: "Continual Deployment of Visual Studio SqlProj"
-slug: "continual-deployment-of-visual-studio-sql-proj"
+permalink: "continual-deployment-of-visual-studio-sql-proj"
 ---
 
 ## Unveil the inner workings of the esoteric build system...

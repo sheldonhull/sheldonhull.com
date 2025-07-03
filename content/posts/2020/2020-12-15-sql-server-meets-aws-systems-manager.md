@@ -1,7 +1,7 @@
 ---
 date: 2020-12-16T00:06:20.000Z
 title: SQL Server Meets AWS Systems Manager
-slug: sql-server-meets-aws-systems-manager
+permalink: sql-server-meets-aws-systems-manager
 tags:
   - tech
   - development

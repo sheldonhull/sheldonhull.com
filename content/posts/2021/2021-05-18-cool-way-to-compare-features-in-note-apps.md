@@ -1,7 +1,7 @@
 ---
 date: 2021-05-18T13:28:03-05:00
 title: Cool Way to Compare Features in Note Apps
-slug: cool-way-to-compare-features-in-note-apps
+permalink: cool-way-to-compare-features-in-note-apps
 tags:
   - tech
   - microblog

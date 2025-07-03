@@ -3,7 +3,7 @@ date: "2015-08-07T00:00:00Z"
 tags:
 - sql-server
 title: "SET NOEXEC is my new friend"
-slug: "set-noexec-is-my-new-friend"
+permalink: "set-noexec-is-my-new-friend"
 ---
 
 Have never really played around with the option: `SET NOEXEC ON`

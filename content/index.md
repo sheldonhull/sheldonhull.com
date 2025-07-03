@@ -2,7 +2,6 @@
 permalink: "/profile/"
 layout: wide
 title: "Sheldon Hull // Developer"
-slug: "profile"
 summary: professional profile for Sheldon Hull
 # sidebar:
 # - title: About

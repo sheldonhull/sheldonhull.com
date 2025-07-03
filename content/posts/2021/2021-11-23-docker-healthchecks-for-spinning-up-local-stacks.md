@@ -2,7 +2,7 @@
 
 date: 2021-11-23T23:59:49+0000
 title: Docker Healthchecks for Spinning Up Local Stacks
-slug: docker-healthchecks-for-spinning-up-local-stacks
+permalink: docker-healthchecks-for-spinning-up-local-stacks
 tags:
 
 - tech

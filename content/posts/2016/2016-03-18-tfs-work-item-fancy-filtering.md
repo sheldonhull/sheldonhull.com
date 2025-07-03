@@ -6,7 +6,7 @@ tags:
 - tfs
 - ramblings
 title: "TFS Work-Item Fancy Filtering"
-slug: "tfs-work-item-fancy-filtering"
+permalink: "tfs-work-item-fancy-filtering"
 ---
 
 If you want to create a TFS query that would identify work items that have changed, but were not changed by the person working it, there is a nifty way to do this.The filtering field can be set to <> another field that is available, but the syntax/setup in Visual Studio is not intuitive. It's in the dropdown list, but I'd never noticed it before!

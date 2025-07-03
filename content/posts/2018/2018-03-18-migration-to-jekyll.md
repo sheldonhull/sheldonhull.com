@@ -5,7 +5,7 @@ tags:
   - tech
   - jekyll
 title: "Migration To Jekyll"
-slug: "migration-to-jekyll"
+permalink: "migration-to-jekyll"
 toc: true
 ---
 

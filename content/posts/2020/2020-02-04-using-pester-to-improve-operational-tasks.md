@@ -1,7 +1,7 @@
 ---
 date: 2020-04-20T13:00:00.000+00:00
 title: Using Pester to Improve Operational Tasks
-slug: using-pester-to-improve-operational-tasks
+permalink: using-pester-to-improve-operational-tasks
 summary: Leverage more software development testing principles for operational tasks
   to improve the quality and repeatability of work completed
 comments: true

@@ -2,7 +2,6 @@
 title: precommit
 date: 2021-06-16
 summary: A cheatsheet for various pre-commit hooks and things that help with linting, formatting, code scans and more. These all help "shift left" the review to eliminate more issues in the development workflow, rather than providing feedback only once the CI system is involved.
-slug: precommit
 permalink: /notes/precommit
 comments: true
 tags:

@@ -2,7 +2,7 @@
 
 date: 2021-08-10T17:43:22Z
 title: SweetOps Slack Archive
-slug: sweetops-slack-archive
+permalink: sweetops-slack-archive
 tags:
 
 - tech

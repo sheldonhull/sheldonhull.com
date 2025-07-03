@@ -1,7 +1,7 @@
 ---
 date: 2021-01-21T20:07:36-06:00
 title: Github Pages Now Supports Private Pages
-slug: github-pages-now-supports-private-pages
+permalink: github-pages-now-supports-private-pages
 tags:
   - tech
   - development

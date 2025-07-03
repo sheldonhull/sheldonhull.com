@@ -4,7 +4,7 @@ tags:
 - ramblings
 - flood
 title: "A Not-So Waterlogged Texan - Tuesday"
-slug: "a-not-so-waterlogged-texan-tuesday"
+permalink: "a-not-so-waterlogged-texan-tuesday"
 ---
 
 > [!warning] Updated: 2017-08 1:30pm Wednesday+

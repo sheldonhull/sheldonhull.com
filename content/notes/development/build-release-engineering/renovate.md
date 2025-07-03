@@ -4,7 +4,7 @@ description: Use renovate for dependency management
 date: 2023-03-06T17:18:00
 tags:
   - dependency-management
-slug: renovate
+permalink: renovate
 ---
 
 ## Run Locally Via Docker

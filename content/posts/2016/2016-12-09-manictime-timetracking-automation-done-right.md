@@ -5,7 +5,7 @@ tags:
 - ramblings
 - cool-tools
 title: "ManicTime - Timetracking Automation Done Right"
-slug: "manictime-timetracking-automation-done-right"
+permalink: "manictime-timetracking-automation-done-right"
 toc: true
 ---
 

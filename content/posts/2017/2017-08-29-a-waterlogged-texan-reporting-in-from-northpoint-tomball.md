@@ -7,7 +7,7 @@ tags:
 - family
 - follower-of-Jesus
 title: "A Waterlogged Texan Reporting In from Northpoint Tomball"
-slug: "a-waterlogged-texan-reporting-in-from-northpoint-tomball"
+permalink: "a-waterlogged-texan-reporting-in-from-northpoint-tomball"
 ---
 
 ## Waterlogged

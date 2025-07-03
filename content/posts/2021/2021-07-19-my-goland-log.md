@@ -2,7 +2,7 @@
 
 date: 2021-07-19T17:23:30-05:00
 title: My Goland Log
-slug: my-goland-log
+permalink: my-goland-log
 summary:
   A post I'll maintain with questions or problems I faced in adopting development in Goland
 tags:

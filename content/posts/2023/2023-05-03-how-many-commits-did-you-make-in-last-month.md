@@ -2,7 +2,7 @@
 
 date: 2023-05-03T18:07:04+0000
 title: How Many Commits Did You Make in Last Month
-slug: how-many-commits-did-you-make-in-last-month
+permalink: how-many-commits-did-you-make-in-last-month
 tags:
 - tech
 - development

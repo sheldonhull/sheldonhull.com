@@ -8,7 +8,7 @@ tags:
 - tech
 - cool-tools
 title: "External Tool VSCODE called from SQL Management Studio"
-slug: "edit-in-vscode"
+permalink: "edit-in-vscode"
 ---
 
 Previous Related Post:

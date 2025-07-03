@@ -1,7 +1,7 @@
 ---
 date: 2020-09-07T07:00:00-05:00
 title: Reflections on Being a New Gopher With A Dotnet Background
-slug: reflections-on-being-a-new-gopher-with-a-dotnet-background
+permalink: reflections-on-being-a-new-gopher-with-a-dotnet-background
 summary:
   Quick reflections on being a new gopher with a dotnet background.
 tags:

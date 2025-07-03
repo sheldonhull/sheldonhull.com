@@ -2,7 +2,7 @@
 
 date: 2024-05-17T17:17:21+0000
 title: The Technology We Take for Granted Is Pretty Amazing
-slug: the-technology-we-take-for-granted-is-pretty-amazing
+permalink: the-technology-we-take-for-granted-is-pretty-amazing
 authors: [Sheldon]
 tags:
 

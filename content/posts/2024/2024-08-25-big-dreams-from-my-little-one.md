@@ -1,7 +1,7 @@
 ---
 date: 2024-08-25T19:10:06+0000
 title: Big Dreams From Little Ones
-slug: big-dreams-from-little-ones
+permalink: big-dreams-from-little-ones
 tags:
 - dadlife
 - family

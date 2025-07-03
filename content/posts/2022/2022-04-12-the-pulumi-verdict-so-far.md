@@ -1,7 +1,7 @@
 ---
 date: 2022-04-12T16:55:16+0000
 title: The Pulumi Verdict So Far
-slug: the-pulumi-verdict-so-far
+permalink: the-pulumi-verdict-so-far
 tags:
 - tech
 - development

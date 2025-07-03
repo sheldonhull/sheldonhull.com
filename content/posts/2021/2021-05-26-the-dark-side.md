@@ -1,7 +1,7 @@
 ---
 date: 2021-05-26T23:37:43-05:00
 title: The Dark Side
-slug: the-dark-side
+permalink: the-dark-side
 tags:
   - tech
   - development

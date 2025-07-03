@@ -12,7 +12,7 @@ tags:
 - tech
 - dbatools
 title: "Exploring SQL Server With Powershell And SMO Basics"
-slug: "exploring-sql-server-with-powershell-and-smo-basics"
+permalink: "exploring-sql-server-with-powershell-and-smo-basics"
 
 ---
 

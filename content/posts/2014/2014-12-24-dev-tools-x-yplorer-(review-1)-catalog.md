@@ -1,6 +1,6 @@
 ---
 title: "Dev Tools: XYplorer (review 1) - Catalog"
-slug: "dev-tools-x-yplorer-(review-1)-catalog"
+permalink: "dev-tools-x-yplorer-(review-1)-catalog"
 date: "2014-12-24T00:00:00Z"
 tags:
 - cool-tools

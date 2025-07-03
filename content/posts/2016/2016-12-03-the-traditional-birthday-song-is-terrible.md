@@ -6,7 +6,7 @@ tags:
 - ramblings
 - music
 title: "The Traditional Birthday Song Is Terrible"
-slug: "the-traditional-birthday-song-is-terrible"
+permalink: "the-traditional-birthday-song-is-terrible"
 ---
 
 The traditional birthday song is terrible.It's never really changed.

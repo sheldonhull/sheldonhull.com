@@ -4,7 +4,7 @@ tags:
 - sql-server
 - cool-tools
 title: "Documenting Your Database with Diagrams"
-slug: "documenting-your-database-with-diagrams"
+permalink: "documenting-your-database-with-diagrams"
 toc: true
 ---
 

@@ -2,7 +2,7 @@
 date: "2016-09-21T00:00:00Z"
 tags: ["sql-server"]
 title: "SQL 2016 - Configuration Manager Not Showing in Start Menu"
-slug: "sql-2016-configuration-manager-not-showing-in-start-menu"
+permalink: "sql-2016-configuration-manager-not-showing-in-start-menu"
 ---
 
 > [!info] update+

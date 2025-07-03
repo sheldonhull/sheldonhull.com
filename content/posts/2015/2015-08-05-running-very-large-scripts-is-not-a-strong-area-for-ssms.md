@@ -3,7 +3,7 @@ date: "2015-08-05T00:00:00Z"
 tags:
 - sql-server
 title: "Running very large scripts is not a strong area for SSMS"
-slug: "running-very-large-scripts-is-not-a-strong-area-for-ssms"
+permalink: "running-very-large-scripts-is-not-a-strong-area-for-ssms"
 ---
 
 ## out of memory, argggh!

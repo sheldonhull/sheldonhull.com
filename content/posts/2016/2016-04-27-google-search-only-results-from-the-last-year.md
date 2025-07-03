@@ -4,7 +4,7 @@ tags:
 - ramblings
 - tech
 title: "Google Search Only Results from the last year"
-slug: "google-search-only-results-from-the-last-year"
+permalink: "google-search-only-results-from-the-last-year"
 ---
 
 Tech changes quick. Reading google postings from something in 2009 is not my first choice.I found an option after digging through some google discussion posts on how to setup the default search in chrome (also applies to other browsers) to automatically apply the advanced filter option for "results in last year".

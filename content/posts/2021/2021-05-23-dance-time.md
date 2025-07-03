@@ -1,7 +1,7 @@
 ---
 date: 2021-05-23T18:03:15-05:00
 title: Dance Time
-slug: dance-time
+permalink: dance-time
 tags:
   - ramblings
   - art

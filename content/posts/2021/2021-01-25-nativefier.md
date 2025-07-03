@@ -1,7 +1,7 @@
 ---
 date: 2021-01-25T22:19:41Z
 title: Nativefier
-slug: nativefier
+permalink: nativefier
 tags:
 - tech
 - development

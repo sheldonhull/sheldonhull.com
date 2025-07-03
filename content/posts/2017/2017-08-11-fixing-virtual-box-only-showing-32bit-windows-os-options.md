@@ -6,7 +6,7 @@ tags:
 - ramblings
 - tech
 title: "Fixing VirtualBox Only Showing 32bit Windows OS Options"
-slug: "fixing-virtual-box-only-showing-32bit-windows-os-options"
+permalink: "fixing-virtual-box-only-showing-32bit-windows-os-options"
 ---
 
 Original help was identified from this article [Why is VirtualBox only showing 32 bit guest versions on my 64 bit host OS?](http://www.fixedbyvonnie.com/2014/11/virtualbox-showing-32-bit-guest-versions-64-bit-host-os/)

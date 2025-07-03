@@ -2,7 +2,7 @@
 
 date: 2024-02-29T20:15:36+0000
 title: Improve Language Matching in Vscode
-slug: improve-language-matching-in-vscode
+permalink: improve-language-matching-in-vscode
 tags:
 
 - tech

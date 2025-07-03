@@ -1,7 +1,7 @@
 ---
 date: 2020-02-26T07:00:00-06:00
 title: Quickly Create Github Release via Cli
-slug: quickly-create-github-release-via-cli
+permalink: quickly-create-github-release-via-cli
 summary:
   Here's how you can quickly create a github release without having to go through the web interface
 tags:

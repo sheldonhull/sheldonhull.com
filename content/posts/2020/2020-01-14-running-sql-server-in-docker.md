@@ -1,7 +1,7 @@
 ---
 date: 2020-01-16T13:00:00.000+00:00
 title: Running SQL Server in Docker
-slug: running-sql-server-in-docker
+permalink: running-sql-server-in-docker
 summary: For development work, it can be freeing to leverage Docker to simplify spinning
   up a test SQL Server instance for your work
 tags:

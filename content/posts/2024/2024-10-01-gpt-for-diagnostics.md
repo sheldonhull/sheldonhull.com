@@ -2,7 +2,7 @@
 
 date: 2024-10-01T17:26:01+0000
 title: Gpt for Diagnostics
-slug: gpt-for-diagnostics
+permalink: gpt-for-diagnostics
 tags:
 - tech
 - microblog

@@ -2,7 +2,7 @@
 
 date: 2022-01-28T19:40:41+0000
 title: Pulumi Round 2
-slug: Pulumi-round-2
+permalink: Pulumi-round-2
 tags:
 
 - tech

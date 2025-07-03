@@ -9,7 +9,7 @@ tags:
 - powershell
 - cool-tools
 title: "Setting Up InfluxDb, Chronograf, and Grafana for the SqlServer Dev"
-slug: "setting-up-influx-db-chronograf-and-grafana-for-the-sql-server-dev"
+permalink: "setting-up-influx-db-chronograf-and-grafana-for-the-sql-server-dev"
 toc: true
 series: ["InfluxDb"]
 ---

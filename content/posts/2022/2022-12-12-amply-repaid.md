@@ -1,7 +1,7 @@
 ---
 date: 2022-12-12T18:44:28+0000
 title: Amply Repaid
-slug: amply-repaid
+permalink: amply-repaid
 tags:
 - children
 - microblog

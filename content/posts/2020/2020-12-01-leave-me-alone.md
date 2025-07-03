@@ -1,7 +1,7 @@
 ---
 date: 2020-12-01T12:31:14-06:00
 title: Leave Me Alone
-slug: leave-me-alone
+permalink: leave-me-alone
 tags:
     - tech
     - cool-tools

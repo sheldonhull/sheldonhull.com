@@ -1,6 +1,6 @@
 ---
 date: "2015-01-13T00:00:00Z"
-slug: dev-tools-file-search
+permalink: dev-tools-file-search
 tags:
 - sql-server
 title: "Dev Tools: The File Searcher/Launcher to rule them all"

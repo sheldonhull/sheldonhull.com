@@ -5,7 +5,7 @@ tags:
 - powershell
 - sql-server
 title: "Attaching Database Using SMO & Powershell"
-slug: "attaching-database-using-smo-and-powershell"
+permalink: "attaching-database-using-smo-and-powershell"
 ---
 
 Steve Jones wrote a great article on using this automation titled `The Demo Setup-Attaching Databases with Powershell`. I threw together a completed script and modified it for my functionality here. MSDN documentation on the functionality is located here [Server.AttachDatabase Method (String, StringCollection, String, AttachOptions)](http://bit.ly/2fZPypU)I see some definitive room for improvement with some future work on this to display percentage complete and so on, but did not implement at this time.

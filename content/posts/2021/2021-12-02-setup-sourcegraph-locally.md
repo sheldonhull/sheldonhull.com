@@ -1,7 +1,7 @@
 ---
 date: 2021-12-02T22:48:45+0000
 title: Setup Sourcegraph Locally
-slug: setup-sourcegraph-locally
+permalink: setup-sourcegraph-locally
 tags:
 
 - tech

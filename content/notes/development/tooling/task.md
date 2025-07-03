@@ -3,7 +3,7 @@ title: task
 date: 2020-10-30
 toc: true
 summary: A cheatsheet with snippets for Task, a cross-platform task runner alternative to Make.
-slug: task
+permalink: task
 comments: true
 tags:
   - development

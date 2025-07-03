@@ -2,7 +2,7 @@
 
 date: 2021-09-10T20:11:44+0000
 title: Automatic Grafana Provisioning in Kubernetes
-slug: automatic-grafana-provisioning-in-kubernetes
+permalink: automatic-grafana-provisioning-in-kubernetes
 tags:
 
 - tech

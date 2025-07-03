@@ -9,7 +9,7 @@ tags:
 - cool-tools
 - tech
 title: "Update SSMS With PS1"
-slug: "update-ssms-with-ps1"
+permalink: "update-ssms-with-ps1"
 ---
 
 > [!note] Updated: 2018-03-29+

@@ -1,7 +1,7 @@
 ---
 date: 2020-09-09T11:40:18-05:00
 title: Terraform's Elegance in Abstraction
-slug: terraform's-elegance-in-abstraction
+permalink: terraform's-elegance-in-abstraction
 tags:
     - tech
     - development

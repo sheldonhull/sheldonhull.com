@@ -1,7 +1,7 @@
 ---
 date: 2022-03-11T23:49:22+0000
 title: Pulumi Secrets
-slug: pulumi-secrets
+permalink: pulumi-secrets
 summary:
   Really appreciate the slick handling for stack level encrypted secrets.
 tags:

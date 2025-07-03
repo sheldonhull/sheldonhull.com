@@ -2,7 +2,7 @@
 
 date: 2022-03-24T18:39:42+0000
 title: Remove Pending Operations From Pulumi State
-slug: remove-pending-operations-from-pulumi-state
+permalink: remove-pending-operations-from-pulumi-state
 tags:
 - tech
 - development

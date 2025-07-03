@@ -3,7 +3,6 @@
 permalink: "/brag/"
 layout: wide
 title: "Sheldon Hull // Developer"
-slug: "brag"
 summary: professional summary & accomplishments
 comments: false
 robots: noindex

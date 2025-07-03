@@ -1,7 +1,7 @@
 ---
 date: 2022-03-11T21:07:20+0000
 title: Night Owl for Slack
-slug: night-owl-for-slack
+permalink: night-owl-for-slack
 tags:
 
 - tech

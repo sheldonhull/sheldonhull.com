@@ -2,7 +2,7 @@
 
 date: 2023-06-08T23:56:47+0000
 title: Brain Noodles
-slug: brain-noodles
+permalink: brain-noodles
 tags:
 - microblog
 

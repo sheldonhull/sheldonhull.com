@@ -2,7 +2,7 @@
 
 date: 2023-11-06T13:56:58+0000
 title: Region & Language Defaults
-slug: region-and-language-defaults
+permalink: region-and-language-defaults
 tags:
 - tech
 - development

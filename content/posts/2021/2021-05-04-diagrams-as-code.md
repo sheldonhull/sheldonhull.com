@@ -1,7 +1,7 @@
 ---
 date: 2021-05-04T07:00:00.000Z
 title: Diagrams as Code
-slug: diagrams-as-code
+permalink: diagrams-as-code
 summary: >-
   Generate diagrams as code using Python, if you prefer to have a bit more
   development oriented workflow for visualization.

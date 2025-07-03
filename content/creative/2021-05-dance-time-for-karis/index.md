@@ -1,6 +1,6 @@
 ---
 title: Dance Time For Karis
-slug: dance-time-for-karis
+permalink: dance-time-for-karis
 type: "gallery"
 resources:
 - name: dance-:counter

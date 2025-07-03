@@ -1,6 +1,6 @@
 ---
 title: Development
-slug: development
+permalink: development
 toc: false
 ---
 

@@ -4,7 +4,7 @@ tags:
 - sql-server
 - mysteries
 title: "Cannot Generate SSPI Context"
-slug: "cannot-generate-sspi-context"
+permalink: "cannot-generate-sspi-context"
 ---
 
 ## Troubleshooting

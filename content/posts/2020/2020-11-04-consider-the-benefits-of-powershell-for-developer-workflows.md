@@ -1,7 +1,7 @@
 ---
 date: 2020-11-04T07:00:00Z
 title: Consider the Benefits of Powershell for Developer Workflows
-slug: consider-the-benefits-of-powershell-for-developer-workflows
+permalink: consider-the-benefits-of-powershell-for-developer-workflows
 summary:
   You use bash and python. You have no need of the wierdness that is powershell.
   Give me couple minutes to convince you otherwise. Maybe you'll find something useful :-)

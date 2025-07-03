@@ -1,7 +1,7 @@
 ---
 date: 2023-06-11T12:00:00+0500
 title: Alexa Customization
-slug: alexa-customization
+permalink: alexa-customization
 tags:
 - tech
 - microblog

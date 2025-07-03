@@ -10,7 +10,7 @@ tags:
 - tech
 - git
 title: Git Cracking
-slug: git-cracking
+permalink: git-cracking
 toc: true
 
 ---

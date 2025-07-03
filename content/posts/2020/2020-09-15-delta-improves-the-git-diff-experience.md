@@ -1,7 +1,7 @@
 ---
 date: 2020-09-15T12:30:23-05:00
 title: Delta Improves the Git Diff Experience
-slug: delta-improves-the-git-diff-experience
+permalink: delta-improves-the-git-diff-experience
 tags:
     - tech
     - development

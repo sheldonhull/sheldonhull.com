@@ -8,7 +8,7 @@ tags:
 - family
 - follower-of-Jesus
 title: "Delight in the Little Moments"
-slug: "delight-in-the-little-moments"
+permalink: "delight-in-the-little-moments"
 ---
 
 This last Easter I had some fun with the kids at their grandparents. Remember the days of spinning until you were nauseous? Was fun to watch the kids enjoying this so I took a few clips, nothing fancy, just a snapshot of enjoying the little moments in life.

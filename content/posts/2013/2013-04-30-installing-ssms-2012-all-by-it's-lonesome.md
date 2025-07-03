@@ -3,7 +3,7 @@ date: "2013-04-30T00:00:00Z"
 tags:
 - sql-server
 title: "Installing SSMS 2012 all by it's lonesome"
-slug: "installing-ssms-2012-all-by-it's-lonesome"
+permalink: "installing-ssms-2012-all-by-it's-lonesome"
 lightgallery: true
 ---
 

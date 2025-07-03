@@ -3,7 +3,6 @@ title: powershell
 date: 2019-03-19
 summary: A cheatsheet for some interesting PowerShell related concepts that
   might benefit others looking for some tips and tricks
-slug: powershell
 permalink: /notes/powershell
 comments: true
 tags:

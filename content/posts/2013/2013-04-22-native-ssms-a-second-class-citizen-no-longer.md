@@ -6,7 +6,7 @@ tags:
 - sql-server
 - cool-tools
 title: "Native SSMS a second class citizen no longer..."
-slug: "native-ssms-a-second-class-citizen-no-longer"
+permalink: "native-ssms-a-second-class-citizen-no-longer"
 toc: true
 ---
 

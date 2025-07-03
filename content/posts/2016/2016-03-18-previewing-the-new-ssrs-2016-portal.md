@@ -4,7 +4,7 @@ tags:
 - sql-server
 - ssrs
 title: "Previewing the new SSRS 2016 portal"
-slug: "previewing-the-new-ssrs-2016-portal"
+permalink: "previewing-the-new-ssrs-2016-portal"
 ---
 
 Ran into an issue with the "Preview New Reporting Portal" link on a fresh install of 2016 giving me a not found error.

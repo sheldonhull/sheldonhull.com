@@ -5,7 +5,7 @@ tags:
 - sql-server
 - ramblings
 title: "Remote Desktop Workflow Improvements"
-slug: "remote-desktop-workflow-improvements"
+permalink: "remote-desktop-workflow-improvements"
 toc: true
 ---
 

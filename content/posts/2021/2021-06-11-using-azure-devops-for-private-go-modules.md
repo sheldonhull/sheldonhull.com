@@ -2,7 +2,7 @@
 
 date: 2021-06-11T16:35:44-05:00
 title: Using Azure DevOps for Private Go Modules
-slug: using-azure-devops-for-private-go-modules
+permalink: using-azure-devops-for-private-go-modules
 summary: How to use Azure DevOps for private Go modules
 tags: [azure-devops, golang, devops]
 toc: true

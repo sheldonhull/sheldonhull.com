@@ -1,7 +1,7 @@
 ---
 date: 2020-09-01T12:33:25-05:00
 title: Rebuild Dash Index Due to Corrupted Index
-slug: rebuild-dash-index-due-to-corrupted-index
+permalink: rebuild-dash-index-due-to-corrupted-index
 tags:
     - tech
     - development

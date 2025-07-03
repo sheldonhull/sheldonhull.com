@@ -1,7 +1,7 @@
 ---
 date: 2020-04-20T07:00:00-05:00
 title: Improved Windows Terminal Setup
-slug: improved-windows-terminal-setup
+permalink: improved-windows-terminal-setup
 summary: Quickly get some nice defaults going for latest Windows Terminal
 tags:
 - cool-tools

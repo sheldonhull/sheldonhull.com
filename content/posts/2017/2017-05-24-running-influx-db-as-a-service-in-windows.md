@@ -8,7 +8,7 @@ tags:
 - tech
 - sql-server
 title: "Running InfluxDB as a service in Windows"
-slug: "running-influx-db-as-a-service-in-windows"
+permalink: "running-influx-db-as-a-service-in-windows"
 toc: true
 series: ["InfluxDb"]
 ---

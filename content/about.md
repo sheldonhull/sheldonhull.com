@@ -2,7 +2,6 @@
 permalink: "/about/"
 layout: single
 title: About
-slug: about
 summary: about me
 sidebar: []
 author_profile: false

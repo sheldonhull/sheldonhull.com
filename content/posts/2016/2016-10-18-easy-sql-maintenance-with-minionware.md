@@ -1,6 +1,6 @@
 ---
 title: Easy SQL Maintenance with Minionware
-slug: easy-sql-maintenance-with-minionware
+permalink: easy-sql-maintenance-with-minionware
 date: 2016-10-18T00:00:00Z
 toc: true
 summary: Review of using Minionware sql maintenance solution

@@ -1,7 +1,7 @@
 ---
 date: 2021-01-09T23:11:04Z
 title: Remove Chrome Autocomplete Suggestion
-slug: remove-chrome-autocomplete-suggestion
+permalink: remove-chrome-autocomplete-suggestion
 tags:
   - tech
   - microblog

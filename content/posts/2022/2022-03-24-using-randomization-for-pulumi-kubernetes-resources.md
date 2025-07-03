@@ -2,7 +2,7 @@
 
 date: 2022-03-24T21:15:37+0000
 title: Using Randomization for Pulumi Kubernetes Resources
-slug: using-randomization-for-pulumi-kubernetes-resources
+permalink: using-randomization-for-pulumi-kubernetes-resources
 summary: |
   Randomization can help ensure logical name uniqueness with Pulumi.
   Getting to that point can be tricky, but here's a way to keep it simple.

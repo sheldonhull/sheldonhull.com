@@ -1,7 +1,7 @@
 ---
 date: 2021-01-14T02:42:20Z
 title: Leverage Renovate for Easy Dependency Updates
-slug: leverage-renovate-for-easy-dependency-updates
+permalink: leverage-renovate-for-easy-dependency-updates
 tags:
   - tech
   - development

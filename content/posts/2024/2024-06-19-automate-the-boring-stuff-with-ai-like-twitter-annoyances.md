@@ -2,7 +2,7 @@
 
 date: 2024-06-19T19:10:06+0000
 title: Automate the Boring Stuff With Ai Like Twitter Annoyances
-slug: automate-the-boring-stuff-with-ai-like-twitter-annoyances
+permalink: automate-the-boring-stuff-with-ai-like-twitter-annoyances
 tags:
 - tech
 - development

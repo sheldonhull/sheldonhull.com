@@ -2,7 +2,7 @@
 
 date: 2021-07-30T13:08:42-05:00
 title: Treating Repos Like Cattle Instead of Pets
-slug: treating-repos-like-cattle-instead-of-pets
+permalink: treating-repos-like-cattle-instead-of-pets
 summary:
   Thinking on handling repositories tooling in a consistent manner.
   What can we do to handle projects in a consistent way and reduce the rework required?

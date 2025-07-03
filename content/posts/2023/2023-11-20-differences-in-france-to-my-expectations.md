@@ -2,7 +2,7 @@
 
 date: 2023-11-20T14:04:28+0000
 title: Differences in France To My Expectations
-slug: differences-in-france-to-my-expectations
+permalink: differences-in-france-to-my-expectations
 tags:
 - microblog
 - travel

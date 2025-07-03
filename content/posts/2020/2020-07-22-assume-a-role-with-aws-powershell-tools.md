@@ -1,6 +1,6 @@
 ---
 title: Assume a role with AWS PowerShell Tools
-slug: assume-a-role-with-aws-powershell-tools
+permalink: assume-a-role-with-aws-powershell-tools
 date: 2020-07-21T20:00:00-05:00
 toc: true
 summary: However, as I've wanted to run some scripts across multiple accounts,

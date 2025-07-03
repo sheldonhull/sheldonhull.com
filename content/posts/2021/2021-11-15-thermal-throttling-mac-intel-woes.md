@@ -2,7 +2,7 @@
 
 date: 2021-11-15T22:04:08+0000
 title: Thermal Throttling Mac Intel Woes
-slug: thermal-throttling-mac-intel-woes
+permalink: thermal-throttling-mac-intel-woes
 tags:
 
 - tech

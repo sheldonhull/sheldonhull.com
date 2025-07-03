@@ -2,7 +2,7 @@
 
 date: 2023-10-20T03:46:09+0000
 title: Leveled Up With Truck Driving
-slug: leveled-up-with-truck-driving
+permalink: leveled-up-with-truck-driving
 tags:
 - microblog
 ---

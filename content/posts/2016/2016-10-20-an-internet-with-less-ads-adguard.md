@@ -4,7 +4,7 @@ tags:
 - ramblings
 - cool-tools
 title: "An Internet With Less Ads - Adguard"
-slug: "an-internet-with-less-ads-adguard"
+permalink: "an-internet-with-less-ads-adguard"
 ---
 
 # Ads...I know they employ people, make the world go round, gave us google.... but seriously I hate almost all ads.

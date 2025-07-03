@@ -4,7 +4,7 @@ last_modified_at: "2019-02-09"
 tags:
 - sql-server
 title: "Transaction Logging & Recovery (part 2)"
-slug: "transaction-logging-&-recovery-(part-2)"
+permalink: "transaction-logging-&-recovery-(part-2)"
 toc: true
 ---
 

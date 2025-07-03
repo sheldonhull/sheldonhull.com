@@ -4,7 +4,7 @@ tags:
 - cool-tools
 - ramblings
 title: "Syncovery & Arq - Syncing & Backup"
-slug: "syncovery-&-arq-syncing-&-backup"
+permalink: "syncovery-&-arq-syncing-&-backup"
 ---
 
 # Syncovery & Arq 5I've tried a lot of file sync/backup utilities.

@@ -6,7 +6,7 @@ tags:
 - cool-tools
 - tech
 title: "Dataedo - First Look"
-slug: "dataedo-first-look"
+permalink: "dataedo-first-look"
 ---
 
 > [!info] update 2019-02-22+

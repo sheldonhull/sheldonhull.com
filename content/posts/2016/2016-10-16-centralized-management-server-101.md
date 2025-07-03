@@ -3,7 +3,7 @@ date: "2016-10-16T00:00:00Z"
 tags:
 - sql-server
 title: "Centralized Management Server 101"
-slug: "centralized-management-server-101"
+permalink: "centralized-management-server-101"
 toc: true
 ---
 

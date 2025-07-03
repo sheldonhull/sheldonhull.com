@@ -2,7 +2,7 @@
 
 date: 2023-12-01T12:57:42+0000
 title: Easiest Way to Run Local Ai
-slug: easiest-way-to-run-local-ai
+permalink: easiest-way-to-run-local-ai
 tags:
 
 - tech

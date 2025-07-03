@@ -9,7 +9,7 @@ tags:
 - sql-server
 - cool-tools
 title: "InfluxDB and Annotations"
-slug: "influx-db-and-annotations"
+permalink: "influx-db-and-annotations"
 toc: true
 series: ["InfluxDb"]
 ---

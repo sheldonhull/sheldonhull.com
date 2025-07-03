@@ -3,7 +3,7 @@ date: "2015-08-18T00:00:00Z"
 tags:
 - sql-server
 title: "Monitoring SQL Server on a budget"
-slug: "monitoring-sql-server-on-a-budget"
+permalink: "monitoring-sql-server-on-a-budget"
 toc: true
 ---
 

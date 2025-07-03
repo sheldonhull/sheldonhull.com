@@ -2,7 +2,6 @@
 permalink: "/recruiters/"
 layout: wide
 title: "Sheldon Hull // Developer"
-slug: "recruiters"
 summary: Quick overview of who I am and what I'm looking for targeted at recruiters.
 comments: false
 robots: noindex

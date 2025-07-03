@@ -1,7 +1,7 @@
 ---
 date: 2020-02-14T07:00:00-06:00
 title: Asciidoc Distributed Docs as Code
-slug: asciidoc-distributed-docs-as-code
+permalink: asciidoc-distributed-docs-as-code
 summary:
   Approach documentation with a developer's mindset and use a 'docs-as-code' mentality. This is how you can get started.
 tags:

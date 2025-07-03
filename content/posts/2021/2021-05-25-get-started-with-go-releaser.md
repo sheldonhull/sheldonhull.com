@@ -1,7 +1,7 @@
 ---
 date: 2021-05-25T18:11:54-05:00
 title: Get Started With GoReleaser
-slug: get-started-with-goreleaser
+permalink: get-started-with-goreleaser
 summary:
   Improve your CICD skills with building Go apps
 tags:

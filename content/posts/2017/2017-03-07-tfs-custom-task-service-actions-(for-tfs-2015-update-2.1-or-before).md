@@ -6,7 +6,7 @@ tags:
 - powershell
 - tech
 title: TFS Custom Task - Service Actions (for TFS 2015 Update 2.1 or before)
-slug: tfs-custom-task-service-actions-(for-tfs-2015-update-21-or-before)
+permalink: tfs-custom-task-service-actions-(for-tfs-2015-update-21-or-before)
 
 ---
 

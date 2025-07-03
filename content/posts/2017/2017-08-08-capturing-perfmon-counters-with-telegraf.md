@@ -9,7 +9,7 @@ tags:
 - cool-tools
 - powershell
 title: "Capturing Perfmon Counters With Telegraf"
-slug: "capturing-perfmon-counters-with-telegraf"
+permalink: "capturing-perfmon-counters-with-telegraf"
 series: ["InfluxDb"]
 ---
 

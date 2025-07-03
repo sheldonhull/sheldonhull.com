@@ -1,7 +1,7 @@
 ---
 date: 2020-06-18T12:00:00.000Z
 title: My Experience Switching To A Macbook Pro From Windows
-slug: my-experience-switching-to-a-macbook-pro-from-windows
+permalink: my-experience-switching-to-a-macbook-pro-from-windows
 summary: >-
   Having used Windows mostly for my entire life, this is what it was like
   switching to a Mac for professional use

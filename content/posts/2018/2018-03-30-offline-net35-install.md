@@ -7,7 +7,7 @@ tags:
 - sql-server
 - tech
 title: "SQL .NET Requirements"
-slug: "offline-net35-install"
+permalink: "offline-net35-install"
 toc: true
 ---
 

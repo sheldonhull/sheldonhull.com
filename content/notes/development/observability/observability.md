@@ -1,6 +1,5 @@
 ---
 title: 'observability'
-slug: 'observability'
 date: '2023-07-13'
 toc: true
 summary: Some notes related to observability, monitoring, and alerting.

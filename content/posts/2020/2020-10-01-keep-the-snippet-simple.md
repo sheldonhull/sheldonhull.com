@@ -1,7 +1,7 @@
 ---
 date: 2020-10-01T16:51:49-05:00
 title: Keep the Snippet Simple
-slug: keep-the-snippet-simple
+permalink: keep-the-snippet-simple
 tags:
     - tech
     - development

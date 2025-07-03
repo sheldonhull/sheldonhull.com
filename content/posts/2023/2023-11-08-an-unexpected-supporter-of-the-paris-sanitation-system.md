@@ -2,7 +2,7 @@
 
 date: 2023-11-08T13:07:41+0000
 title: An Unexpected Supporter of the Paris Sanitation System
-slug: an-unexpected-supporter-of-the-paris-sanitation-system
+permalink: an-unexpected-supporter-of-the-paris-sanitation-system
 tags:
 - travel
 - dadlife

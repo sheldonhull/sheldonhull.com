@@ -6,7 +6,7 @@ tags:
 - redgate
 - sql-server
 title: "Install ReadyRoll via Command Line"
-slug: "install-ready-roll-via-command-line"
+permalink: "install-ready-roll-via-command-line"
 ---
 
 #### command line install options

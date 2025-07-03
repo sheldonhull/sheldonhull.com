@@ -6,7 +6,7 @@ tags:
 - worship
 - follower-of-Jesus
 title: "Lack for Nothing"
-slug: "lack-for-nothing"
+permalink: "lack-for-nothing"
 ---
 
 The message of this song is one that that has been driving itself home as more and more important to me.

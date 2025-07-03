@@ -1,4 +1,4 @@
 ---
 title: "creative"
-slug: "creative"
+permalink: "creative"
 ---

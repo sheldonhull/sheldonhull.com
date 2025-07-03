@@ -1,6 +1,6 @@
 ---
 title: Getting Started with Stream Analytics
-slug: getting-started-with-stream-analytics
+permalink: getting-started-with-stream-analytics
 date: 2020-07-24T19:00:00-05:00
 toc: true
 summary: If you are a newbie to the world of streaming analytics and need to get

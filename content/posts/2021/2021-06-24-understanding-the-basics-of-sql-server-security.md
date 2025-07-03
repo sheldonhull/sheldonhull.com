@@ -1,7 +1,7 @@
 ---
 date: 2021-06-24T12:26:52-05:00
 title: Understanding The Basics of SQL Server Security
-slug: understanding-the-basics-of-sql-server-security
+permalink: understanding-the-basics-of-sql-server-security
 summary:
   As I've worked with folks using other database engines, I've realized that Microsoft SQL Server has some terminology and handling that is a bit confusing.
   Here's my attempt to clarify the basics for myself and others needing a quick overview.

@@ -9,7 +9,7 @@ tags:
 - powershell
 - development
 title: "Migrating From Hipchat To Slack"
-slug: "migrating-from-hipchat-to-slack"
+permalink: "migrating-from-hipchat-to-slack"
 toc: true
 ---
 

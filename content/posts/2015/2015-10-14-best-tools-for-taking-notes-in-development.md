@@ -4,7 +4,7 @@ tags:
 - sql-server
 - cool-tools
 title: "Best Tools for Taking Notes In Development"
-slug: "best-tools-for-taking-notes-in-development"
+permalink: "best-tools-for-taking-notes-in-development"
 toc: true
 ---
 

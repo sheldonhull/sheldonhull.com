@@ -3,7 +3,7 @@ date: "2014-12-11T00:00:00Z"
 tags:
 - sql-server
 title: "OR pattern causing indexing scans in parameter based queries"
-slug: "or-pattern-causing-indexing-scans-in-parameter-based-queries"
+permalink: "or-pattern-causing-indexing-scans-in-parameter-based-queries"
 ---
 
 #Tl;dr

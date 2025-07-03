@@ -2,7 +2,7 @@
 
 date: 2023-12-02T19:06:18+0000
 title: Chunnel, Train, and Pubs
-slug: chunnel-train-and-pubs
+permalink: chunnel-train-and-pubs
 tags:
 - travel
 series: ['Trip to Europe']

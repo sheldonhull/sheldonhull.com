@@ -5,7 +5,7 @@ tags:
 - sql-server
 - cool-tools
 title: "On how to Googlify your SQL statements for future searching"
-slug: "on-how-to-googlify-your-sql-statements-for-future-searching"
+permalink: "on-how-to-googlify-your-sql-statements-for-future-searching"
 toc: true
 ---
 
@@ -42,11 +42,11 @@ Basic Settings I choose (If you aren't using [Bitstream](http://ftp.gnome.org/pu
 
     CurvyTabs = true HtmlExtensions = html;htm;xhtml;shtml;shtm;php;asp;jsp;sql InitialSorting = -8
 
-* Why? Curvy tabs... because curves are nice
-* HTML Extensions, obvious
-* Initial Sorting = -8 means that instead of sorting by "match %" which I didn't find helpful for me, to sort by modified date in desc order. This means I'll find the most most recent match for the text I'm searching for at the top of my list.
+- Why? Curvy tabs... because curves are nice
+- HTML Extensions, obvious
+- Initial Sorting = -8 means that instead of sorting by "match %" which I didn't find helpful for me, to sort by modified date in desc order. This means I'll find the most most recent match for the text I'm searching for at the top of my list.
 
-* Setup your custom indexes. I setup separate indexes for executed statements and editor history so I could filter down what I cared about and eliminate near duplicate matches for the most part. Right click in blank space to create index.
+- Setup your custom indexes. I setup separate indexes for executed statements and editor history so I could filter down what I cared about and eliminate near duplicate matches for the most part. Right click in blank space to create index.
 
 I setup as follows:
 ![DocFetcher_createIndex1](images/DocFetcher_createIndex1_t0qhl5.jpg)

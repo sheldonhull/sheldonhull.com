@@ -1,7 +1,7 @@
 ---
 date: 2021-07-07T00:07:00-05:00
 title: How To Reduce Noise From Slack
-slug: how-to-reduce-noise-from-slack
+permalink: how-to-reduce-noise-from-slack
 summary:
    Improve your Slack experience with a few tweaks. This can help you get value from Slack, rather than drowning in noise.
 tags:

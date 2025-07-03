@@ -1,7 +1,7 @@
 ---
 date: 2021-07-05T07:00:00-05:00
 title: Luminar AI
-slug: luminar-ai
+permalink: luminar-ai
 summary: >-
   Let's take a look at Luminar AI from a prior Lightroom owner and get some
   first impressions.

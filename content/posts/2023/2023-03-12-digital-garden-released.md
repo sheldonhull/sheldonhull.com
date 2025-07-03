@@ -2,7 +2,7 @@
 
 date: 2023-03-12T23:28:22+0000
 title: Digital Garden Released
-slug: digital-garden-released
+permalink: digital-garden-released
 tags:
 
 - tech

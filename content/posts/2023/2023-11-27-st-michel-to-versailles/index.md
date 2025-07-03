@@ -2,7 +2,7 @@
 
 date: 2023-11-27T18:50:49+0000
 title: St Michel to Versailles
-slug: st-michel-to-versailles
+permalink: st-michel-to-versailles
 summary:
   In this blog post, we journey with our narrator and his kids from the unique beauty of St. Michel to the overwhelming grandeur of Versailles.
   St. Michel stands out in its vast wetlands, offering a serene perspective from the sands.

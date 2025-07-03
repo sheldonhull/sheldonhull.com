@@ -2,7 +2,7 @@
 
 date: 2021-07-13T19:10:50-05:00
 title: My First Vscode Extension Pack for Go
-slug: my-first-vscode-extension-pack-for-go
+permalink: my-first-vscode-extension-pack-for-go
 tags:
 - tech
 - development

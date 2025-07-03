@@ -4,7 +4,7 @@ tags:
 - cool-tools
 - sql-server
 title: "SQL Compare 12: Initial Look"
-slug: "sql-compare-12-initial-look"
+permalink: "sql-compare-12-initial-look"
 toc: true
 ---
 

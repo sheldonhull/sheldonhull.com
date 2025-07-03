@@ -1,7 +1,7 @@
 ---
 date: 2020-09-24T00:09:57-05:00
 title: Deadcells
-slug: deadcells
+permalink: deadcells
 tags:
     - gaming
     - ramblings

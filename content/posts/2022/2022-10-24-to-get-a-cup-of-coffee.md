@@ -2,7 +2,7 @@
 
 date: 2022-10-24T20:55:20+0000
 title: To Get a Cup of Coffee
-slug: to-get-a-cup-of-coffee
+permalink: to-get-a-cup-of-coffee
 tags:
 - tech
 - development

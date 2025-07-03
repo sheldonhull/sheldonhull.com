@@ -2,7 +2,6 @@
 permalink: "/metrics/"
 layout: wide
 title: metrics
-slug: metrics
 summary: general metrics on site
 sidebar: []
 author_profile: false

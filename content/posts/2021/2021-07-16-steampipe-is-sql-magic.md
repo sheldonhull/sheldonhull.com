@@ -1,7 +1,7 @@
 ---
 date: 2021-07-16T16:11:52-05:00
 title: Steampipe Is Sql Magic
-slug: steampipe-is-sql-magic
+permalink: steampipe-is-sql-magic
 summary: Steampipe offers a great experience using SQL to access cloud provider metadata.
 tags:
 - tech

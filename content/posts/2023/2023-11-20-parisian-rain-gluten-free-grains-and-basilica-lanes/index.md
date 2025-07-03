@@ -2,7 +2,7 @@
 
 date: 2023-11-20T13:38:21+0000
 title: Parisian Rain, Gluten Free Grains, and Basilica Lanes
-slug: parisian-rain-gluten-free-grains-and-basilica-lanes
+permalink: parisian-rain-gluten-free-grains-and-basilica-lanes
 summary:
   Exploring Paris with Karis, from savory delights at Copains to the awe-inspiring Basilica and diverse cityscapes.
 tags:

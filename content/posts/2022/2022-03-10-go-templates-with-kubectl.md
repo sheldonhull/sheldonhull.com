@@ -2,7 +2,7 @@
 
 date: 2022-03-10T19:13:52+0000
 title: Go Templates With Kubectl
-slug: go-templates-with-kubectl
+permalink: go-templates-with-kubectl
 tags:
 
 - tech

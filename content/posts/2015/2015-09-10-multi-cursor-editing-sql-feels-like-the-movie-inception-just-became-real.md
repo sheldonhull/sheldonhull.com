@@ -3,7 +3,7 @@ date: "2015-09-10T00:00:00Z"
 tags:
 - sql-server
 title: "Multi-Cursor Editing SQL feels like the movie Inception just became real"
-slug: "multi-cursor-editing-sql-feels-like-the-movie-inception-just-became-real"
+permalink: "multi-cursor-editing-sql-feels-like-the-movie-inception-just-became-real"
 ---
 
 *   Yes... multicursor editing is epic

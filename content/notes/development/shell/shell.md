@@ -5,7 +5,6 @@ toc: true
 summary:
   A cheatsheet for some bash stuff. I really ♥️ pwsh... but acknowledge it's not everyone's cup of tea.
   This page helps me get by with being a terrible basher
-slug: shell
 permalink: /notes/shell
 comments: true
 tags:

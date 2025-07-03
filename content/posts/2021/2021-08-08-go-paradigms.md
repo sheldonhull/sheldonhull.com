@@ -3,7 +3,7 @@ date: 2021-08-08T15:45:25Z
 draft: true
 title: Go Paradigms (Or Why Succintness Isn't Always A Good Thing)
 summary: Maybe err != nil isn't so bad
-slug: go-paradigms
+permalink: go-paradigms
 tags:
 - tech
 - development

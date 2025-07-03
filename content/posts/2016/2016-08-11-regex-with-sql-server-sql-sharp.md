@@ -5,7 +5,7 @@ tags:
 - sql-server
 - cool-tools
 title: "Regex With SQL Server - SQLSharp"
-slug: "regex-with-sql-server-sql-sharp"
+permalink: "regex-with-sql-server-sql-sharp"
 toc: true
 ---
 

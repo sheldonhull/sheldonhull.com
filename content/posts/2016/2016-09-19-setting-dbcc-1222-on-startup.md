@@ -4,7 +4,7 @@ tags:
 - sql-configuration
 - sql-server
 title: "Setting DBCC 1222 on startup"
-slug: "setting-dbcc-1222-on-startup"
+permalink: "setting-dbcc-1222-on-startup"
 ---
 
 The following command is run to gain details on deadlocks.

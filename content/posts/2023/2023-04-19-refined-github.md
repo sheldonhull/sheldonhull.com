@@ -2,7 +2,7 @@
 
 date: 2023-04-19T17:02:03+0000
 title: Refined Github
-slug: refined-github
+permalink: refined-github
 tags:
 
 - tech

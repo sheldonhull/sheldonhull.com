@@ -1,7 +1,7 @@
 ---
 date: 2020-11-02T21:39:39Z
 title: Unable To Resolve Provider AWS with Terraform Version 0.13.4
-slug: unable-to-resolve-provider-aws-with-terraform-013
+permalink: unable-to-resolve-provider-aws-with-terraform-013
 tags:
     - tech
     - development

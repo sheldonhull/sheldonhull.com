@@ -4,7 +4,7 @@ last_modified_at: "2019-02-09"
 tags:
 - sql-server
 title: "Transaction Logging & Recovery (101)"
-slug: "transaction-logging-&-recovery-(101)"
+permalink: "transaction-logging-&-recovery-(101)"
 toc: true
 ---
 

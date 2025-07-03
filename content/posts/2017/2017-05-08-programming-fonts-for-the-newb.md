@@ -5,7 +5,7 @@ last_modified_at: "2018-03-30"
 tags:
     - tech
 title: "Programming Fonts For The Newb"
-slug: "programming-fonts-for-the-newb"
+permalink: "programming-fonts-for-the-newb"
 ---
 
 ## the camps

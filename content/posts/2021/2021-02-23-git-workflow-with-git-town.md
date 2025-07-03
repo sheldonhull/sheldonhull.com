@@ -2,7 +2,7 @@
 date: "2021-02-23T22:23:00Z"
 series:
 - Supercharge Your Git Workflow
-slug: git-workflow-with-git-town
+permalink: git-workflow-with-git-town
 summary: Improve your git workflow with a few cli tools.
 tags:
 - tech

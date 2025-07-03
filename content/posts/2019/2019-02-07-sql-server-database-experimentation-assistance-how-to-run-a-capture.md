@@ -9,7 +9,7 @@ tags:
 - performance-tuning
 - dbatools
 title: "SQL Server Database Experimentation Assistant - How to Run a Capture"
-slug: "sql-server-database-experimentation-assistance-how-to-run-a-capture"
+permalink: "sql-server-database-experimentation-assistance-how-to-run-a-capture"
 toc: false
 ---
 

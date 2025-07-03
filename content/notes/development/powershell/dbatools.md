@@ -1,6 +1,5 @@
 ---
 title: 'dbatools'
-slug: 'dbatools'
 date: '2019-03-11T12:00:00'
 toc: true
 summary: A cheatsheet and quick start reference for working with dbatools

@@ -4,7 +4,7 @@ draft: true
 tags:
 - sql-server
 title: "Implicit Transactions"
-slug: "implicit-transactions"
+permalink: "implicit-transactions"
 ---
 
 Never messed around with this setting in the server configuration, so I was unfamilar with the impact it would have.If I ran a statement with something like the following:

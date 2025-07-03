@@ -2,7 +2,7 @@
 
 date: 2023-11-14T01:36:00+0100
 title: First Week in Paris
-slug: first-week-in-paris
+permalink: first-week-in-paris
 summary:
   A quick recap of our first week in paris, with some pictures and random Dumb and Dumber references.
 tags:

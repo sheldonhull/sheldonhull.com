@@ -2,7 +2,7 @@
 
 date: 2021-11-04T17:30:31+0000
 title: Keyboard Remapping in Goland
-slug: keyboard-remapping-in-goland
+permalink: keyboard-remapping-in-goland
 tags:
 
 - tech

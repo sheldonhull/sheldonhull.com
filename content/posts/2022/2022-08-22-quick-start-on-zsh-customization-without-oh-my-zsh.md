@@ -9,5 +9,5 @@ tags:
 - cool-tools
 - shell
 - zsh
-slug: quick-start-zsh-customization-zsh
+permalink: quick-start-zsh-customization-zsh
 ---

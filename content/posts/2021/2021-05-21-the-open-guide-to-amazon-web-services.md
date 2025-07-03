@@ -1,7 +1,7 @@
 ---
 date: 2021-05-21T11:21:42-05:00
 title: The Open Guide to Amazon Web Services
-slug: the-open-guide-to-amazon-web-services
+permalink: the-open-guide-to-amazon-web-services
 tags:
   - tech
   - development

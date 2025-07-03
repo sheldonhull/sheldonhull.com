@@ -1,7 +1,7 @@
 ---
 date: 2021-05-20T10:29:17-05:00
 title: Cloudflare Analytics for Your Jamstack Site
-slug: cloudflare-analytics-for-your-jamstack-site
+permalink: cloudflare-analytics-for-your-jamstack-site
 tags:
   - tech
   - development

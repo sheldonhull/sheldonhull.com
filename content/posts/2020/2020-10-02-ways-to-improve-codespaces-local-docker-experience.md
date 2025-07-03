@@ -1,7 +1,7 @@
 ---
 date: 2020-10-02T14:23:31-05:00
 title: Ways to Improve Codespaces Local Docker Experience
-slug: ways-to-improve-codespaces-local-docker-experience
+permalink: ways-to-improve-codespaces-local-docker-experience
 tags:
     - tech
     - development

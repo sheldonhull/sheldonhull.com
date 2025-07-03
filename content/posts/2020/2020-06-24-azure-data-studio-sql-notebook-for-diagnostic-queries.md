@@ -1,7 +1,7 @@
 ---
 date: 2020-06-24T11:00:00.000+00:00
 title: Azure Data Studio SQL Notebook for Diagnostic Queries
-slug: azure-data-studio-sql-notebook-for-diagnostic-queries
+permalink: azure-data-studio-sql-notebook-for-diagnostic-queries
 summary: Dbatools has many amazing features. This one is a pretty amazing quick win
   for diagnostic efforts
 tags:

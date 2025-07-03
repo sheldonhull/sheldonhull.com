@@ -1,6 +1,6 @@
 ---
 title: Getting Started With Terraform
-slug: getting-started-with-terraform
+permalink: getting-started-with-terraform
 date: 2019-11-07T07:30:00+00:00
 toc: true
 summary: Getting started with using Terraform for infrastructure can be a bit

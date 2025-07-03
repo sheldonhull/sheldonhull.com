@@ -4,7 +4,7 @@ tags:
 - sql-server
 - cool-tools
 title: "Split personality text editing in SSMS with Sublime Text 3"
-slug: "split-personality-text-eiting-in-ssms-with-sublime-text-3"
+permalink: "split-personality-text-eiting-in-ssms-with-sublime-text-3"
 ---
 
 My preview post showed a demonstration of the multi-cursor editing power of Sublime Text 3 when speeding up your coding with SQL server.There is a pretty straight forward way to setup sublime (or one of your preferred text editors) to open the same file you are editing in SQL Management Studio without much hassle. I find this helpful when the type of editing might benefit from some of the fantastic functionality in Sublime.

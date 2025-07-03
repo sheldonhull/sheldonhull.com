@@ -1,7 +1,7 @@
 ---
 date: 2019-07-16T13:00:00+00:00
 title: Painless Synchronization of Azure Blob Storage with AWS S3
-slug: painless-synchronization-of-azure-blob-storage-with-aws-s3
+permalink: painless-synchronization-of-azure-blob-storage-with-aws-s3
 summary: leverage the free tool RClone for using the cloud api's easily to synchronize
   cloud based storage without the need to copy locally
 tags:

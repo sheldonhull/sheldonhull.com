@@ -1,7 +1,7 @@
 ---
 date: 2019-06-10T05:06:00+00:00
 title: Leverage AWS System Manager Sessions
-slug: leveraging-aws-system-manager-sessions
+permalink: leveraging-aws-system-manager-sessions
 summary: leveraging aws system manager sessions can help with aws development, by
   eliminating the need to RDP for work that can be done via a PowerShell session.
   In addition, it can help bypass the need to use SSH tunneling, or RDP hops into

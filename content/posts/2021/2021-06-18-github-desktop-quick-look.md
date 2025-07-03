@@ -1,6 +1,6 @@
 ---
 date: "2021-06-18T12:05:10-05:00"
-slug: github-desktop-quick-look
+permalink: github-desktop-quick-look
 tags:
 - tech
 - development

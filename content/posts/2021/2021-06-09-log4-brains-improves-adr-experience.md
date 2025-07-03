@@ -1,7 +1,7 @@
 ---
 date: 2021-06-09T19:02:34-05:00
 title: Log4 Brains Improves ADR Experience
-slug: log4-brains-improves-adr-experience
+permalink: log4-brains-improves-adr-experience
 tags:
   - tech
   - development

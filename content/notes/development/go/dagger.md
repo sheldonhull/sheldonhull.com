@@ -1,6 +1,6 @@
 ---
 title: Dagger
-slug: dagger
+permalink: dagger
 lastmod: 2023-03-21T13:44:00
 date: 2023-03-07T19:20:00
 tags:

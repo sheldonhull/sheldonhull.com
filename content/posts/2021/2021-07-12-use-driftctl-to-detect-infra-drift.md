@@ -1,7 +1,7 @@
 ---
 date: 2021-07-12T15:08:30-05:00
 title: Use Driftctl to Detect Infra Drift
-slug: use-driftctl-to-detect-infra-drift
+permalink: use-driftctl-to-detect-infra-drift
 tags:
 - tech
 - development
