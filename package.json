@@ -20,7 +20,7 @@
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1"
   },
   "engines": {
-    "npm": "11.5.2",
+    "npm": "11.6.0",
     "node": "v24.3.0"
   },
   "keywords": [
@@ -47,7 +47,7 @@
     "cli-spinner": "0.2.10",
     "d3": "7.9.0",
     "esbuild-sass-plugin": "3.3.1",
-    "flexsearch": "0.8.205",
+    "flexsearch": "0.8.212",
     "github-slugger": "2.0.0",
     "globby": "14.1.0",
     "gray-matter": "4.0.3",
@@ -62,7 +62,7 @@
     "mdast-util-to-string": "4.0.0",
     "micromorph": "0.4.5",
     "minimatch": "10.0.3",
-    "pixi.js": "8.13.0",
+    "pixi.js": "8.13.1",
     "preact": "10.27.1",
     "preact-render-to-string": "6.6.1",
     "pretty-bytes": "7.0.1",
