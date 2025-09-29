@@ -65,7 +65,7 @@
     "pixi.js": "8.13.2",
     "preact": "10.27.2",
     "preact-render-to-string": "6.6.1",
-    "pretty-bytes": "7.0.1",
+    "pretty-bytes": "7.1.0",
     "pretty-time": "1.1.0",
     "reading-time": "1.5.0",
     "rehype-autolink-headings": "7.1.0",
@@ -86,8 +86,8 @@
     "rfdc": "1.4.1",
     "satori": "0.18.3",
     "serve-handler": "6.1.6",
-    "sharp": "0.34.3",
-    "shiki": "3.12.2",
+    "sharp": "0.34.4",
+    "shiki": "3.13.0",
     "source-map-support": "0.5.21",
     "to-vfile": "8.0.0",
     "toml": "3.0.0",
@@ -113,6 +113,6 @@
     "typescript": "5.8.3"
   },
   "volta": {
-    "node": "v22.19.0"
+    "node": "v22.20.0"
   }
 }
