@@ -20,7 +20,7 @@
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1"
   },
   "engines": {
-    "npm": "11.6.1",
+    "npm": "11.6.2",
     "node": "v24.3.0"
   },
   "keywords": [
@@ -40,7 +40,7 @@
     "@myriaddreamin/rehype-typst": "0.6.0",
     "@napi-rs/simple-git": "0.1.22",
     "@tweenjs/tween.js": "25.0.0",
-    "@webgpu/types": "0.1.65",
+    "@webgpu/types": "0.1.66",
     "ansi-truncate": "1.4.0",
     "async-mutex": "0.5.0",
     "chokidar": "4.0.3",
