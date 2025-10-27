@@ -64,7 +64,7 @@
     "minimatch": "10.0.3",
     "pixi.js": "8.14.0",
     "preact": "10.27.2",
-    "preact-render-to-string": "6.6.2",
+    "preact-render-to-string": "6.6.3",
     "pretty-bytes": "7.1.0",
     "pretty-time": "1.1.0",
     "reading-time": "1.5.0",
@@ -113,6 +113,6 @@
     "typescript": "5.8.3"
   },
   "volta": {
-    "node": "v22.20.0"
+    "node": "v22.21.0"
   }
 }
