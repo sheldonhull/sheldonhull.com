@@ -69,7 +69,7 @@ tasks:
           echo "gitpod command: $(gp url 1313)"
           export DEPLOY_PRIME_URL=$(gp url 1313)
         fi
-      - $HUGO serve -b ${DEPLOY_PRIME_URL:-$DEFAULT_BUILD_SERVER} --verbose --enableGitInfo -d '_site' --buildFuture --buildDrafts --gc # --disableFastRender
+      - $HUGO serve -b ${DEPLOY_PRIME_URL:-$DEFAULT_BUILD_SERVER} --enableGitInfo -d '_site' --buildFuture --buildDrafts --gc # --disableFastRender
 
       # - task: build
   echo-debug:
@@ -95,7 +95,7 @@ tasks:
     desc: Build the webpage for previews or other debug setup
     #deps: [assets, templates]
     cmds:
-      - $HUGO --buildFuture --buildDrafts --enableGitInfo --verbose --minify --gc --destination ${HUGO_DESTINATION:-$DEFAULT_HUGO_DESTINATION} -b ${DEPLOY_PRIME_URL:-$DEFAULT_BUILD_SERVER}
+      - $HUGO --buildFuture --buildDrafts --enableGitInfo --minify --gc --destination ${HUGO_DESTINATION:-$DEFAULT_HUGO_DESTINATION} -b ${DEPLOY_PRIME_URL:-$DEFAULT_BUILD_SERVER}
   build-public:
     desc: Build algolia public json only if missing algolia
     generates:

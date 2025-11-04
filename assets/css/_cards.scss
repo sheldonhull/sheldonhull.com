@@ -20,29 +20,33 @@
 
   [theme="light"] {
     .card {
-    //   color: $global-font-color !important;
-          background: $global-border-color !important;
-      box-shadow: 0 6px 10px $global-border-color;
+      //   color: $global-font-color !important;
+      background: var(--global-border-color) !important;
+      box-shadow: 0 6px 10px var(--global-border-color);
+
       h3 {
         filter: none;
       }
     }
+
     .card:hover {
-      box-shadow: 0 10px 20px $global-border-color;
+      box-shadow: 0 10px 20px var(--global-border-color);
     }
   }
 
   [theme="dark"] {
     .card {
 
-    //   color: $global-border-color-dark !important;
-      box-shadow: 0 6px 10px $global-border-color-dark;
+      //   color: $global-border-color-dark !important;
+      box-shadow: 0 6px 10px var(--global-border-color);
+
       h3 {
         filter: drop-shadow(0 0 10px #03edf9);
       }
     }
+
     .card:hover {
-      box-shadow: 0 10px 20px $global-border-color-dark;
+      box-shadow: 0 10px 20px var(--global-border-color);
     }
   }
 
@@ -55,6 +59,7 @@
     cursor: pointer;
     max-width: 40%;
   }
+
   .card:hover {
     transform: scale(1.05);
   }

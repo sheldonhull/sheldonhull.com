@@ -43,7 +43,7 @@
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "",
   // Use 'postStartCommand' to run commands after the container is created like starting minikube.
-  "postStartCommand": "sudo chown -R vscode /home/vscode/go/ && export GOPATH=/home/vscode/go/ && export PATH=\"${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH\" && echo '🔨 aqua tooling download' && aqua install && echo '✅ aqua install complete' && echo '🔨 running go mod download' && go mod download && echo '✅ go mod download finished' && echo '🔨 downloading build tooling dependencies' && mage && echo '✅ build tooling dependencies complete'",
+  "postStartCommand": "sudo chown -R vscode /home/vscode/go/ && export GOPATH=/home/vscode/go/ && export PATH=\"${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH\" && echo '🔨 aqua tooling download' && aqua install && echo '✅ aqua install complete' && echo '🔨 running go mod download' && go mod download && echo '✅ go mod download finished' && echo '🔨 downloading build tooling dependencies' && go tool mage && echo '✅ build tooling dependencies complete'",
   // Minikube does not like running as root, so use a non-root user.
   "remoteUser": "vscode",
   "containerEnv": {
@@ -55,9 +55,9 @@
     ".devcontainer/init"
   ],
   "hostRequirements": {
-        "storage": "32gb",
-        "cpus": 4,
-        "memory": "8gb"
+    "storage": "32gb",
+    "cpus": 4,
+    "memory": "8gb"
   },
   "features": {
     "ghcr.io/devcontainers/features/common-utils:1": {

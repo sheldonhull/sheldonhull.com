@@ -1,12 +1,9 @@
 ---
 date: "2015-01-13T00:00:00Z"
 slug: dev-tools-file-search
-typora-root-url: ../../../static
-typora-copy-images-to:  ../../../static/images
 tags:
 - sql-server
 title: "Dev Tools: The File Searcher/Launcher to rule them all"
-slug: "dev-tools-the-file-searcher-launcher-to-rule-them-all"
 ---
 
 Why does this not have more recognition? In the experimentation of various file management and launching apps, I've tried several (Launchy, Listary, etc), but none have offered the speed and customization of Find and Run Robot. This app is a life saver for the power user! Here is an example of how you can have a hotkey to immediately launch a customized google search. The group alias gives you extensibility to filter the text you are typing to identify this alias of "Google Me" as the result to use since we typed ? as the first part of the string (that is the anchor ^).

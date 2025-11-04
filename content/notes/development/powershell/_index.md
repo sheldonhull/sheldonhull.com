@@ -13,8 +13,6 @@ toc:
   enable: true
   keepStatic: false
   auto: true
-typora-root-url: ../../static
-typora-copy-images-to: ../../static/images
 ---
 
 With magic like this, why use bash!

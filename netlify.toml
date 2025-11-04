@@ -9,7 +9,7 @@ export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua
 aqua policy allow .aqua/aqua-policy.yaml
 aqua install --tags first
 aqua install --tags ci
-mage init hugo:buildpublic algolia
+go tool mage init hugo:buildpublic algolia
 '''
 publish = "public"
 
@@ -37,7 +37,7 @@ export PATH="$(aqua root-dir)/bin:$PATH"
 aqua policy allow .aqua/aqua-policy.yaml
 aqua install --tags first
 aqua install --tags ci
-mage init build
+go tool mage init build
 '''
 publish = "preview"
 
@@ -58,7 +58,7 @@ export PATH="$(aqua root-dir)/bin:$PATH"
 aqua policy allow .aqua/aqua-policy.yaml
 aqua install --tags first
 aqua install --tags ci
-mage init build
+go tool mage init build
 '''
 
 [context.branch-deploy.environment]

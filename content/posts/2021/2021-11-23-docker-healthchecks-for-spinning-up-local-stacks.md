@@ -12,8 +12,6 @@ tags:
 
 # images: [/images/]
 
-typora-root-url: ../../../static
-typora-copy-images-to:  ../../../static/images
 ---
 
 I've used a few approaches in the past with "wait-for-it" style containers.

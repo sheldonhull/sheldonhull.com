@@ -1,47 +1,55 @@
 // TODO: improve theme for dark/light, still only dark on the btn-default later properties
 [theme="dark"] {
-.btn {
-    color: $global-font-color-dark !important;
+    .btn {
+        color: var(--global-font-color) !important;
+    }
+
+    .btn:hover,
+    .btn:focus {
+        color: var(--single-link-hover-color) !important;
+    }
+
+    .btn-default {
+        color: var(--global-font-color) !important;
+        background-color: var(--header-background-color) !important;
+        border-color: var(--global-border-color) !important;
+    }
+
+    .btn-default:hover,
+    .btn-default:focus,
+    .btn-default:active {
+        color: var(--global-font-color) !important;
+        background-color: var(--header-background-color) !important;
+        border-color: var(--global-border-color) !important;
+    }
 }
-.btn:hover,
-.btn:focus {
-    color: $single-link-hover-color-dark !important;
-}
-.btn-default {
-    color: $global-font-color-dark !important;
-    background-color: $header-background-color-dark !important;
-    border-color: $global-border-color-dark !important;
-}
-.btn-default:hover,
-.btn-default:focus,
-.btn-default:active {
-    color: $global-font-color-dark !important;
-    background-color: $header-background-color-dark !important;
-    border-color: $global-border-color-dark !important;
-}
-}
+
 [theme="light"] {
-.btn {
-    color: $global-font-color !important;
+    .btn {
+        color: var(--global-font-color) !important;
+    }
+
+    .btn:hover,
+    .btn:focus {
+        color: var(--single-link-hover-color) !important;
+    }
+
+    .btn-default {
+        color: var(--global-font-color) !important;
+        background-color: var(--header-background-color) !important;
+        border-color: var(--global-border-color) !important;
+    }
+
+    .btn-default:hover,
+    .btn-default:focus,
+    .btn-default:active {
+        color: var(--global-font-color) !important;
+        background-color: var(--header-background-color) !important;
+        border-color: var(--global-border-color) !important;
+    }
 }
-.btn:hover,
-.btn:focus {
-    color: $single-link-hover-color !important;
-}
-.btn-default {
-    color: $global-font-color !important;
-    background-color: $header-background-color !important;
-    border-color: $global-border-color !important;
-}
-.btn-default:hover,
-.btn-default:focus,
-.btn-default:active {
-    color: $global-font-color !important;
-    background-color: $header-background-color !important;
-    border-color: $global-border-color !important;
-}
-}
-$time-long-fade:10;
+
+$time-long-fade: 10;
 
 .btn {
     display: inline-block !important;
@@ -54,12 +62,12 @@ $time-long-fade:10;
     white-space: nowrap !important;
     vertical-align: middle !important;
     -ms-touch-action: manipulation !important;
-        touch-action: manipulation !important;
+    touch-action: manipulation !important;
     cursor: pointer !important;
     -webkit-user-select: none !important;
-       -moz-user-select: none !important;
-        -ms-user-select: none !important;
-            user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
     background-image: none !important;
     border: 1px solid transparent !important;
     border-radius: 4px !important;
@@ -76,7 +84,7 @@ $time-long-fade:10;
 
 .btn:hover,
 .btn:focus {
-     text-decoration: none !important;
+    text-decoration: none !important;
     @include transition(all $time_long_fade !important);
 }
 

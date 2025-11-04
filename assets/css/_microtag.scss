@@ -1,13 +1,13 @@
 // Microblog on list page
 
 .microtag {
-   overflow:hidden;
-   display:inline-block;
+  overflow: hidden;
+  display: inline-block;
 
   .tag {
-    background: $search-background-color-dark;
+    background: var(--search-background-color);
     border-radius: 3px 0 0 3px;
-    color:$global-font-color-dark;
+    color: var(--global-font-color);
     display: inline-block;
     height: 1.5em;
     line-height: 1.5em;
@@ -19,9 +19,9 @@
   }
 
   .tag::before {
-    background: $global-background-color-dark;
+    background: var(--global-background-color);
     border-radius: 10px;
-    box-shadow: inset 0 1px $global-background-color-dark;
+    box-shadow: inset 0 1px var(--global-background-color);
     // content: '';
     height: 6px;
     left: 10px;
@@ -29,14 +29,14 @@
     width: 6px;
     top: 10px;
     border-bottom: 1em solid transparent;
-    border-left: 1em solid $search-background-color-dark;
+    border-left: 1em solid var(--search-background-color);
     border-top: 1em solid transparent;
   }
 
   .tag::after {
-    background: $global-background-color-dark;
+    background: var(--global-background-color);
     border-bottom: 1em solid transparent;
-    border-left: 1em solid $search-background-color-dark;
+    border-left: 1em solid var(--search-background-color);
     border-top: 1em solid transparent;
     // content: '';
     position: absolute;

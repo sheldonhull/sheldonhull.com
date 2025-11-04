@@ -1,6 +1,6 @@
 [theme="dark"] {
     .microblog {
-        background-color: $header-background-color-dark;
+        background-color: var(--header-background-color);
         box-shadow: 2px 2px 4px rgba(3, 237, 249, 0.034), 4px 4px 8px rgba(3, 237, 249, 0.048),
             6px 6px 8px rgba(3, 237, 249, 0.06), 8px 8px 10px rgba(3, 237, 249, 0.072),
             10px 10px 12px rgba(3, 237, 249, 0.086), 12px 12px 14px rgba(3, 237, 249, 0.12);
@@ -12,14 +12,16 @@
                 10px 10px 12px rgba(3, 237, 249, 0.086), 12px 12px 14px rgba(3, 237, 249, 0.12);
             // margin-bottom: 40p;
         }
+
         &.img {
-            background-color: $global-border-color-dark;
+            background-color: var(--global-border-color);
         }
     }
 }
+
 [theme="light"] {
     .microblog {
-        background-color: $header-background-color;
+        background-color: var(--header-background-color);
     }
 }
 

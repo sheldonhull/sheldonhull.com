@@ -7,6 +7,6 @@
 Common Starting Tasks:
 
 - `glow README.md`
-- `mage -l`
-- `mage -h init`
-- `mage job:setup`
+- `go tool mage -l`
+- `go tool mage -h init`
+- `go tool mage job:setup`
