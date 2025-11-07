@@ -24,3 +24,4 @@ packages:
     tags: ['ci']
   - name: golangci/golangci-lint@v2.6.0
   - name: go-task/task@v3.45.4
+  - name: BurntSushi/ripgrep@15.1.0
