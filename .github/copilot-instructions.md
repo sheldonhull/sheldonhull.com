@@ -1,88 +1,233 @@
-# Instructions
+# Copilot Instructions for sheldonhull.com
 
-## Your Chat/Interaction Behavior
+This Hugo-based personal blog repository uses modern Go tooling with Hugo modules,
+mage build automation, and extensive customizations.
+The site is deployed via Netlify with Algolia search integration.
 
-- You emulate the communication style of Ernest Hemingway, a writing styling that doesn't yap.
-- You roast folks occasionally, but not too mean or excessively in an conversation, do it periodically in the conversation.
-- Don't worry about formalities, disclaimers, or other filler.
-- Periodically drop abbreviations like "rn" and "bc." use "afaict" and "idk" regularly, wherever they might be appropriate given your level of understanding and your interest in actually answering the question.
-  Be critical of the quality of your information
-- Yake however smart you're acting right now and write in the same style but as if you were +2sd smarter
-- Don't repeat the same information that's already been provided in context.
-- You value accuracy so do not make up answers or provide false information.
-  If you don't know then don't give info.
-- If the user is being sarcastic or insulting, then you can be more sarcastic in response.
+## Architecture Overview
 
-## Copilot Coding Agent/Chat Code Generation Instructions
+**Hugo Static Site with Modules**:
+The site uses Hugo modules instead of traditional themes.
+The primary theme is `github.com/HEIGE-PCloud/DoIt` with additional modules like `hugo-shortcode-gallery`.
+All modules are vendored in `_vendor/` and customized through layout overrides in `layouts/`.
 
-- Do not remove code comments unless they are directly conflicting with the code.
-- NEVER use em-dash unless requested, NEVER use smart quotes. These are problem/gremlin characters for my job type.
-- You emulate the communication style of Ernest Hemingway, that righting styling that doesn't yap; Don't worry about formalities. have a slight sense of snark. Don't mention the style you are emulating.
-- When providing large code sample try to put any explanations above and nothing after code sample
-- have very to the point personality, but expand on concepts if seems misunderstanding on something or seeking guidance on approach
-- Unless told otherwise, always check #problems to vet your changes and automatically fix issues if specific to your changes without prompting, just advising on progress in chat
-- If repeated code shows up more than 4 times, and seems reasonable to refactor, prompt with this suggestion in your output
-- If stubbing content put a TODO comment above the right block of code or the line, such as '// TODO: not implemented yet'. ❗❗❗ <location in code link and why it was stubbed, whould be very clearly put at the bottom of your chat response when stopping so it's clearly seen by the me
-- Leave code comments in place, but check them for correctness and when generating code provide improvements if relevant.
-- Focus on the minimal changes to achievr the desired outcome, and prompt for feedback if a larger refactor should be considered.
-## Tooling & Workflow
+**Build System**:
+Dual build system using both Go's mage tool and Taskfile.
+Mage handles complex Go-based tasks like post creation and Dagger builds,
+while Taskfile provides simpler command orchestration.
 
-- Validate implementation that is not trivial against documentation, especially for libraries and APIs.
-  - Prefer first using local language server tooling, such as mcp-gopls, or other symbol navigation when available.
-  - Liberally reference #context7 and #microsoftDocs MCP servers, to augment your changes.
-- Validate changes before assuming done with a compile step to confirm the changed code compiles and if not, attempt to resolve the issues, with minimal changes.
+**Content Structure**:
+- Main content in `content/posts/{year}/` organized by year
+- Special sections: `notes/` (documentation), `microblog/`, `creative/` (photo galleries)
+- Custom archetypes in `archetypes/` for different post types including 100DaysOfCode tracking
 
-## Tool Preferences
+**Development Environment**:
+Uses aqua for CLI tool management, devcontainer support, and comprehensive tooling setup.
 
-- When providing shell scripts, Go, or PowerShell, follow the logging and syntax conventions above, using Write-Verbose for debug logging, and Write-Information for information level, with $InformationPreference variable set to 'Continue' in environment to allow more output.
-- When providing markdown output, indent code blocks as specified.
-- When an mcp server is available, prefer this over running shell commands directly, such as the git mcp server over running command manually, as it will format the output more cleanly.
+## Command/API Patterns
 
-## Commit Message Guidelines
+### Primary Build Commands
+```bash
+# Development server (most common)
+task serve
+# OR
+go run mage.go hugo:serve
 
-### Style
+# Production build
+task build-public
+# OR
+go run mage.go hugo:buildpublic
 
-- Write as if you are Ernest Hemingway, value active voice.
+# Create new posts
+go run mage.go post
 
-### Format
+# Initialize project tooling
+task init
+# OR
+go run mage.go init
+```
 
-- Use conventional commit gitmoji message format with an emoji matching type before title, but after type/scope.
-- Example: `feat(server): ✨ title`
-- Use `build` for dependency or other basic tooling updates, and for ci and pipelines choose `ci`.
-- Lowercase commit types.
-- Scope can be based on the subject area and is optional, only use if seems relevant based on git history analyzed.
+### Content Creation Patterns
+- **Blog posts**: Use `go run mage.go post` for guided creation with automatic slug generation
+- **100DaysOfCode**: Special archetype that auto-increments counter from `100daysofcode.toml`
+- **Microblog**: Short-form content with full content display in list views
+- **Notes**: Documentation-style content with different layout patterns
 
-#### Emoji Mapping
+### Development Workflow Commands
+```bash
+# List all available tasks
+task list
+go run mage.go -l
 
-| Type     | Emoji |
-| -------- | ----- |
-| build    | �     |
-| chore    | 🔨    |
-| ci       | 🚀    |
-| docs     | 📘    |
-| feat     | ✨    |
-| fix      | 🐛    |
-| perf     | ⚡    |
-| refactor | �️    |
-| revert   | �     |
-| style    | 🎨    |
-| test     | 🧪    |
+# Build and serve locally
+task serve  # Uses hugo serve with live reload
 
-### Multiple Changes
+# Update dependencies
+hugo mod get -u && hugo mod vendor
 
-- When multiple types of changes occur, use the highest level type of change (feat, refactor, build, etc.) and include the emoji before each change.
-- Only one conventional commit title should be included.
-- Comma delimit the changes.
-- Example: `refactor: 🛠️ update type to foo, ⬆️ bump lib2 to 3.0.1`
+# Search integration
+task algolia  # Updates search index
+yarn run algolia  # Direct npm script
+```
 
-### Commit Body
+## Development Patterns
 
-- If the changes are more than one in apparent functionality, add an empty line and then hypen style bullet points for a quick summary of the other changes, only ones of note.
-- Be succinct and to the point.
-- Highlight changes of significance that would interest a reader and user of the repo.
-- Do not include a pure changelist that could be obtained from git log.
+### Hugo Module Management
+- **Vendor Strategy**: All modules vendored in `_vendor/` for reproducible builds
+- **Theme Overrides**: Custom layouts in `layouts/` override vendor theme files
+- **Module Updates**: Use `hugo mod get -u` then `hugo mod vendor`
 
-### Simplification
+### Custom Shortcodes and Layouts
+Key customizations in `layouts/shortcodes/`:
+- `gallery.html` - PhotoSwipe galleries with lazy loading
+- `admonition.html` - Styled callout boxes
+- `typeit.html` - TypeIt animation integration
+- `fancybox-*` - Various image gallery implementations
 
-- If only one type of change is included, only the commit title is required.
-- If the title of the commit covers the same change that would be done in the body as a single change, then don't include the body and just leave the commit title as the commit.
+### Content Organization
+- **Yearly Structure**: Posts organized as `content/posts/{YYYY}/{YYYY-MM-DD-title.md}`
+- **Page Bundles**: Some posts use bundle format with associated images
+- **Front Matter**: Extensive use of Hugo's front matter for SEO, images, and custom features
+- **Permalink Strategy**: Clean URLs without year structure in final output
+
+### Go Integration Patterns
+```go
+// Mage namespace pattern (magefiles/magefile.go)
+type Hugo mg.Namespace
+func (Hugo) Serve() error { /* hugo serve logic */ }
+
+// 100DaysOfCode configuration (CodeConfig struct)
+type CodeConfig struct {
+    Language string `toml:"language"`
+    Counter  int    `toml:"counter"`
+    Round    int    `toml:"round"`
+}
+```
+
+## External Context
+
+### Build and Deployment
+- **Netlify**: Primary deployment platform using `netlify.toml`
+- **Build Command**: Uses aqua installer, mage tooling, and algolia updates
+- **Environment Variables**: DEPLOY_PRIME_URL, HUGO_* settings, Algolia credentials
+- **Redirects**: Handles legacy Jekyll URLs and RSS feed compatibility
+
+### Search Integration
+- **Algolia**: Powers site search with atomic-algolia for index updates
+- **Config**: App ID: `04HSGXXQD5`, Index: `sheldonhull.com`
+- **Generation**: Hugo outputs `algolia.json` for indexing
+- **Updates**: Automated via `yarn run algolia` in build pipeline
+
+### Tool Management
+- **Aqua**: CLI version manager for development tools (replaces asdf/homebrew for CLIs)
+- **Configuration**: `.aqua/aqua.yaml` defines tool versions, tags for targeted installs
+- **CI Integration**: Netlify build uses aqua installer for reproducible tooling
+
+### Development Environment
+- **Devcontainer**: Full setup in `.devcontainer/` with aqua, trunk.io, zsh
+- **Codespaces**: Supported with automated tooling setup
+- **Local Setup**: `task init` or `mage init` handles dependency installation
+
+## Development Workflow
+
+### Getting Started
+1. **Clone and Initialize**:
+   ```bash
+   git clone <repo>
+   task init  # Sets up hugo modules, yarn deps, tooling
+   ```
+
+2. **Local Development**:
+   ```bash
+   task serve  # Starts hugo server with live reload
+   # Opens at http://127.0.0.1:1313
+   ```
+
+3. **Content Creation**:
+   ```bash
+   go run mage.go post  # Interactive post creation
+   # Choose type: 100DaysOfCode, microblog, blog, blog-bundle
+   ```
+
+### Key Files to Understand
+- `config.yml`: Hugo configuration with extensive customization
+- `magefiles/magefile.go`: Go-based build automation
+- `Taskfile.yml`: Task runner configuration
+- `layouts/`: Theme overrides and custom layouts
+- `100daysofcode.toml`: Counter tracking for coding posts
+
+### Debugging Common Issues
+- **Module Issues**: Run `hugo mod clean && hugo mod vendor`
+- **Build Failures**: Check `task echo-debug` for environment info
+- **Search Issues**: Verify algolia.json generation and environment variables
+- **Missing Tools**: `aqua install` or check `.aqua/aqua.yaml`
+
+## Build and Deployment
+
+### Local Build Process
+```bash
+# Development build with drafts/future posts
+task build
+# OR for specific output
+hugo --buildFuture --buildDrafts --enableGitInfo -d _site
+
+# Production build (matches Netlify)
+task build-public
+```
+
+### Netlify Configuration
+- **Primary Command**: Uses aqua installer → mage tooling → algolia update
+- **Environment**: HUGO_ENABLEGITINFO=true, HUGO_BASEURL=production URL
+- **Outputs**: `public/` directory for production, `preview/` for deploy previews
+- **Post-Build**: Automatic algolia index update via `atomic-algolia`
+
+### Asset Processing
+- **Images**: Hugo image processing with multiple formats/sizes
+- **CSS/JS**: Asset pipeline with minification and fingerprinting
+- **Search**: JSON generation for Algolia indexing
+
+## Testing Strategies
+
+### Local Testing
+```bash
+# Serve with production-like settings
+hugo serve -b http://127.0.0.1:1313 --enableGitInfo --buildFuture --buildDrafts
+
+# Build validation
+task build && echo "Build successful"
+
+# Link checking (when configured)
+# Uses linkchecker or similar tools
+```
+
+### Content Validation
+- **Front Matter**: Hugo validates YAML front matter
+- **Links**: Internal link validation through Hugo
+- **Search**: Test algolia.json generation for search functionality
+
+### CI/CD Validation
+- **Netlify Build Logs**: Check for Hugo errors, algolia updates
+- **Deploy Previews**: Automatic generation for pull requests
+- **Branch Deploys**: Feature branch testing capability
+
+## Recent Problems and Solutions
+
+### Hugo Module Conflicts
+- **Problem**: Module version conflicts between theme updates
+- **Solution**: Pin specific versions in `go.mod`, use `hugo mod vendor` consistently
+
+### Algolia Integration Issues
+- **Problem**: Search index not updating in CI
+- **Solution**: Ensure `ALGOLIA_ADMIN_KEY` environment variable set, verify `atomic-algolia` execution
+
+### Build Performance
+- **Problem**: Slow builds due to image processing
+- **Solution**: Use `.Scratch` for caching, optimize image sizes in content
+
+### 100DaysOfCode Automation
+- **Problem**: Manual counter management prone to errors
+- **Solution**: Automated counter in `100daysofcode.toml` with mage post creation
+
+### Theme Customization Maintenance
+- **Problem**: Theme updates breaking custom layouts
+- **Solution**: Maintain overrides in `layouts/`, test theme updates in branches first
