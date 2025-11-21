@@ -19,6 +19,9 @@ const {
   theme = 'night-owl'
 } = Astro.props;
 
+// Generate unique ID for SVG filter to avoid conflicts with multiple gists
+const filterId = `glass-distortion-${gistId.substring(0, 8)}`;
+
 // Fetch gist data from GitHub API at build time
 const apiUrl = `https://api.github.com/gists/${gistId}`;
 let gistContent = '';
@@ -54,19 +57,116 @@ try {
   gistContent = `// Error loading gist content: ${error}`;
 }
 
+// Map GitHub language names to Shiki-compatible names
+const languageMap: Record<string, string> = {
+  'ignore list': 'text',
+  'shell': 'bash',
+  'shell script': 'bash',
+};
+
+// Apply language mapping and fallback
+const mappedLanguage = languageMap[detectedLanguage] || detectedLanguage;
+
 // Syntax highlight with Shiki
-const highlighted = await codeToHtml(gistContent, {
-  lang: detectedLanguage,
-  theme: theme,
-  structure: 'classic'
-});
+let highlighted: string;
+try {
+  highlighted = await codeToHtml(gistContent, {
+    lang: mappedLanguage,
+    theme: theme,
+    structure: 'classic'
+  });
+} catch (err) {
+  // If language is not supported, fall back to plaintext
+  console.warn(`Language "${mappedLanguage}" not supported by Shiki, falling back to text`);
+  highlighted = await codeToHtml(gistContent, {
+    lang: 'text',
+    theme: theme,
+    structure: 'classic'
+  });
+}
 ---
 
-<div class="gist-window-container group my-8">
-  <div class="gist-window relative overflow-hidden rounded-xl border border-white/10 bg-slate-900/75 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+<!-- SVG Filter Definition for True Liquid Glass Distortion -->
+<svg class="absolute w-0 h-0" aria-hidden="true">
+  <defs>
+    <filter id={filterId} x="0%" y="0%" width="100%" height="100%">
+      <!-- Create fractal noise for organic liquid texture with animation -->
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.01 0.01"
+        numOctaves="2"
+        result="turbulence"
+      >
+        <animate
+          attributeName="baseFrequency"
+          values="0.01 0.01;0.015 0.012;0.01 0.01"
+          dur="10s"
+          repeatCount="indefinite"
+        />
+      </feTurbulence>
 
-    <!-- macOS Window Chrome -->
-    <div class="window-chrome flex items-center gap-4 border-b border-white/5 bg-gradient-to-b from-slate-800/95 to-slate-900/95 px-4 py-3 backdrop-blur-sm">
+      <!-- Smooth the turbulence -->
+      <feGaussianBlur in="turbulence" stdDeviation="3" result="blur" />
+
+      <!-- Add specular lighting for glass reflection -->
+      <feSpecularLighting
+        in="blur"
+        surfaceScale="5"
+        specularConstant="0.75"
+        specularExponent="20"
+        lighting-color="#93c5fd"
+        result="specular"
+      >
+        <fePointLight x="-200" y="-200" z="300" />
+      </feSpecularLighting>
+
+      <!-- Composite the lighting -->
+      <feComposite
+        in="specular"
+        in2="SourceAlpha"
+        operator="in"
+        result="specularComposite"
+      />
+
+      <!-- Apply displacement for liquid distortion with animated scale -->
+      <feDisplacementMap
+        in="SourceGraphic"
+        in2="blur"
+        scale="25"
+        xChannelSelector="R"
+        yChannelSelector="G"
+      >
+        <animate
+          attributeName="scale"
+          values="20;30;20"
+          dur="8s"
+          repeatCount="indefinite"
+        />
+      </feDisplacementMap>
+    </filter>
+  </defs>
+</svg>
+
+<div class="gist-window-container group my-8">
+  <div class="gist-window liquid-glass-morph relative overflow-hidden rounded-xl border border-white/10 bg-slate-900/90 shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:shadow-[0_25px_80px_rgba(0,0,0,0.6),0_0_60px_rgba(147,197,253,0.2)] active:scale-[0.98]">
+
+    <div class="relative z-10">
+
+    <!-- macOS Window Chrome with Liquid Glass Effect -->
+    <div class="window-chrome-wrapper relative">
+      <!-- SVG Liquid Glass Effect Layer - ONLY on titlebar -->
+      <div class="liquid-glass-effect absolute inset-0 rounded-t-xl pointer-events-none opacity-40 transition-all duration-700 group-hover:opacity-70" style={`filter: url(#${filterId})`}></div>
+
+      <!-- Tint Layer for glass color -->
+      <div class="liquid-glass-tint absolute inset-0 rounded-t-xl bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10 pointer-events-none transition-opacity duration-500 group-hover:opacity-80"></div>
+
+      <!-- Shine Layer for glass highlights -->
+      <div class="liquid-glass-shine absolute inset-0 rounded-t-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-500" style="box-shadow: inset 3px 3px 2px 0 rgba(255, 255, 255, 0.4), inset -2px -2px 2px 2px rgba(255, 255, 255, 0.3);"></div>
+
+      <!-- Liquid ripple overlay -->
+      <div class="liquid-ripple-overlay absolute inset-0 rounded-t-xl pointer-events-none opacity-0"></div>
+
+    <div class="window-chrome relative z-10 flex items-center gap-4 border-b border-white/5 bg-slate-800/60 backdrop-blur-[40px] backdrop-saturate-[180%] px-4 py-3 transition-all duration-500 group-hover:backdrop-blur-[60px]">
 
       <!-- Control Dots -->
       <div class="chrome-buttons flex gap-2">
@@ -111,9 +211,10 @@ const highlighted = await codeToHtml(gistContent, {
         </a>
       </div>
     </div>
+    </div> <!-- Close window-chrome-wrapper -->
 
-    <!-- Code Content -->
-    <div class="window-content relative">
+    <!-- Code Content with stable background -->
+    <div class="window-content relative bg-slate-900">
       <!-- Copy Button -->
       <button
         class="copy-button absolute right-3 top-3 z-10 rounded-md border border-white/10 bg-slate-800/80 px-3 py-1.5 text-xs text-slate-300 backdrop-blur-sm transition-all hover:bg-slate-700/80 hover:text-white active:scale-95"
@@ -129,12 +230,169 @@ const highlighted = await codeToHtml(gistContent, {
         <Fragment set:html={highlighted} />
       </div>
     </div>
+    </div> <!-- Close relative z-10 wrapper -->
   </div>
 </div>
 
 <style>
+  /* Scroll animation setup */
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-animate.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* ============================================ */
+  /* LIQUID GLASS EFFECTS */
+  /* ============================================ */
+
+  /* Liquid glass morphing animation - more dramatic and visible */
+  @keyframes liquid-morph {
+    0%, 100% {
+      backdrop-filter: blur(40px) saturate(180%) brightness(1);
+    }
+    50% {
+      backdrop-filter: blur(48px) saturate(200%) brightness(1.05);
+    }
+  }
+
+  /* Liquid shimmer animation for border - enhanced */
+  @keyframes liquid-shimmer {
+    0% {
+      background-position: 0% 50%;
+      opacity: 0.5;
+    }
+    50% {
+      background-position: 100% 50%;
+      opacity: 1;
+    }
+    100% {
+      background-position: 0% 50%;
+      opacity: 0.5;
+    }
+  }
+
+  /* Liquid ripple effect */
+  @keyframes liquid-ripple {
+    0% {
+      transform: scale(0);
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  /* Glass wobble on click - subtle movement */
+  @keyframes liquid-wobble {
+    0%, 100% {
+      transform: translateY(-2px) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-1px) scale(0.995) rotate(-0.5deg);
+    }
+    50% {
+      transform: translateY(-3px) scale(1.005) rotate(0.5deg);
+    }
+    75% {
+      transform: translateY(-2px) scale(0.998) rotate(-0.25deg);
+    }
+  }
+
+  /* Pulsing glow effect */
+  @keyframes liquid-glow {
+    0%, 100% {
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(147, 197, 253, 0.1);
+    }
+    50% {
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(147, 197, 253, 0.3),
+        0 0 80px rgba(167, 139, 250, 0.2);
+    }
+  }
+
+  /* Base liquid glass morphing styles - stable window */
+  .liquid-glass-morph {
+    will-change: transform;
+    /* Smooth transitions for scroll-based jelly wobble */
+    transition: transform 0.1s ease-out;
+  }
+
+  /* Enhanced glassmorphism on hover with pulsing glow */
+  .gist-window-container:hover .liquid-glass-morph {
+    animation: liquid-glow 3s ease-in-out infinite;
+  }
+
+  /* Window chrome wrapper - contains liquid glass effects */
+  .window-chrome-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem 0.75rem 0 0; /* Rounded top corners only */
+  }
+
+  /* Liquid glass effect layer - only on titlebar */
+  .liquid-glass-effect {
+    background: rgba(147, 197, 253, 0.02);
+  }
+
+  /* Animated shimmer border */
+  .liquid-border {
+    background-size: 200% 200%;
+    animation: liquid-shimmer 4s ease infinite;
+  }
+
+  /* Liquid ripple overlay styling - more visible */
+  .liquid-ripple-overlay {
+    background: radial-gradient(circle at center, rgba(147, 197, 253, 0.4) 0%, transparent 70%);
+    transition: opacity 0.3s ease;
+    border-radius: inherit;
+    mix-blend-mode: screen;
+  }
+
+  /* Wobble animation on click - subtle */
+  .liquid-glass-morph.wobble {
+    animation: liquid-wobble 0.5s ease-out;
+  }
+
+  /* Glass refraction effect removed - too much motion */
+  /* Keeping the keyframe definition in case we want to re-enable */
+  @keyframes glass-shine {
+    0% {
+      left: -100%;
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      left: 200%;
+      opacity: 0;
+    }
+  }
+
+  /* Code content - stable background, no color shifting */
+  .window-content {
+    background: rgb(15, 23, 42) !important; /* Solid slate-900 */
+    isolation: isolate; /* Prevent filter effects from parent */
+  }
+
   .gist-window-container :global(.shiki) {
-    background: transparent !important;
+    background: rgb(15, 23, 42) !important; /* Solid slate-900 - prevents color shifting */
     margin: 0;
     padding: 0;
   }
@@ -144,16 +402,17 @@ const highlighted = await codeToHtml(gistContent, {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-bottom: 1.rem;
     font-size: 0.875rem;
     line-height: 1.625;
+    background: inherit; /* Inherit stable background */
   }
 
   .gist-window-container :global(.shiki .line) {
     min-height: 1.5rem;
   }
 
-  /* Scrollbar styling */
+  /* Scrollbar styling with liquid glass effect */
   .code-block {
     scrollbar-width: thin;
     scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
@@ -164,22 +423,46 @@ const highlighted = await codeToHtml(gistContent, {
   }
 
   .code-block::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .code-block::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.3);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 4px;
   }
 
+  .code-block::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg,
+      rgba(147, 197, 253, 0.3) 0%,
+      rgba(167, 139, 250, 0.3) 50%,
+      rgba(244, 114, 182, 0.3) 100%);
+    border-radius: 4px;
+    transition: background 0.3s;
+  }
+
   .code-block::-webkit-scrollbar-thumb:hover {
-    background: rgba(148, 163, 184, 0.5);
+    background: linear-gradient(90deg,
+      rgba(147, 197, 253, 0.5) 0%,
+      rgba(167, 139, 250, 0.5) 50%,
+      rgba(244, 114, 182, 0.5) 100%);
   }
 </style>
 
 <script>
-  // Copy button functionality
-  document.addEventListener('astro:page-load', () => {
+  // Initialize function
+  function initGistEffects() {
+    // ============================================
+    // LIQUID GLASS INTERACTIVE EFFECTS
+    // ============================================
+
+    // Add wobble effect to gist windows
+    const gistWindows = document.querySelectorAll('.gist-window.liquid-glass-morph');
+
+    gistWindows.forEach((window) => {
+      // Subtle wobble on mousedown
+      window.addEventListener('mousedown', function(e) {
+        this.classList.add('wobble');
+        setTimeout(() => this.classList.remove('wobble'), 500);
+      });
+    });
+
+    // Copy button functionality
     const copyButtons = document.querySelectorAll('.copy-button');
 
     copyButtons.forEach(button => {
@@ -210,5 +493,90 @@ const highlighted = await codeToHtml(gistContent, {
         }
       });
     });
+
+    // Scroll animation with flex effect and liquid glass activation
+    const gistContainers = document.querySelectorAll('.gist-window-container');
+
+    // Intersection Observer for initial fade-in and liquid glass activation
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, observerOptions);
+
+    gistContainers.forEach(container => {
+      observer.observe(container);
+    });
+
+    // Scroll-based parallax flex effect
+    let ticking = false;
+
+    function updateGistPositions() {
+      gistContainers.forEach(container => {
+        if (!container.classList.contains('in-view')) return;
+
+        const rect = container.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        // Only apply effect when element is visible
+        if (rect.top < viewportHeight && rect.bottom > 0) {
+          // Calculate scroll progress (0 to 1) as element moves through viewport
+          const scrollProgress = 1 - (rect.top + rect.height / 2) / viewportHeight;
+          const clampedProgress = Math.max(0, Math.min(1, scrollProgress));
+
+          // Apply liquid jelly wobble effect - subtle movement
+          const gistWindow = container.querySelector('.gist-window.liquid-glass-morph');
+          if (gistWindow) {
+            // Jelly wave motion - subtle
+            const flex = Math.sin(clampedProgress * Math.PI * 2) * 3; // Subtle wobble up/down
+
+            // Scale wobble - very subtle jelly squish effect
+            const scaleX = 1 + (Math.sin(clampedProgress * Math.PI * 2) * 0.008);
+            const scaleY = 1 - (Math.sin(clampedProgress * Math.PI * 2) * 0.005);
+
+            // Rotation wobble - liquid sway
+            const rotation = Math.sin(clampedProgress * Math.PI * 2) * 0.3;
+
+            gistWindow.style.transform = `translateY(${flex}px) scale(${scaleX}, ${scaleY}) rotate(${rotation}deg)`;
+          }
+        }
+      });
+
+      ticking = false;
+    }
+
+    function requestTickFunction() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateGistPositions);
+        ticking = true;
+      }
+    }
+
+    // Throttled scroll listener
+    window.addEventListener('scroll', requestTickFunction, { passive: true });
+
+    // Initial position update
+    updateGistPositions();
+  } // End initGistEffects
+
+  // Run on Astro page load
+  document.addEventListener('astro:page-load', () => {
+    initGistEffects();
   });
+
+  // Also run immediately in case astro:page-load doesn't fire
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initGistEffects();
+    });
+  } else {
+    initGistEffects();
+  }
 </script>

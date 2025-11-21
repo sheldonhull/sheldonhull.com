@@ -8,33 +8,30 @@ import GistWindow from '../components/GistWindow.astro';
     <h1 class="mb-2 text-4xl font-bold text-slate-100">Beautiful Gist Display Demo</h1>
     <p class="mb-12 text-slate-400">Showcasing GitHub gists with macOS-style window chrome and glassmorphism effects</p>
 
-    <!-- Example 1: With custom title -->
+    <!-- Example 1: Working Gist -->
     <section class="mb-16">
-      <h2 class="mb-4 text-2xl font-semibold text-slate-200">Example 1: TypeScript Code</h2>
-      <p class="mb-6 text-sm text-slate-400">A beautiful window with custom title and TypeScript syntax highlighting</p>
+      <h2 class="mb-4 text-2xl font-semibold text-slate-200">Example 1: Markdown Documentation</h2>
+      <p class="mb-6 text-sm text-slate-400">A beautiful window displaying a README with markdown syntax highlighting</p>
 
-      <!-- Replace with your actual gist -->
-      <GistWindow
-        user="example"
-        gistId="your-gist-id-here"
-        title="TypeScript Example"
-        lang="typescript"
-      />
-    </section>
-<script src="https://gist.github.com/sheldonhull/9e608da09f84fac600d921e3f0867226.js"></script>
-
-    <!-- Example 2: Go code -->
-    <section class="mb-16">
-      <h2 class="mb-4 text-2xl font-semibold text-slate-200">Example 2: Go Code</h2>
-      <p class="mb-6 text-sm text-slate-400">Golang syntax with glassmorphism background</p>
-
-      <!-- Real gist example -->
       <GistWindow
         user="sheldonhull"
         gistId="9e608da09f84fac600d921e3f0867226"
         filename="README.md"
         title="Run Test Documentation"
         lang="markdown"
+      />
+    </section>
+
+    <!-- Example 2: Same gist, different file -->
+    <section class="mb-16">
+      <h2 class="mb-4 text-2xl font-semibold text-slate-200">Example 2: Configuration File</h2>
+      <p class="mb-6 text-sm text-slate-400">Showing a .gitignore file from the same gist</p>
+
+      <GistWindow
+        user="sheldonhull"
+        gistId="9e608da09f84fac600d921e3f0867226"
+        filename=".gitignore"
+        title="Git Ignore Configuration"
       />
     </section>
 
@@ -79,9 +76,12 @@ import GistWindow from '../components/GistWindow.astro';
           <h3 class="mb-2 text-sm font-medium text-slate-300">Features:</h3>
           <ul class="list-inside list-disc space-y-1 text-sm text-slate-400">
             <li>macOS-style window chrome with interactive colored dots</li>
-            <li>Glassmorphism effect with backdrop blur</li>
-            <li>Smooth hover animations</li>
-            <li>One-click copy button</li>
+            <li>Liquid glass effect with enhanced backdrop blur and saturation</li>
+            <li>Scroll-based parallax flex animation</li>
+            <li>Animated gradient border on hover</li>
+            <li>Smooth fade-in animations when scrolling into view</li>
+            <li>One-click copy button with visual feedback</li>
+            <li>Beautiful gradient scrollbar styling</li>
             <li>Direct link to GitHub gist</li>
             <li>Responsive design</li>
             <li>Build-time gist fetching (no client-side API calls)</li>
