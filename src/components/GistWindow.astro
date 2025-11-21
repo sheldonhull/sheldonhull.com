@@ -1,0 +1,214 @@
+---
+import { codeToHtml } from 'shiki';
+
+interface Props {
+  user: string;
+  gistId: string;
+  filename?: string;
+  title?: string;
+  lang?: string;
+  theme?: string;
+}
+
+const {
+  user,
+  gistId,
+  filename,
+  title = filename || 'Code',
+  lang = 'typescript',
+  theme = 'night-owl'
+} = Astro.props;
+
+// Fetch gist data from GitHub API at build time
+const apiUrl = `https://api.github.com/gists/${gistId}`;
+let gistContent = '';
+let detectedLanguage = lang;
+let gistUrl = `https://gist.github.com/${user}/${gistId}`;
+
+try {
+  const response = await fetch(apiUrl);
+  if (!response.ok) {
+    throw new Error(`GitHub API error: ${response.status}`);
+  }
+
+  const gistData = await response.json();
+
+  // Get the specific file or first file
+  if (filename && gistData.files[filename]) {
+    gistContent = gistData.files[filename].content;
+    detectedLanguage = gistData.files[filename].language?.toLowerCase() || lang;
+  } else if (filename) {
+    // Requested file not found - show available files
+    const availableFiles = Object.keys(gistData.files).join(', ');
+    console.error(`File "${filename}" not found in gist. Available files: ${availableFiles}`);
+    gistContent = `// Error: File "${filename}" not found in gist\n// Available files: ${availableFiles}`;
+  } else {
+    // Get first file
+    const firstFile = Object.values(gistData.files)[0] as any;
+    gistContent = firstFile.content;
+    detectedLanguage = firstFile.language?.toLowerCase() || lang;
+    gistUrl += `#file-${firstFile.filename.replace(/\./g, '-')}`;
+  }
+} catch (error) {
+  console.error('Error fetching gist:', error);
+  gistContent = `// Error loading gist content: ${error}`;
+}
+
+// Syntax highlight with Shiki
+const highlighted = await codeToHtml(gistContent, {
+  lang: detectedLanguage,
+  theme: theme,
+  structure: 'classic'
+});
+---
+
+<div class="gist-window-container group my-8">
+  <div class="gist-window relative overflow-hidden rounded-xl border border-white/10 bg-slate-900/75 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+
+    <!-- macOS Window Chrome -->
+    <div class="window-chrome flex items-center gap-4 border-b border-white/5 bg-gradient-to-b from-slate-800/95 to-slate-900/95 px-4 py-3 backdrop-blur-sm">
+
+      <!-- Control Dots -->
+      <div class="chrome-buttons flex gap-2">
+        <button
+          class="chrome-dot close relative h-3 w-3 rounded-full bg-gradient-to-br from-red-500 to-red-600 shadow-sm ring-1 ring-black/20 transition-all hover:ring-2 hover:ring-red-400/50"
+          aria-label="Close"
+        >
+          <span class="dot-icon absolute inset-0 flex items-center justify-center text-[8px] font-bold text-black/70 opacity-0 transition-opacity group-hover:opacity-100">×</span>
+        </button>
+        <button
+          class="chrome-dot minimize relative h-3 w-3 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 shadow-sm ring-1 ring-black/20 transition-all hover:ring-2 hover:ring-yellow-400/50"
+          aria-label="Minimize"
+        >
+          <span class="dot-icon absolute inset-0 flex items-center justify-center text-[8px] font-bold text-black/70 opacity-0 transition-opacity group-hover:opacity-100">−</span>
+        </button>
+        <button
+          class="chrome-dot maximize relative h-3 w-3 rounded-full bg-gradient-to-br from-green-500 to-green-600 shadow-sm ring-1 ring-black/20 transition-all hover:ring-2 hover:ring-green-400/50"
+          aria-label="Maximize"
+        >
+          <span class="dot-icon absolute inset-0 flex items-center justify-center text-[8px] font-bold text-black/70 opacity-0 transition-opacity group-hover:opacity-100">+</span>
+        </button>
+      </div>
+
+      <!-- Title -->
+      <div class="chrome-title flex-1 text-center text-sm font-medium text-slate-300">
+        {title}
+      </div>
+
+      <!-- Actions -->
+      <div class="chrome-actions">
+        <a
+          href={gistUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex h-7 items-center gap-1.5 rounded-md bg-slate-800/50 px-2.5 text-xs text-slate-400 transition-colors hover:bg-slate-700/50 hover:text-slate-300"
+          title="View on GitHub"
+        >
+          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Code Content -->
+    <div class="window-content relative">
+      <!-- Copy Button -->
+      <button
+        class="copy-button absolute right-3 top-3 z-10 rounded-md border border-white/10 bg-slate-800/80 px-3 py-1.5 text-xs text-slate-300 backdrop-blur-sm transition-all hover:bg-slate-700/80 hover:text-white active:scale-95"
+        data-code={gistContent}
+        aria-label="Copy code"
+      >
+        <span class="copy-text">Copy</span>
+        <span class="copied-text hidden">✓ Copied!</span>
+      </button>
+
+      <!-- Syntax Highlighted Code -->
+      <div class="code-block overflow-x-auto">
+        <Fragment set:html={highlighted} />
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .gist-window-container :global(.shiki) {
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  .gist-window-container :global(.shiki code) {
+    display: block;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  .gist-window-container :global(.shiki .line) {
+    min-height: 1.5rem;
+  }
+
+  /* Scrollbar styling */
+  .code-block {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+  }
+
+  .code-block::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .code-block::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .code-block::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 4px;
+  }
+
+  .code-block::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.5);
+  }
+</style>
+
+<script>
+  // Copy button functionality
+  document.addEventListener('astro:page-load', () => {
+    const copyButtons = document.querySelectorAll('.copy-button');
+
+    copyButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        const code = button.getAttribute('data-code');
+        if (!code) return;
+
+        try {
+          await navigator.clipboard.writeText(code);
+
+          // Show feedback
+          const copyText = button.querySelector('.copy-text');
+          const copiedText = button.querySelector('.copied-text');
+
+          if (copyText && copiedText) {
+            copyText.classList.add('hidden');
+            copiedText.classList.remove('hidden');
+            button.classList.add('bg-green-600/80', 'border-green-500/50');
+
+            setTimeout(() => {
+              copyText.classList.remove('hidden');
+              copiedText.classList.add('hidden');
+              button.classList.remove('bg-green-600/80', 'border-green-500/50');
+            }, 2000);
+          }
+        } catch (err) {
+          console.error('Failed to copy:', err);
+        }
+      });
+    });
+  });
+</script>
