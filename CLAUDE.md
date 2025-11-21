@@ -1,7 +1,3 @@
-# Additional Conventions Beyond the Built-in Functions
-
-As this project's AI coding tool, you must follow the additional conventions below, in addition to the built-in functions.
-
 # Copilot Instructions for sheldonhull.com
 
 This Hugo-based personal blog repository uses modern Go tooling with Hugo modules,
