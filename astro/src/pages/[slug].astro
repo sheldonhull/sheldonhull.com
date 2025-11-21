@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map(post => ({
+    params: { slug: post.data.slug || post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+// Helper function to format date
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(date);
+}
+
+const formattedDate = formatDate(post.data.date);
+---
+
+<BaseLayout title={`${post.data.title} - Sheldon Hull`} description={post.data.title}>
+  <article class="max-w-3xl mx-auto">
+    <!-- Back link -->
+    <div class="mb-8">
+      <a
+        href="/posts"
+        class="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-100 transition-colors text-sm"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to posts
+      </a>
+    </div>
+
+    <!-- Post header -->
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4 text-zinc-100">
+        {post.data.title}
+      </h1>
+      <div class="flex items-center gap-4 text-sm text-zinc-400">
+        <time datetime={post.data.date.toISOString()}>
+          {formattedDate}
+        </time>
+        {post.data.authors && post.data.authors.length > 0 && (
+          <>
+            <span class="text-zinc-700">•</span>
+            <span>{post.data.authors.join(', ')}</span>
+          </>
+        )}
+      </div>
+      {post.data.tags && post.data.tags.length > 0 && (
+        <div class="flex gap-2 mt-4 flex-wrap">
+          {post.data.tags.map(tag => (
+            <span
+              key={tag}
+              class="text-xs text-zinc-400 bg-zinc-900/50 border border-zinc-800 px-3 py-1 rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <!-- Post content -->
+    <div class="prose prose-invert prose-zinc max-w-none
+      prose-headings:text-zinc-100
+      prose-p:text-zinc-300
+      prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300
+      prose-strong:text-zinc-100
+      prose-code:text-pink-400 prose-code:bg-zinc-900/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+      prose-pre:bg-zinc-900/50 prose-pre:border prose-pre:border-zinc-800
+      prose-blockquote:border-l-blue-500 prose-blockquote:text-zinc-400
+      prose-ul:text-zinc-300
+      prose-ol:text-zinc-300
+      prose-li:text-zinc-300
+    ">
+      <Content />
+    </div>
+
+    <!-- Post footer -->
+    <footer class="mt-16 pt-8 border-t border-zinc-800">
+      <a
+        href="/posts"
+        class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        View all posts
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

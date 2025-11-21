@@ -1,0 +1,51 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Sheldon Hull",
+  description = "Tech blog and digital garden by Sheldon Hull"
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-zinc-950 text-zinc-100">
+    <nav class="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-sm">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <a href="/" class="text-xl font-bold text-zinc-100 hover:text-zinc-300 transition-colors">
+            Sheldon Hull
+          </a>
+          <div class="flex gap-6">
+            <a href="/" class="text-zinc-400 hover:text-zinc-100 transition-colors">Home</a>
+            <a href="/posts" class="text-zinc-400 hover:text-zinc-100 transition-colors">Posts</a>
+            <a href="/about" class="text-zinc-400 hover:text-zinc-100 transition-colors">About</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-12">
+      <slot />
+    </main>
+
+    <footer class="border-t border-zinc-800 mt-16">
+      <div class="container mx-auto px-4 py-8 text-center text-zinc-500 text-sm">
+        <p>&copy; {new Date().getFullYear()} Sheldon Hull. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

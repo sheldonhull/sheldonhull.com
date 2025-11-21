@@ -304,3 +304,28 @@ tasks:
   #   desc: run formatters
   #   cmds:
   #     - yarn prettier --write # ./layouts/
+
+  # === Astro Tasks ===
+  astro:serve:
+    desc: Start Astro development server
+    dir: astro
+    cmds:
+      - export VOLTA_HOME="$HOME/.volta" && export PATH="$VOLTA_HOME/bin:$PATH" && npm run dev
+
+  astro:build:
+    desc: Build Astro site for production
+    dir: astro
+    cmds:
+      - export VOLTA_HOME="$HOME/.volta" && export PATH="$VOLTA_HOME/bin:$PATH" && npm run build
+
+  astro:preview:
+    desc: Preview Astro production build
+    dir: astro
+    cmds:
+      - export VOLTA_HOME="$HOME/.volta" && export PATH="$VOLTA_HOME/bin:$PATH" && npm run preview
+
+  astro:install:
+    desc: Install Astro dependencies
+    dir: astro
+    cmds:
+      - export VOLTA_HOME="$HOME/.volta" && export PATH="$VOLTA_HOME/bin:$PATH" && npm install
