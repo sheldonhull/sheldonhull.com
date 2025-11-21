@@ -1,0 +1,164 @@
+// ============================================
+// Liquid Glass Effect for Menu Items
+// ============================================
+// Adds a modern glassmorphism effect with liquid animations
+// to navigation menu items, complementing the existing cyan glow
+
+// Mixin for reusable liquid glass effect
+@mixin liquid-glass-base($bg-opacity, $blur-amount, $border-opacity) {
+  -webkit-backdrop-filter: blur($blur-amount) saturate(180%);
+  backdrop-filter: blur($blur-amount) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, $border-opacity);
+  @include transition(all 0.35s cubic-bezier(0.4, 0, 0.2, 1));
+  position: relative;
+  overflow: hidden;
+
+  // Subtle highlight for glass depth
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%);
+    opacity: 0;
+    @include transition(opacity 0.3s ease);
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+// Liquid ripple animation on click
+@keyframes liquid-ripple {
+  0% {
+    @include transform(scale(0.98));
+    opacity: 0.8;
+  }
+
+  50% {
+    @include transform(scale(1.01));
+  }
+
+  100% {
+    @include transform(scale(1));
+    opacity: 1;
+  }
+}
+
+
+// Base styles for all menu items
+.menu .menu-item {
+  will-change: backdrop-filter, background;
+  border-radius: 6px;
+  margin: 0 0.25rem;
+  padding: 0.35rem 0.75rem;
+
+  // Fallback for browsers without backdrop-filter support
+  background: transparent;
+
+  @include transition(all 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+// Enhanced glass effect for supporting browsers
+@supports ((-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px))) {
+
+  // Dark theme glass effect
+  [theme="dark"] {
+
+    // Special handling for search to exclude from glass effect
+    .menu-item#search-desktop {
+      &:hover {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: transparent;
+      }
+    }
+  }
+
+  // Light theme glass effect
+  [theme="light"] {
+    .menu .menu-item {
+
+      &:hover,
+      &:focus {
+        @include liquid-glass-base(0.15, 10px, 0.2);
+        background: rgba(255, 255, 255, 0.25);
+        @include box-shadow(0 4px 16px rgba(0, 0, 0, 0.1),
+          inset 0 1px 1px rgba(255, 255, 255, 0.4),
+          inset 0 -1px 1px rgba(0, 0, 0, 0.05));
+      }
+
+      &:active {
+        animation: liquid-ripple 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      &.active {
+        @include liquid-glass-base(0.2, 8px, 0.3);
+        background: rgba(255, 255, 255, 0.35);
+        border-bottom: 2px solid rgba(97, 173, 255, 0.8);
+        @include box-shadow(0 2px 8px rgba(0, 0, 0, 0.12),
+          inset 0 1px 1px rgba(255, 255, 255, 0.5));
+      }
+    }
+  }
+}
+
+// Fallback for browsers without backdrop-filter
+.menu .menu-item {
+
+  &:hover,
+  &:focus {
+    [theme="dark"] & {
+      background: rgba(3, 237, 249, 0.2);
+      @include box-shadow(0 2px 8px rgba(3, 237, 249, 0.3));
+    }
+
+    [theme="light"] & {
+      background: rgba(0, 0, 0, 0.08);
+      @include box-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+    }
+  }
+
+  &.active {
+    [theme="dark"] & {
+      background: rgba(3, 237, 249, 0.25);
+      border-bottom: 2px solid #03edf9;
+    }
+
+    [theme="light"] & {
+      background: rgba(97, 173, 255, 0.2);
+      border-bottom: 2px solid #61adff;
+    }
+  }
+}
+
+// Mobile menu glass adjustments
+#header-mobile {
+  .menu .menu-item {
+    border-radius: 4px;
+    margin: 0.25rem 0;
+    padding: 0.5rem 1rem;
+
+    &:hover {
+
+      // Slightly stronger effect on mobile for touch targets
+      @supports (backdrop-filter: blur(10px)) {
+        backdrop-filter: blur(14px) saturate(180%);
+        -webkit-backdrop-filter: blur(14px) saturate(180%);
+      }
+    }
+  }
+}
+
+// Performance optimization: remove will-change after transition
+.menu .menu-item {
+  &:hover {
+    @include transition(all 0.35s cubic-bezier(0.4, 0, 0.2, 1), will-change 0.5s ease 0.35s);
+  }
+}
