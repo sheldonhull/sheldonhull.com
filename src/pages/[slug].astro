@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { humanizeDate, formatDate } from '../utils/date';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -13,15 +14,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await post.render();
 
-// Helper function to format date
-function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }).format(date);
-}
-
+const humanizedDate = humanizeDate(post.data.date);
 const formattedDate = formatDate(post.data.date);
 ---
 
@@ -47,8 +40,8 @@ const formattedDate = formatDate(post.data.date);
         {post.data.title}
       </h1>
       <div class="flex items-center gap-4 text-sm" style="color: var(--sw-text-muted);">
-        <time datetime={post.data.date.toISOString()}>
-          {formattedDate}
+        <time datetime={post.data.date.toISOString()} title={formattedDate}>
+          {humanizedDate}
         </time>
         {post.data.authors && post.data.authors.length > 0 && (
           <>
