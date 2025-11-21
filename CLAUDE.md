@@ -231,3 +231,4 @@ task build && echo "Build successful"
 ### Theme Customization Maintenance
 - **Problem**: Theme updates breaking custom layouts
 - **Solution**: Maintain overrides in `layouts/`, test theme updates in branches first
+- add short synopsis of resources you used and that it's still a work in progress to your memory
