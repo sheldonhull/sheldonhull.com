@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import netlify from '@astrojs/netlify';
 
 import tailwindcss from '@tailwindcss/vite';
 import { mdxAutoImports } from './src/plugins/mdx-auto-imports.ts';
@@ -12,6 +13,7 @@ const NETLIFY_PREVIEW_SITE = process.env.CONTEXT !== 'production' && process.env
 export default defineConfig({
   site: NETLIFY_PREVIEW_SITE || 'https://www.sheldonhull.com/',
   outDir: '.artifacts/public',
+  adapter: netlify(),
   integrations: [
     mdx({
       // Automatically inject imports for components like GistWindow

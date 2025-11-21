@@ -6,6 +6,7 @@ output: prefixed
 silent: true
 env:
   VOLTA_HOME: "$HOME/.volta"
+  PATH: "$HOME/.volta/bin:$PATH"
   DOCKER_BUILDKIT: 1
 vars:
   DATA_DIR: ./data
@@ -76,7 +77,7 @@ tasks:
       - echo "GIT_COMMIT_SHA       = $GIT_COMMIT_SHA"
       - echo "GIT_COMMIT_SHA_SHORT = $GIT_COMMIT_SHA_SHORT"
       - echo "NODE_VERSION         = $(node --version)"
-      - echo "NPM_VERSION          = $(npm --version)"
+      - echo "YARN_VERSION         = $(yarn --version)"
 
   init:
     desc: Initialize project to ensure dependencies and tooling is ready
@@ -86,19 +87,19 @@ tasks:
   astro:serve:
     desc: Start Astro development server
     cmds:
-      - export VOLTA_HOME="$HOME/.volta" && export PATH="$VOLTA_HOME/bin:$PATH" && npm run dev
+      - yarn dev
 
   astro:build:
     desc: Build Astro site for production
     cmds:
-      - export VOLTA_HOME="$HOME/.volta" && export PATH="$VOLTA_HOME/bin:$PATH" && npm run build
+      - yarn build
 
   astro:preview:
     desc: Preview Astro production build
     cmds:
-      - export VOLTA_HOME="$HOME/.volta" && export PATH="$VOLTA_HOME/bin:$PATH" && npm run preview
+      - yarn preview
 
   astro:install:
     desc: Install Astro dependencies
     cmds:
-      - export VOLTA_HOME="$HOME/.volta" && export PATH="$VOLTA_HOME/bin:$PATH" && npm install
+      - yarn install
