@@ -31,7 +31,8 @@ const formattedDate = formatDate(post.data.date);
     <div class="mb-8">
       <a
         href="/posts"
-        class="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-100 transition-colors text-sm"
+        class="inline-flex items-center gap-2 transition-colors hover:text-[var(--sw-cyan)] text-sm"
+        style="color: var(--sw-text-secondary);"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -42,16 +43,16 @@ const formattedDate = formatDate(post.data.date);
 
     <!-- Post header -->
     <header class="mb-8">
-      <h1 class="text-4xl font-bold mb-4 text-zinc-100">
+      <h1 class="text-4xl font-bold mb-4 synthwave-gradient">
         {post.data.title}
       </h1>
-      <div class="flex items-center gap-4 text-sm text-zinc-400">
+      <div class="flex items-center gap-4 text-sm" style="color: var(--sw-text-muted);">
         <time datetime={post.data.date.toISOString()}>
           {formattedDate}
         </time>
         {post.data.authors && post.data.authors.length > 0 && (
           <>
-            <span class="text-zinc-700">•</span>
+            <span style="color: var(--sw-purple);">•</span>
             <span>{post.data.authors.join(', ')}</span>
           </>
         )}
@@ -61,7 +62,8 @@ const formattedDate = formatDate(post.data.date);
           {post.data.tags.map(tag => (
             <span
               key={tag}
-              class="text-xs text-zinc-400 bg-zinc-900/50 border border-zinc-800 px-3 py-1 rounded-full"
+              class="text-xs px-3 py-1 rounded-full"
+              style="color: var(--sw-cyan); background: var(--sw-bg-tertiary); border: 1px solid rgba(127, 219, 202, 0.3);"
             >
               {tag}
             </span>
@@ -71,26 +73,48 @@ const formattedDate = formatDate(post.data.date);
     </header>
 
     <!-- Post content -->
-    <div class="prose prose-invert prose-zinc max-w-none
-      prose-headings:text-zinc-100
-      prose-p:text-zinc-300
-      prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300
-      prose-strong:text-zinc-100
-      prose-code:text-pink-400 prose-code:bg-zinc-900/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
-      prose-pre:bg-zinc-900/50 prose-pre:border prose-pre:border-zinc-800
-      prose-blockquote:border-l-blue-500 prose-blockquote:text-zinc-400
-      prose-ul:text-zinc-300
-      prose-ol:text-zinc-300
-      prose-li:text-zinc-300
-    ">
+    <div class="prose prose-invert max-w-none">
+      <style>
+        .prose {
+          --tw-prose-body: var(--sw-text-secondary);
+          --tw-prose-headings: var(--sw-text-primary);
+          --tw-prose-links: var(--sw-cyan);
+          --tw-prose-bold: var(--sw-text-primary);
+          --tw-prose-code: var(--sw-pink);
+          --tw-prose-quotes: var(--sw-text-secondary);
+        }
+        .prose a {
+          color: var(--sw-cyan);
+          text-decoration: none;
+          transition: all 0.2s;
+        }
+        .prose a:hover {
+          opacity: 0.8;
+        }
+        .prose code {
+          color: var(--sw-pink);
+          background: var(--sw-bg-tertiary);
+          padding: 0.2em 0.4em;
+          border-radius: 0.25rem;
+        }
+        .prose pre {
+          background: var(--sw-bg-secondary);
+          border: 1px solid var(--sw-purple);
+        }
+        .prose blockquote {
+          border-left-color: var(--sw-cyan);
+          color: var(--sw-text-secondary);
+        }
+      </style>
       <Content />
     </div>
 
     <!-- Post footer -->
-    <footer class="mt-16 pt-8 border-t border-zinc-800">
+    <footer class="mt-16 pt-8" style="border-top: 1px solid rgba(199, 146, 234, 0.3);">
       <a
         href="/posts"
-        class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
+        class="inline-flex items-center gap-2 transition-colors hover:opacity-80"
+        style="color: var(--sw-pink);"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />

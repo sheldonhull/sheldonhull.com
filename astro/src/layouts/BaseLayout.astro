@@ -22,17 +22,17 @@ const {
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen bg-zinc-950 text-zinc-100">
-    <nav class="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-sm">
+  <body class="min-h-screen text-[var(--sw-text-primary)]" style="background: var(--sw-bg-primary);">
+    <nav class="border-b backdrop-blur-sm" style="border-color: var(--sw-cyan); background: var(--sw-bg-secondary);">
       <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
-          <a href="/" class="text-xl font-bold text-zinc-100 hover:text-zinc-300 transition-colors">
+          <a href="/" class="text-xl font-bold transition-all hover:scale-105" style="color: var(--sw-cyan);">
             Sheldon Hull
           </a>
           <div class="flex gap-6">
-            <a href="/" class="text-zinc-400 hover:text-zinc-100 transition-colors">Home</a>
-            <a href="/posts" class="text-zinc-400 hover:text-zinc-100 transition-colors">Posts</a>
-            <a href="/about" class="text-zinc-400 hover:text-zinc-100 transition-colors">About</a>
+            <a href="/" class="transition-colors hover:text-[var(--sw-cyan)]" style="color: var(--sw-text-secondary);">Home</a>
+            <a href="/posts" class="transition-colors hover:text-[var(--sw-cyan)]" style="color: var(--sw-text-secondary);">Posts</a>
+            <a href="/about" class="transition-colors hover:text-[var(--sw-cyan)]" style="color: var(--sw-text-secondary);">About</a>
           </div>
         </div>
       </div>
@@ -42,8 +42,8 @@ const {
       <slot />
     </main>
 
-    <footer class="border-t border-zinc-800 mt-16">
-      <div class="container mx-auto px-4 py-8 text-center text-zinc-500 text-sm">
+    <footer class="border-t mt-16" style="border-color: var(--sw-bg-tertiary); background: var(--sw-bg-secondary);">
+      <div class="container mx-auto px-4 py-8 text-center text-sm" style="color: var(--sw-text-muted);">
         <p>&copy; {new Date().getFullYear()} Sheldon Hull. All rights reserved.</p>
       </div>
     </footer>

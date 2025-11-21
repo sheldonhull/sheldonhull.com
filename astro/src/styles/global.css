@@ -1,1 +1,61 @@
 @import "tailwindcss";
+
+/* Night Owl Color Palette with Subtle Neon Accents */
+:root {
+  --sw-bg-primary: #011627;
+  --sw-bg-secondary: #01121f;
+  --sw-bg-tertiary: #0b2942;
+
+  --sw-pink: #ff5874;
+  --sw-cyan: #7fdbca;
+  --sw-purple: #c792ea;
+  --sw-yellow: #ecc48d;
+  --sw-blue: #82aaff;
+
+  --sw-text-primary: #d6deeb;
+  --sw-text-secondary: #a7b7c8;
+  --sw-text-muted: #637777;
+}
+
+/* Subtle Glow Effects - Tasteful and Refined */
+.neon-glow-pink {
+  text-shadow:
+    0 0 8px rgba(255, 88, 116, 0.4);
+}
+
+.neon-glow-cyan {
+  text-shadow:
+    0 0 8px rgba(127, 219, 202, 0.4);
+}
+
+.neon-glow-purple {
+  text-shadow:
+    0 0 8px rgba(199, 146, 234, 0.4);
+}
+
+.neon-border-pink {
+  box-shadow:
+    0 0 8px rgba(255, 88, 116, 0.3);
+}
+
+.neon-border-cyan {
+  box-shadow:
+    0 0 8px rgba(127, 219, 202, 0.3);
+}
+
+.neon-border-purple {
+  box-shadow:
+    0 0 8px rgba(199, 146, 234, 0.3);
+}
+
+/* Gradient with subtle glow */
+.synthwave-gradient {
+  background: linear-gradient(135deg,
+    var(--sw-purple) 0%,
+    var(--sw-pink) 50%,
+    var(--sw-cyan) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px rgba(255, 88, 116, 0.3));
+}
