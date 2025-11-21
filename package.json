@@ -16,9 +16,12 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "shadcn-ui": "^0.9.5"
+    "@astrojs/netlify": "^6.6.2",
+    "shadcn-ui": "^0.9.5",
+    "vite": "^6.0.0"
   },
   "volta": {
-    "node": "22.14.0"
+    "node": "22.14.0",
+    "yarn": "4.11.0"
   }
 }
