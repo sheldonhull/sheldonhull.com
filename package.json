@@ -17,5 +17,8 @@
   },
   "devDependencies": {
     "shadcn-ui": "^0.9.5"
+  },
+  "volta": {
+    "node": "22.14.0"
   }
 }
