@@ -11,9 +11,11 @@ tags:
   - cool-tools
 ---
 
-{{< admonition type="info" title="Updated: 2020-04-29" >}}
-broken image links removed
-{{< /admonition >}}
+
+> **ℹ️ Updated: 2020-04-29**
+>
+> broken image links removed
+
 
 There are some beautiful ways to visualize time series data with the tools I'm going to go over. This post is purely focused on the initial setup and saving you some time there. In a future post, I'll show how some of these tools can help you visualize your server performance in a powerful way, including taking metrics from multiple types of servers that be working with SQL Server, and combining the metrics when appropriate to give a full picture of performance.
 
@@ -28,8 +30,7 @@ I started by running this quick powershell script to download the stable toolkit
   user="sheldonhull"
   gistId="5fa33704e2599e3ddb46a8299ad3bafe"
   filename="DownloadInfluxTools.ps1"
-  title="Download InfluxDB. A quick parsing of the html of the webpage to get you the latest URL version of the stable builds and download and unzip to local directory. This includes a download of whatever Chronograf version is available since at the time of this it was in beta and not a stable build"
-  lang="powershell"
+  title="Download InfluxDB. A quick parsing of the html of the webpage to get you the latest URL version of the stable builds and download and unzip to local directory. This includes a download of whatever Chronograf version is available since at the time of this it was in beta and not a stable build"lang="powershell"
 />
 
 Once extracted, I moved the influx extracted subfolder into the InfluxDB folder to keep it clean. Now all the binaries rested in `C:\Influx\InfluxDB` folder with no nesting folders.
@@ -43,15 +44,16 @@ Started up the local influxdb binary.
   user="sheldonhull"
   gistId="6f4e11d60244af00edac438cb9ae6ea5"
   filename="RunInflux.ps1"
-  title="open the influx command line and startup the console server if not currently running"
-  lang="powershell"
+  title="open the influx command line and startup the console server if not currently running"lang="powershell"
 />
 
 Initializing the new database was simple as documented: `create database statty`
 
-{{< admonition type="warning" title="Case Sensitivity" >}}
-InfluxDB is case sensitive. Make sure to check your case if something isn't working, such as use "DatabaseName" instead of use "databasename"
-{{< /admonition >}}
+
+> **⚠️ Case Sensitivity**
+>
+> InfluxDB is case sensitive. Make sure to check your case if something isn't working, such as use "DatabaseName" instead of use "databasename"
+
 
 Also, if you get an error with access to the file, try running as admin.
 
@@ -80,8 +82,7 @@ Once you have this running you can take the telegraf binaries and run them on an
   user="sheldonhull"
   gistId="1a9641ce607569dde912f996137debae"
   filename="StartTelegraf.ps1"
-  title="StartTelegraf"
-  lang="powershell"
+  title="StartTelegraf"lang="powershell"
 />
 
 Edit the conf file to add some tags, change default sampling interval and more. I'll post another article about setting up telegraf to run as a service in the future so search for more info
@@ -103,8 +104,7 @@ One these metrics began to run, I ran Chronograf. This is Influx's alternative t
   user="sheldonhull"
   gistId="958094675f6ab53897616755dd130144"
   filename="StartChrongraf.ps1"
-  title="Start Chronograf"
-  lang="powershell"
+  title="Start Chronograf"lang="powershell"
 />
 
 Upon loading and opening up the instance monitor, I found immediately that I was able to get some metrics from the defaults.
@@ -119,8 +119,7 @@ When starting Grafana, you can run the following script. It creates a copy of th
   user="sheldonhull"
   gistId="3cff34cf9029bd99cd1e888e755c307c"
   filename="StartGrafana.ps1"
-  title="StartGrafana"
-  lang="powershell"
+  title="StartGrafana"lang="powershell"
 />
 
 Once you open the localhost page, if you don't see datasources in the left hand drop down, create an organization and ensure you are an admin, you'll then see the option to add datasources. I simple pointed the page to InfluxDB console running on the server I had setup previously.

@@ -154,6 +154,8 @@ README.adoc  -- optional, but I always include for landing page, and point to th
 * Ensure your non-asciidoc contents are prefaced with an underscore in the title name. I don't like this, but it's a requirement from confluence-publisher. This ensures it won't try to render as a page.
 * Anything in the target directory (ancestor) gets purged in the process. I recommend a dedicated confluence space you create just for this to minimize risk and disable manual edits.
 
-{{< admonition type="info" title="Docker Commands in Microsoft-Hosted Agent" >}}
-I didn't expect docker commands to work in Azure DevOps agent, thinking nested virtualization would not work and all. However, it works beautifully. Consider using Azure DevOps yaml pipelines for running your docker commands and you take one step towards better build processes.
-{{< /admonition >}}
+
+> **ℹ️ Docker Commands in Microsoft-Hosted Agent**
+>
+> I didn't expect docker commands to work in Azure DevOps agent, thinking nested virtualization would not work and all. However, it works beautifully. Consider using Azure DevOps yaml pipelines for running your docker commands and you take one step towards better build processes.
+
