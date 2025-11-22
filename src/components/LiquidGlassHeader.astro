@@ -1,0 +1,38 @@
+---
+// Liquid glass header using animated SVG filters
+// Applies actual distortion to text via SVG displacement
+---
+
+<!-- SVG filter for liquid glass text distortion -->
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position: absolute;">
+  <defs>
+    <filter id="liquid-distortion" x="-50%" y="-50%" width="200%" height="200%">
+      <feTurbulence id="turbulence" type="fractalNoise" baseFrequency="0.009 0.009" numOctaves="3" seed="2" result="noise">
+        <animate attributeName="baseFrequency" dur="20s" values="0.009 0.009;0.011 0.010;0.009 0.009" repeatCount="indefinite" />
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+</svg>
+
+<div class="liquid-glass-header" id="liquid-header">
+  <div class="container mx-auto px-4 py-4 relative z-10 liquid-text-container">
+    <div class="flex items-center justify-between">
+      <a href="/" class="text-xl font-bold transition-all duration-300 hover:scale-105 neon-glow-cyan" style="color: var(--sw-cyan);">
+        Sheldon Hull
+      </a>
+      <div class="flex gap-6">
+        <a href="/" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Home</a>
+        <a href="/posts" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Posts</a>
+        <a href="/about" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">About</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .liquid-text-container {
+    filter: url(#liquid-distortion);
+    will-change: filter;
+  }
+</style>

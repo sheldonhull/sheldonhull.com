@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import LiquidGlassHeader from '../components/LiquidGlassHeader.astro';
 
 interface Props {
   title?: string;
@@ -37,20 +38,7 @@ const {
       </defs>
     </svg>
 
-    <nav class="liquid-glass-header">
-      <div class="container mx-auto px-4 py-4 relative z-10">
-        <div class="flex items-center justify-between">
-          <a href="/" class="text-xl font-bold transition-all duration-300 hover:scale-105 neon-glow-cyan" style="color: var(--sw-cyan);">
-            Sheldon Hull
-          </a>
-          <div class="flex gap-6">
-            <a href="/" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Home</a>
-            <a href="/posts" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Posts</a>
-            <a href="/about" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">About</a>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <LiquidGlassHeader />
 
     <main class="container mx-auto px-4 py-12 mt-8">
       <slot />

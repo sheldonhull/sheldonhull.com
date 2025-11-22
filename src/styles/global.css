@@ -110,33 +110,26 @@ h4, h5, h6, .h4, .h5, .h6 {
     0 0 30px rgba(199, 146, 234, 0.2);
 }
 
-/* Liquid Glass Header Effect - iOS-inspired transparency */
+/* Liquid Glass Header Effect - TEMPORARILY SIMPLIFIED FOR TESTING */
 .liquid-glass-header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  isolation: isolate;
-  overflow: hidden;
 
-  /* Outer shadow for depth */
-  box-shadow:
-    0 6px 24px rgba(0, 0, 0, 0.4),
-    0 1px 0 rgba(127, 219, 202, 0.2);
+  /* Minimal styling - just basic glass backdrop */
+  background: rgba(1, 22, 39, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 
-  /* Refined border glow */
-  border-bottom: 1px solid rgba(127, 219, 202, 0.3);
-
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid rgba(127, 219, 202, 0.15);
 }
 
-/* Glass tint and inner shadow layer - sits on top */
-.liquid-glass-header::before {
+/* DISABLED FOR TESTING - Glass tint layer */
+/* .liquid-glass-header::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
-
-  /* Subtle cyan tint with animated shimmer */
   background:
     linear-gradient(
       90deg,
@@ -148,40 +141,34 @@ h4, h5, h6, .h4, .h5, .h6 {
     rgba(127, 219, 202, 0.15);
   background-size: 200% 100%, 100% 100%;
   animation: liquidShimmer 8s ease-in-out infinite;
-
-  /* Inner shadow for glass thickness illusion */
   box-shadow:
     inset 0 0 20px -5px rgba(255, 255, 255, 0.5);
-
   pointer-events: none;
-}
+} */
 
-/* Frost blur and distortion layer - sits behind */
-.liquid-glass-header::after {
+/* DISABLED FOR TESTING - Frost blur layer */
+/* .liquid-glass-header::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
   isolation: isolate;
-
-  /* Frost glass blur with SVG distortion */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   filter: url(#glass-distortion);
   -webkit-filter: url(#glass-distortion);
-
   pointer-events: none;
-}
+} */
 
-/* Shimmer animation for glass effect */
-@keyframes liquidShimmer {
+/* DISABLED FOR TESTING - Shimmer animation */
+/* @keyframes liquidShimmer {
   0%, 100% {
     background-position: 0% 50%, 0 0;
   }
   50% {
     background-position: 100% 50%, 0 0;
   }
-}
+} */
 
 /* Nav link hover effects */
 .nav-link {
