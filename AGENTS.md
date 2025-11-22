@@ -4,9 +4,10 @@ As this project's AI coding tool, you must follow the additional conventions bel
 
 # Copilot Instructions for sheldonhull.com
 
-This Hugo-based personal blog repository uses modern Go tooling with Hugo modules,
-mage build automation, and extensive customizations.
-The site is deployed via Netlify with Algolia search integration.
+This repository contains both a Hugo-based blog and an Astro-based site.
+The Hugo site uses Go tooling with Hugo modules and mage build automation.
+The Astro site uses modern JavaScript tooling with Yarn 3.8.7 and Taskfile.
+Both are deployed via Netlify with Algolia search integration.
 
 ## Architecture Overview
 
@@ -15,10 +16,16 @@ The site uses Hugo modules instead of traditional themes.
 The primary theme is `github.com/HEIGE-PCloud/DoIt` with additional modules like `hugo-shortcode-gallery`.
 All modules are vendored in `_vendor/` and customized through layout overrides in `layouts/`.
 
+**Astro Static Site**:
+The Astro site is located in `src/` with configuration in `astro.config.mjs`.
+Uses Yarn 3.8.7 (as specified in `.yarnrc.yml`) for dependency management.
+**IMPORTANT**: Always use `task` commands for Astro builds to ensure proper environment setup and consistency.
+
 **Build System**:
 Dual build system using both Go's mage tool and Taskfile.
-Mage handles complex Go-based tasks like post creation and Dagger builds,
-while Taskfile provides simpler command orchestration.
+Mage handles complex Go-based tasks like post creation and Dagger builds.
+Taskfile provides simpler command orchestration for both Hugo and Astro builds.
+**For Astro**: Always prefer using `task` commands over direct `yarn` or `npm` commands.
 
 **Content Structure**:
 - Main content in `content/posts/{year}/` organized by year
@@ -30,11 +37,37 @@ Uses aqua for CLI tool management, devcontainer support, and comprehensive tooli
 
 ## Command/API Patterns
 
-### Primary Build Commands
+### Astro Build Commands (Preferred)
+**IMPORTANT**: For Astro-related tasks, always use `task` commands to ensure proper environment and consistency:
+
 ```bash
-# Development server (most common)
+# Astro development server with live reload
 task serve
 # OR
+task astro:serve
+
+# Astro production build
+task build
+# OR
+task astro:build
+
+# Astro preview production build
+task preview
+# OR
+task astro:preview
+
+# Install/update Astro dependencies
+task init
+# OR
+task astro:install
+
+# Note: Yarn 3.8.7 is configured and locked in .yarnrc.yml
+# The lockfile is immutable in CI - do not run builds that modify it
+```
+
+### Hugo Build Commands
+```bash
+# Development server (most common)
 go run mage.go hugo:serve
 
 # Production build
@@ -45,9 +78,7 @@ go run mage.go hugo:buildpublic
 # Create new posts
 go run mage.go post
 
-# Initialize project tooling
-task init
-# OR
+# Initialize Hugo tooling
 go run mage.go init
 ```
 
@@ -63,11 +94,17 @@ go run mage.go init
 task list
 go run mage.go -l
 
-# Build and serve locally
-task serve  # Uses hugo serve with live reload
+# Build and serve locally (Astro)
+task serve  # Astro dev server with live reload
 
-# Update dependencies
+# Build and serve locally (Hugo)
+go run mage.go hugo:serve
+
+# Update Hugo dependencies
 hugo mod get -u && hugo mod vendor
+
+# Update Astro dependencies
+task init  # Runs yarn install with locked Yarn 3.8.7
 
 # Search integration
 task algolia  # Updates search index
@@ -75,6 +112,24 @@ yarn run algolia  # Direct npm script
 ```
 
 ## Development Patterns
+
+### Yarn Dependency Management (Astro)
+- **Version**: Yarn 3.8.7 is locked in `.yarnrc.yml` and must match `package.json` volta config
+- **Immutable Lockfile**: In CI environments, Yarn automatically runs in immutable mode
+- **Local Development**: Use `task init` or `task astro:install` to install dependencies
+- **Important**: Never commit changes that would modify `yarn.lock` without also committing the updated lockfile
+- **Troubleshooting**: If you encounter lockfile issues:
+  ```bash
+  # Ensure you're using Yarn 3.8.7
+  corepack enable
+  corepack prepare yarn@3.8.7 --activate
+  yarn -v  # should print 3.8.7
+  
+  # Update lockfile
+  YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+  git add yarn.lock
+  git commit -m "chore: update yarn.lock"
+  ```
 
 ### Hugo Module Management
 - **Vendor Strategy**: All modules vendored in `_vendor/` for reproducible builds
