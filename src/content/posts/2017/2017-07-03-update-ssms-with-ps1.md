@@ -17,7 +17,7 @@ Also, for less overhead, investigate SQL Operations Studio instead of SSMS for t
 {{< /admonition >}}
 
 
-With how many updates are coming out I threw together a script to parse the latest version from the webpage, and then provide a silent update and install if the installed version is out of date with the available version. To adapt for future changes, the script is easy to update. Right now it's coded to check for version 17 (SSMS 2017). I personally use Ketarin, which I wrote about before if you want a more robust solution here: [Automating SSMS 2016 Updates & Install]({{< relref "2016-04-27-automating-ssms-2016-updates-&-install.md" >}})
+With how many updates are coming out I threw together a script to parse the latest version from the webpage, and then provide a silent update and install if the installed version is out of date with the available version. To adapt for future changes, the script is easy to update. Right now it's coded to check for version 17 (SSMS 2017). I personally use Ketarin, which I wrote about before if you want a more robust solution here: [Automating SSMS 2016 Updates & Install](/automating-ssms-2016-updates-&-install)
 
 The bat file is a simple way for someone to execute as admin.
 
