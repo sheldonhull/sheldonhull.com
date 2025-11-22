@@ -7,7 +7,7 @@ export function remarkRelativeLinks(): Plugin {
     visit(tree, 'link', (node: any) => {
       const url = node.url;
       
-      // Skip if not a relative path or if it's an image
+      // Skip if already root-relative, external, or anchor
       if (!url || url.startsWith('/') || url.startsWith('http') || url.startsWith('#')) {
         return;
       }
@@ -17,13 +17,22 @@ export function remarkRelativeLinks(): Plugin {
         return;
       }
       
-      // Handle relative paths like ./post-name/ or ../../../post-name
-      if (url.startsWith('./') || url.startsWith('../')) {
+      // Handle all relative paths:
+      // - ./post-name/
+      // - ../../../post-name
+      // - post-name (bare relative)
+      // - 2021-06-18-post-name/ (bare relative with date)
+      
+      // Check if it's a relative path (starts with ./ or ../ or is a bare filename)
+      const isRelative = url.startsWith('./') || url.startsWith('../') || 
+                        (/^[\w\d-]+/.test(url) && !url.includes('://'));
+      
+      if (isRelative) {
         // Extract the slug from the path
         const parts = url.split('/').filter(part => part && part !== '.' && part !== '..');
         
         if (parts.length > 0) {
-          // Get the last part as the slug
+          // Get the last non-empty part as the slug
           let slug = parts[parts.length - 1];
           
           // Remove date prefix if present (YYYY-MM-DD-)

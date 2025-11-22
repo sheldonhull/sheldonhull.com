@@ -169,6 +169,6 @@ Consider using it you'd like to improve your git workflow while simplifying all 
 
 ## Backlinks
 
-- [Git Hub Desktop Quick Look](/github-desktop-quick-look)
+- [Git Hub Desktop Quick Look](2021-06-18-github-desktop-quick-look/)
     - Update from `main` already built in.
-This is fantastic, and I can see how this provides a UI to do something similar to [Git Town](https://www.git-town.com/) which I blogged on earlier here: [2021-02-23-git-workflow-with-git-town](/git-workflow-with-git-town)
+This is fantastic, and I can see how this provides a UI to do something similar to [Git Town](https://www.git-town.com/) which I blogged on earlier here: [2021-02-23-git-workflow-with-git-town](2021-02-23-git-workflow-with-git-town/)

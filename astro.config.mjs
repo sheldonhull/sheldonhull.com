@@ -15,6 +15,9 @@ export default defineConfig({
   site: NETLIFY_PREVIEW_SITE || 'https://www.sheldonhull.com/',
   outDir: '.artifacts/public',
   adapter: netlify(),
+  markdown: {
+    remarkPlugins: [remarkRelativeLinks],
+  },
   integrations: [
     mdx({
       // Automatically inject imports for components like GistWindow
