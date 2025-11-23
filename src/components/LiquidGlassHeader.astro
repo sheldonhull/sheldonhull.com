@@ -1,6 +1,7 @@
 ---
 // Liquid glass header using animated SVG filters
 // Applies actual distortion to text via SVG displacement
+// Includes scroll-based quote rotation and otter hat animation
 ---
 
 <!-- SVG filter for liquid glass text distortion -->
@@ -18,8 +19,34 @@
 <div class="liquid-glass-header" id="liquid-header">
   <div class="container mx-auto px-4 py-4 relative z-10 liquid-text-container">
     <div class="flex items-center justify-between">
-      <a href="/" class="text-xl font-bold transition-all duration-300 hover:scale-105 neon-glow-cyan" style="color: var(--sw-cyan);">
-        Sheldon Hull
+      <a href="/" class="flex items-center gap-3 text-xl font-bold transition-all duration-300 hover:scale-105 neon-glow-cyan" style="color: var(--sw-cyan);">
+        <!-- Otter container with fixed width to prevent overlap -->
+        <div class="relative flex-shrink-0" style="width: 2.5rem; height: 2.5rem;">
+          <!-- Otter with hat (default) -->
+          <img
+            id="otter-with-hat"
+            src="/otter-logo.svg"
+            alt="Otter Logo"
+            class="w-10 h-10 otter-image absolute top-0 left-0"
+            style="transition: opacity 500ms ease, transform 600ms ease;"
+          />
+          <!-- Otter without hat (scrolled) -->
+          <img
+            id="otter-no-hat"
+            src="/otter-logo-no-hat.svg"
+            alt="Otter Logo"
+            class="w-10 h-10 otter-image absolute top-0 left-0 opacity-0"
+            style="transition: opacity 500ms ease, transform 600ms ease;"
+          />
+        </div>
+        <!-- Text container to prevent overlap -->
+        <div class="relative flex-shrink-0 min-w-0">
+          <!-- Site name (default) -->
+          <span id="site-name" class="header-text block transition-opacity duration-500">sheldonhull.com</span>
+          <!-- Tech quote (scrolled) -->
+          <span id="tech-quote" class="header-text block absolute top-0 left-0 opacity-0 transition-opacity duration-500 text-base font-normal whitespace-nowrap" style="color: var(--sw-cyan); opacity: 0.6;">
+          </span>
+        </div>
       </a>
       <div class="flex gap-6">
         <a href="/" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Home</a>
@@ -35,4 +62,143 @@
     filter: url(#liquid-distortion);
     will-change: filter;
   }
+
+  .header-text {
+    transition: opacity 500ms ease;
+  }
+
+  /* Mobile: hide quote feature */
+  @media (max-width: 767px) {
+    #tech-quote {
+      display: none !important;
+    }
+  }
 </style>
+
+<script>
+  // Tech shower thought quotes
+  const techQuotes = [
+    "The best code is no code at all",
+    "Debugging is twice as hard as writing code",
+    "Premature optimization is the root of all evil",
+    "Code is read more than it is written",
+    "Make it work, make it right, make it fast",
+    "Complexity is the enemy of reliability",
+    "Good code is its own best documentation",
+    "Programs must be written for people to read",
+    "The cheapest, fastest, and most reliable components are those that aren't there",
+    "Software is a gas; it expands to fill its container",
+    "Simple is better than complex",
+    "Explicit is better than implicit",
+    "If it's not tested, it doesn't work",
+    "Delete code, not comments",
+    "A week of coding can save an hour of planning",
+    "The most dangerous phrase: 'we've always done it this way'",
+    "Perfect is the enemy of good",
+    "Automate everything you do more than twice",
+    "Documentation is a love letter to your future self",
+    "Fail fast, learn faster"
+  ];
+
+  function initHeaderScrollEffect() {
+    // Skip on mobile
+    if (window.innerWidth < 768) {
+      return;
+    }
+
+    const otterWithHat = document.getElementById('otter-with-hat');
+    const otterNoHat = document.getElementById('otter-no-hat');
+    const siteName = document.getElementById('site-name');
+    const techQuote = document.getElementById('tech-quote');
+
+    if (!otterWithHat || !otterNoHat || !siteName || !techQuote) {
+      return;
+    }
+
+    let isScrolled = false;
+    let ticking = false;
+    let lastScrollTop = 0;
+
+    // Get random quote
+    function getRandomQuote() {
+      return techQuotes[Math.floor(Math.random() * techQuotes.length)];
+    }
+
+    // Handle scroll state change
+    function updateHeaderState() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollThreshold = 50;
+
+      // Detect if we just scrolled from top
+      const wasAtTop = lastScrollTop <= scrollThreshold;
+      const isAtTop = scrollTop <= scrollThreshold;
+      const justScrolledDown = wasAtTop && !isAtTop;
+
+      if (scrollTop > scrollThreshold && !isScrolled) {
+        // Scrolled down - show quote and hatless otter
+        isScrolled = true;
+
+        // Pick new quote
+        techQuote.textContent = getRandomQuote();
+
+        // Fade and rotate transitions
+        otterWithHat.style.opacity = '0';
+        otterWithHat.style.transform = 'rotate(360deg)';
+        otterNoHat.style.opacity = '1';
+        otterNoHat.style.transform = 'rotate(360deg)';
+        siteName.style.opacity = '0';
+
+        // Delay quote fade-in slightly for smoother effect
+        setTimeout(() => {
+          techQuote.style.opacity = '0.6';
+        }, 200);
+
+      } else if (scrollTop <= scrollThreshold && isScrolled) {
+        // Scrolled back to top - restore original state
+        isScrolled = false;
+
+        otterWithHat.style.opacity = '1';
+        otterWithHat.style.transform = 'rotate(0deg)';
+        otterNoHat.style.opacity = '0';
+        otterNoHat.style.transform = 'rotate(0deg)';
+        siteName.style.opacity = '1';
+        techQuote.style.opacity = '0';
+      }
+
+      // Pick new quote each time we scroll down from top
+      if (justScrolledDown) {
+        techQuote.textContent = getRandomQuote();
+      }
+
+      lastScrollTop = scrollTop;
+      ticking = false;
+    }
+
+    // Throttled scroll handler
+    function requestTick() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeaderState);
+        ticking = true;
+      }
+    }
+
+    // Attach scroll listener
+    window.addEventListener('scroll', requestTick, { passive: true });
+
+    // Initial state
+    updateHeaderState();
+  }
+
+  // Initialize on page load
+  document.addEventListener('astro:page-load', () => {
+    initHeaderScrollEffect();
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initHeaderScrollEffect();
+    });
+  } else {
+    initHeaderScrollEffect();
+  }
+</script>

@@ -220,10 +220,10 @@ params:
     desktopMode: fixed
     mobileMode: auto
     title:
-      logo: /images/sheldon-avatar.jpg
+      logo: /images/otter-logo.svg
       name: sheldonhull.com
       #pre: '<i class="fas fa-terminal"></i>'  #<i class='fas fa-laptop-code fa-fw'></i>
-      pre: <span id="logo-anima"><span class="arrow">></span><span class="dash">_</span></span>
+      pre: ''
       post: ''
       typeit: true
   footer:
