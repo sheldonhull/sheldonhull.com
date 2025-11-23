@@ -1,5 +1,57 @@
 # Copilot Instructions for sheldonhull.com
 
+**IMPORTANT: Site Migration in Progress**
+
+This site is being migrated from Hugo to Astro. Both systems currently coexist:
+- **Legacy**: Hugo content in `content/` (will be removed after full migration)
+- **Current**: Astro site in `src/` with content in `src/content/posts/`
+
+When working with posts and images, **always use the Astro structure** in `src/`.
+
+## Astro Image Organization
+
+**Image Convention (Updated Nov 2025)**:
+- All images for Astro posts go in `public/posts/{year}/images/`
+- Images are **prefixed with post slug**: `{year}-{month}-{day}-{slug}-{filename}.jpg`
+- Example: `public/posts/2023/images/2023-11-06-new-york-IMG_3085.jpg`
+- `.meta` files for image captions are preserved alongside images
+
+**Structure**:
+```
+src/content/posts/
+├── 2023/
+│   ├── 2023-11-06-new-york.mdx          ← Flat MDX file
+│   ├── 2023-11-14-first-week-in-paris.mdx
+│   └── images/                           ← Shared by ALL 2023 posts
+│       ├── 2023-11-06-new-york-IMG_3085.jpg
+│       ├── 2023-11-06-new-york-IMG_3089.jpg
+│       ├── 2023-11-14-first-week-in-paris-IMG_3227.jpg
+│       └── ...
+└── 2024/
+    ├── post1.md
+    └── images/
+        └── ...
+```
+
+**Gallery Component**:
+- Use `<Gallery />` component in MDX files to display image galleries
+- Auto-imported via `src/plugins/mdx-auto-imports.ts` (no manual import needed)
+- Usage: `<Gallery images={["2023-11-06-new-york-IMG_3085.jpg", "..."]} year="2023" />`
+- Replaces Hugo's `{{< gallery >}}` shortcode
+
+**Content Schema**:
+- Updated in `src/content/config.ts` to support image fields
+- `cover: image().optional()` for featured images (optimized by Astro)
+- `coverAlt: z.string().optional()` for alt text
+- `images: z.array(z.string()).optional()` for backward compatibility
+
+**Image Optimization**:
+- Astro 5.16.0 provides automatic WebP conversion, lazy loading, and responsive images
+- Images in `src/` are optimized at build time
+- Images in `public/` are served as-is (no optimization)
+
+## Legacy Hugo Architecture (Being Phased Out)
+
 This Hugo-based personal blog repository uses modern Go tooling with Hugo modules,
 mage build automation, and extensive customizations.
 The site is deployed via Netlify with Algolia search integration.

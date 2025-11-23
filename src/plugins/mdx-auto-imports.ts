@@ -16,6 +16,10 @@ export function mdxAutoImports(): Plugin {
       {
         name: 'Aside',
         path: '../../../components/Aside.astro'
+      },
+      {
+        name: 'Gallery',
+        path: '../../../components/Gallery.astro'
       }
     ];
 
