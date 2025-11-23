@@ -1,0 +1,19 @@
+---
+title: Go R1 Day 74
+slug: go-r1-day-74
+tags:
+- tech
+- development
+- 100DaysOfCode
+- golang
+- microblog
+date: '2021-10-03T22:26:17+00:00'
+---
+
+## progress
+
+- Worked with DynamoDB schema (NoSQL Document database).
+- Invoked local lambda function using Docker and also remove invocation with `serverless invoke`.
+This took a bit of work to figure out as the parameters weren't quite clear.
+Upon using `--path` for the json template I got from AWS Lambda console, I was able to to get to invoke, and stream the logs with `--log`.
+- More mage magic with promptui and other features, so I can now test a full tear down, build, publish, and invoke a test selection by running: `mage sls:destroy build sls:deploy sls:test remote`.

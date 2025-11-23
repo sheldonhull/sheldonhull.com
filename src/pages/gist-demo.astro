@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GistWindow from '../components/GistWindow.astro';
+---
+
+<BaseLayout title="Gist Window Demo">
+  <div class="mx-auto max-w-5xl px-4 py-12">
+    <h1 class="mb-2 text-4xl font-bold text-slate-100">Beautiful Gist Display Demo</h1>
+    <p class="mb-12 text-slate-400">Showcasing GitHub gists with macOS-style window chrome and glassmorphism effects</p>
+
+    <!-- Example 1: Working Gist -->
+    <section class="mb-16">
+      <h2 class="mb-4 text-2xl font-semibold text-slate-200">Example 1: Markdown Documentation</h2>
+      <p class="mb-6 text-sm text-slate-400">A beautiful window displaying a README with markdown syntax highlighting</p>
+
+      <GistWindow
+        user="sheldonhull"
+        gistId="9e608da09f84fac600d921e3f0867226"
+        filename="README.md"
+        title="Run Test Documentation"
+        lang="markdown"
+      />
+    </section>
+
+    <!-- Example 2: Same gist, different file -->
+    <section class="mb-16">
+      <h2 class="mb-4 text-2xl font-semibold text-slate-200">Example 2: Configuration File</h2>
+      <p class="mb-6 text-sm text-slate-400">Showing a .gitignore file from the same gist</p>
+
+      <GistWindow
+        user="sheldonhull"
+        gistId="9e608da09f84fac600d921e3f0867226"
+        filename=".gitignore"
+        title="Git Ignore Configuration"
+      />
+    </section>
+
+    <!-- Usage Instructions -->
+    <section class="rounded-lg border border-slate-700 bg-slate-800/50 p-6 backdrop-blur-sm">
+      <h2 class="mb-4 text-xl font-semibold text-slate-200">Usage</h2>
+
+      <div class="space-y-4">
+        <div>
+          <h3 class="mb-2 text-sm font-medium text-slate-300">Basic Usage:</h3>
+          <pre class="overflow-x-auto rounded-md bg-slate-900 p-4 text-sm text-slate-300"><code>&lt;GistWindow
+  user="your-github-username"
+  gistId="your-gist-id"
+/&gt;</code></pre>
+        </div>
+
+        <div>
+          <h3 class="mb-2 text-sm font-medium text-slate-300">With Options:</h3>
+          <pre class="overflow-x-auto rounded-md bg-slate-900 p-4 text-sm text-slate-300"><code>&lt;GistWindow
+  user="your-github-username"
+  gistId="your-gist-id"
+  filename="example.ts"
+  title="My Awesome Code"
+  lang="typescript"
+  theme="night-owl"
+/&gt;</code></pre>
+        </div>
+
+        <div>
+          <h3 class="mb-2 text-sm font-medium text-slate-300">Props:</h3>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li><code class="rounded bg-slate-900 px-1.5 py-0.5 text-xs text-slate-300">user</code> - GitHub username (required)</li>
+            <li><code class="rounded bg-slate-900 px-1.5 py-0.5 text-xs text-slate-300">gistId</code> - Gist ID (required)</li>
+            <li><code class="rounded bg-slate-900 px-1.5 py-0.5 text-xs text-slate-300">filename</code> - Specific file from gist (optional)</li>
+            <li><code class="rounded bg-slate-900 px-1.5 py-0.5 text-xs text-slate-300">title</code> - Window title (optional, defaults to filename)</li>
+            <li><code class="rounded bg-slate-900 px-1.5 py-0.5 text-xs text-slate-300">lang</code> - Language for syntax highlighting (optional, auto-detected)</li>
+            <li><code class="rounded bg-slate-900 px-1.5 py-0.5 text-xs text-slate-300">theme</code> - Shiki theme (optional, defaults to night-owl)</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="mb-2 text-sm font-medium text-slate-300">Features:</h3>
+          <ul class="list-inside list-disc space-y-1 text-sm text-slate-400">
+            <li>macOS-style window chrome with interactive colored dots</li>
+            <li>Liquid glass effect with enhanced backdrop blur and saturation</li>
+            <li>Scroll-based parallax flex animation</li>
+            <li>Animated gradient border on hover</li>
+            <li>Smooth fade-in animations when scrolling into view</li>
+            <li>One-click copy button with visual feedback</li>
+            <li>Beautiful gradient scrollbar styling</li>
+            <li>Direct link to GitHub gist</li>
+            <li>Responsive design</li>
+            <li>Build-time gist fetching (no client-side API calls)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

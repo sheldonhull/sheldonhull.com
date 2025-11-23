@@ -11,8 +11,6 @@ tags:
 
 # images: [/images/]
 
-typora-root-url: ../../../static
-typora-copy-images-to:  ../../../static/images
 ---
 
 Let's say you have the Red Hat YAML extension.

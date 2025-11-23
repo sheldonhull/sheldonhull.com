@@ -1,0 +1,30 @@
+{
+  "name": "sheldonhull.hugo",
+  "packageManager": "yarn@3.8.7",
+  "devDependencies": {
+    "atomic-algolia": "0.3.19",
+    "imageoptim-cli": "3.1.9",
+    "prettier": "2.8.8",
+    "prettier-plugin-go-template": "0.0.15"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "algolia": "atomic-algolia",
+    "lunr": "hugo-lunr -i \"content\\blog\\**\" -o \"static\\index.json",
+    "commit": "yarn dlx git-cz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sheldonhull/sheldonhull.hugo.git"
+  },
+  "keywords": [],
+  "author": "Sheldon Hull",
+  "bugs": {
+    "url": "https://github.com/sheldonhull/sheldonhull.hugo/issues"
+  },
+  "homepage": "https://github.com/sheldonhull/sheldonhull.hugo#readme",
+  "description": "blog tasks and packages. Built with hugo, but I do use some other tooling",
+  "dependencies": {
+    "dotenv": "16.5.0"
+  }
+}

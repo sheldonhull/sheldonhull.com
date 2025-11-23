@@ -14,8 +14,6 @@ series: ['goland']
 
 # images: [/images/]
 
-typora-root-url: ../../../static
-typora-copy-images-to:  ../../../static/images
 ---
 
 This is a continuation of my evaluation using Goland.

@@ -1,0 +1,47 @@
+---
+interface Props {
+  items: Array<{
+    title: string;
+    command?: string;
+    gitConfig?: string;
+    highlighted?: boolean;
+  }>;
+}
+
+const { items } = Astro.props;
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+  {items.map((item) => (
+    <div class={`relative rounded-lg border-2 p-6 shadow-lg transition-all hover:shadow-xl ${
+      item.highlighted
+        ? 'bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-blue-500/50 ring-2 ring-blue-400/30'
+        : 'bg-slate-800/50 border-slate-700 hover:border-slate-600'
+    }`}>
+      {item.highlighted && (
+        <div class="absolute -top-3 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+          ⚡ RECOMMENDED
+        </div>
+      )}
+
+      <h3 class="text-xl font-bold mb-4 text-white flex items-center gap-2">
+        {item.highlighted && <span class="text-2xl">⚡</span>}
+        {item.title}
+      </h3>
+
+      {item.command && (
+        <div class="mb-4">
+          <p class="text-sm font-semibold text-slate-300 mb-2">Command:</p>
+          <pre class="bg-black/40 rounded-md p-3 overflow-x-auto text-sm border border-slate-700"><code class="text-green-400">{item.command}</code></pre>
+        </div>
+      )}
+
+      {item.gitConfig && (
+        <div>
+          <p class="text-sm font-semibold text-slate-300 mb-2">Git Config:</p>
+          <pre class="bg-black/40 rounded-md p-3 overflow-x-auto text-sm border border-slate-700"><code class="text-blue-400">{item.gitConfig}</code></pre>
+        </div>
+      )}
+    </div>
+  ))}
+</div>

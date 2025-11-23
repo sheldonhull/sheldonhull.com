@@ -1,0 +1,213 @@
+---
+import '../styles/global.css';
+import LiquidGlassHeader from '../components/LiquidGlassHeader.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Sheldon Hull",
+  description = "Tech blog and digital garden by Sheldon Hull"
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen text-[var(--sw-text-primary)]" style="background: var(--sw-bg-primary);">
+    <!-- SVG Filters for Liquid Glass Distortion -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position: absolute; overflow: hidden;">
+      <defs>
+        <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
+          <!-- Generate fractal noise for organic distortion -->
+          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise" />
+          <!-- Smooth the noise for realistic glass refraction -->
+          <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
+          <!-- Apply displacement mapping for liquid glass effect -->
+          <feDisplacementMap in="SourceGraphic" in2="blurred" scale="77" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
+
+    <LiquidGlassHeader />
+
+    <!-- Mouse Tracking Spotlight -->
+    <div class="spotlight-effect" aria-hidden="true"></div>
+    <div class="ripple-container" aria-hidden="true"></div>
+
+    <main class="container mx-auto px-4 py-12 mt-8">
+      <slot />
+    </main>
+
+    <footer class="border-t mt-16" style="border-color: var(--sw-bg-tertiary); background: var(--sw-bg-secondary);">
+      <div class="container mx-auto px-4 py-8 text-center text-sm" style="color: var(--sw-text-muted);">
+        <p>&copy; {new Date().getFullYear()} Sheldon Hull. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <style>
+      .spotlight-effect {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        background-image: radial-gradient(
+          circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+          var(--spotlight-color-1, rgba(127, 219, 202, 0.35)),
+          var(--spotlight-color-2, rgba(199, 146, 234, 0.25)) 30%,
+          var(--spotlight-color-3, rgba(255, 88, 116, 0.15)) 50%,
+          transparent 75%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease, background-image 0.5s ease;
+        mix-blend-mode: screen;
+        will-change: opacity;
+        transform: translateZ(0);
+      }
+
+      body:hover .spotlight-effect {
+        opacity: var(--spotlight-opacity, 1);
+      }
+
+      .ripple-container {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 10000;
+        overflow: hidden;
+      }
+
+      .neon-ripple {
+        position: absolute;
+        border-radius: 50%;
+        border: 5px solid;
+        pointer-events: none;
+        animation: rippleExpand 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        will-change: transform, opacity;
+        backdrop-filter: blur(4px) saturate(2);
+        transform: translateZ(0);
+      }
+
+      @keyframes rippleExpand {
+        0% {
+          width: 0;
+          height: 0;
+          opacity: 1;
+          filter: brightness(1.5);
+        }
+        50% {
+          opacity: 0.8;
+          filter: brightness(1.2);
+        }
+        100% {
+          width: 500px;
+          height: 500px;
+          opacity: 0;
+          filter: brightness(1);
+        }
+      }
+    </style>
+
+    <script>
+      // Mouse tracking
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+
+        document.documentElement.style.setProperty('--mouse-x', `${x}%`);
+        document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+      });
+
+      // Click ripple effect with color cycling
+      let clickCount = 0;
+      const maxClicks = 10;
+
+      const colorSchemes = [
+        // Cyan theme
+        {
+          color1: 'rgba(127, 219, 202, 0.35)',
+          color2: 'rgba(199, 146, 234, 0.25)',
+          color3: 'rgba(255, 88, 116, 0.15)',
+          ripple: 'rgb(127, 219, 202)'
+        },
+        // Purple theme
+        {
+          color1: 'rgba(199, 146, 234, 0.35)',
+          color2: 'rgba(255, 88, 116, 0.25)',
+          color3: 'rgba(236, 196, 141, 0.15)',
+          ripple: 'rgb(199, 146, 234)'
+        },
+        // Pink theme
+        {
+          color1: 'rgba(255, 88, 116, 0.35)',
+          color2: 'rgba(236, 196, 141, 0.25)',
+          color3: 'rgba(127, 219, 202, 0.15)',
+          ripple: 'rgb(255, 88, 116)'
+        },
+        // Yellow theme
+        {
+          color1: 'rgba(236, 196, 141, 0.35)',
+          color2: 'rgba(127, 219, 202, 0.25)',
+          color3: 'rgba(199, 146, 234, 0.15)',
+          ripple: 'rgb(236, 196, 141)'
+        },
+        // Blue theme
+        {
+          color1: 'rgba(130, 170, 255, 0.35)',
+          color2: 'rgba(127, 219, 202, 0.25)',
+          color3: 'rgba(255, 88, 116, 0.15)',
+          ripple: 'rgb(130, 170, 255)'
+        }
+      ];
+
+      document.addEventListener('click', (e) => {
+        if (clickCount >= maxClicks) return;
+
+        clickCount++;
+
+        // Calculate opacity reduction (gradually fade to 0 by 10 clicks)
+        const opacityMultiplier = 1 - (clickCount / maxClicks);
+
+        // Cycle through color schemes
+        const scheme = colorSchemes[clickCount % colorSchemes.length];
+
+        // Update spotlight colors with reduced opacity
+        document.documentElement.style.setProperty('--spotlight-color-1', scheme.color1);
+        document.documentElement.style.setProperty('--spotlight-color-2', scheme.color2);
+        document.documentElement.style.setProperty('--spotlight-color-3', scheme.color3);
+        document.documentElement.style.setProperty('--spotlight-opacity', opacityMultiplier.toString());
+
+        // Create ripple effect
+        const ripple = document.createElement('div');
+        ripple.className = 'neon-ripple';
+        ripple.style.left = `${e.clientX}px`;
+        ripple.style.top = `${e.clientY}px`;
+        ripple.style.borderColor = scheme.ripple;
+        ripple.style.boxShadow = `
+          0 0 20px ${scheme.ripple},
+          0 0 40px ${scheme.ripple},
+          0 0 80px ${scheme.ripple},
+          0 0 120px ${scheme.ripple},
+          inset 0 0 30px ${scheme.ripple},
+          inset 0 0 60px ${scheme.ripple}
+        `;
+        ripple.style.transform = 'translate(-50%, -50%)';
+
+        const container = document.querySelector('.ripple-container');
+        container?.appendChild(ripple);
+
+        // Remove ripple after animation
+        setTimeout(() => ripple.remove(), 1200);
+      });
+    </script>
+  </body>
+</html>

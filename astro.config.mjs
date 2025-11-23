@@ -1,0 +1,35 @@
+// @ts-check
+import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
+import netlify from '@astrojs/netlify';
+// import icon from 'astro-icon';
+
+import tailwindcss from '@tailwindcss/vite';
+import { mdxAutoImports } from './src/plugins/mdx-auto-imports.ts';
+import { remarkRelativeLinks } from './src/plugins/remark-relative-links.ts';
+
+// https://docs.netlify.com/configure-builds/environment-variables/#read-only-variables
+const NETLIFY_PREVIEW_SITE = process.env.CONTEXT !== 'production' && process.env.DEPLOY_PRIME_URL;
+
+// https://astro.build/config
+export default defineConfig({
+  site: NETLIFY_PREVIEW_SITE || 'https://www.sheldonhull.com/',
+  outDir: '.artifacts/public',
+  adapter: netlify(),
+  markdown: {
+    remarkPlugins: [remarkRelativeLinks],
+  },
+  integrations: [
+    // Temporarily disabled due to Node.js compatibility issue
+    // icon(),
+    mdx({
+      // Automatically inject imports for components like GistWindow
+      remarkPlugins: [mdxAutoImports, remarkRelativeLinks],
+      smartypants: true,
+      gfm: true,
+    })
+  ],
+  vite: {
+    plugins: [tailwindcss()]
+  }
+});

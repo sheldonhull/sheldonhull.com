@@ -14,7 +14,6 @@ tags:
 - 100DaysOfCode
 - golang
 - microblog
-typora-root-url: ../../../static
 typora-copy-images-to:  ../../../static/images
 
 # images: [/images/r1-dVAR_DAYCOUNTER-IMAGE.png]

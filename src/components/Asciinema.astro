@@ -1,0 +1,25 @@
+---
+/**
+ * Asciinema Component
+ * Embeds terminal recordings from asciinema.org
+ *
+ * Usage: <Asciinema id="DnQ0MCgZekv11MggByfjqRNNT" />
+ *
+ * @prop {string} id - The asciinema recording ID
+ */
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<div class="asciinema-container">
+  <script is:inline src={`https://asciinema.org/a/${id}.js`} id={`asciicast-${id}`} async></script>
+</div>
+
+<style>
+  .asciinema-container {
+    margin: 2rem 0;
+  }
+</style>

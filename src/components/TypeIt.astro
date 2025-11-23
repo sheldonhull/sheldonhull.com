@@ -1,0 +1,161 @@
+---
+// TypeIt component for animated typewriter effect
+// Migrated from Hugo typeit shortcode
+interface Props {
+  tag?: string;
+  class?: string;
+  speed?: string | number;
+  deleteSpeed?: string | number;
+  startDelay?: string | number;
+  loop?: string | boolean;
+  cursor?: string | boolean;
+  strings?: string; // JSON string array for multiple strings
+}
+
+const {
+  tag: Tag = 'span',
+  class: className = '',
+  speed = '100',
+  deleteSpeed = '50',
+  startDelay = '250',
+  loop = 'false',
+  cursor = 'true',
+  strings
+} = Astro.props as Props;
+
+// Generate unique ID for this instance
+const id = `typeit-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<Tag
+  id={id}
+  class={`typeit ${className}`}
+  data-speed={speed.toString()}
+  data-delete-speed={deleteSpeed.toString()}
+  data-start-delay={startDelay.toString()}
+  data-loop={loop.toString()}
+  data-cursor={cursor.toString()}
+  data-strings={strings}
+>
+  <slot />
+</Tag>
+
+<script>
+  // Import TypeIt and initialize all instances when DOM is ready
+  import TypeIt from 'typeit';
+
+  // Initialize TypeIt on all typeit elements
+  document.addEventListener('DOMContentLoaded', () => {
+    const elements = document.querySelectorAll('.typeit');
+    elements.forEach((element) => {
+      // Get data attributes
+      const speed = parseInt(element.getAttribute('data-speed') || '100');
+      const deleteSpeed = parseInt(element.getAttribute('data-delete-speed') || '50');
+      const startDelay = parseInt(element.getAttribute('data-start-delay') || '250');
+      const loop = element.getAttribute('data-loop') === 'true';
+      const cursor = element.getAttribute('data-cursor') !== 'false';
+      const stringsAttr = element.getAttribute('data-strings');
+
+      // Parse strings if provided, otherwise use content
+      let strings;
+      if (stringsAttr) {
+        try {
+          strings = JSON.parse(stringsAttr);
+        } catch (e) {
+          strings = [element.textContent || ''];
+        }
+      } else {
+        strings = [element.textContent || ''];
+      }
+
+      // Clear the element
+      element.textContent = '';
+
+      // Initialize TypeIt with multiple strings support
+      if (strings.length > 1 && loop) {
+        // For multiple strings with loop, chain them
+        const instance = new TypeIt(element, {
+          speed: speed,
+          startDelay: startDelay,
+          cursor: cursor,
+          waitUntilVisible: true,
+          breakLines: false,
+        });
+
+        // Add first string
+        instance.type(strings[0]);
+
+        // Chain remaining strings with delete
+        for (let i = 1; i < strings.length; i++) {
+          instance
+            .pause(1000)
+            .delete(null, { deleteSpeed: deleteSpeed })
+            .type(strings[i]);
+        }
+
+        // Loop back to first
+        instance
+          .pause(1000)
+          .delete(null, { deleteSpeed: deleteSpeed })
+          .go();
+
+        // Manual loop after completion
+        instance.reset();
+
+        // Recursive loop function
+        const loopStrings = () => {
+          const loopInstance = new TypeIt(element, {
+            speed: speed,
+            cursor: cursor,
+            breakLines: false,
+          });
+
+          strings.forEach((str: string, idx: number) => {
+            if (idx === 0) {
+              loopInstance.type(str);
+            } else {
+              loopInstance
+                .pause(1000)
+                .delete(null, { deleteSpeed: deleteSpeed })
+                .type(str);
+            }
+          });
+
+          loopInstance
+            .pause(1000)
+            .delete(null, { deleteSpeed: deleteSpeed });
+
+          loopInstance.go();
+
+          // Call again after complete cycle
+          setTimeout(() => {
+            element.textContent = '';
+            loopStrings();
+          }, (speed + deleteSpeed) * strings.join('').length + 2000);
+        };
+
+        // Start the loop after initial run
+        setTimeout(() => {
+          element.textContent = '';
+          loopStrings();
+        }, (speed + deleteSpeed) * strings.join('').length + 2000);
+      } else {
+        // Single string or no loop
+        new TypeIt(element, {
+          strings: strings,
+          speed: speed,
+          startDelay: startDelay,
+          loop: loop,
+          cursor: cursor,
+          waitUntilVisible: true,
+        }).go();
+      }
+    });
+  });
+</script>
+
+<style>
+  .typeit {
+    display: inline-block;
+  }
+</style>

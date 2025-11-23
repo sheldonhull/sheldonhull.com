@@ -11,8 +11,6 @@ comments: true
 tags:
   - development
   - shell
-typora-root-url: ../../static
-typora-copy-images-to: ../../static/images
 ---
 
 This is a mix of shell, linux, and macOS commands.

@@ -1,0 +1,286 @@
+---
+interface Props {
+  images?: string[];  // Explicit list of image filenames
+  year?: string;       // Year directory
+  columns?: number;    // Number of columns (default: 3)
+}
+
+const { images: imageList = [], year, columns = 3 } = Astro.props;
+
+// Build URLs for images - they're now in public/posts/{year}/images/
+const imagePaths = imageList.map(img => {
+  if (year) {
+    return `/posts/${year}/images/${img}`;
+  }
+  return `/images/${img}`;
+});
+
+const galleryId = `gallery-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="gallery" data-columns={columns} id={galleryId}>
+  {imagePaths.length === 0 ? (
+    <p class="gallery-empty">
+      No images provided. Usage: <code>&lt;Gallery images={["image1.jpg", "image2.jpg"]} year="2023" /&gt;</code>
+    </p>
+  ) : (
+    imagePaths.map((imgPath, index) => (
+      <figure class="gallery-item">
+        <button
+          class="gallery-btn"
+          data-index={index}
+          aria-label={`View image ${index + 1}`}
+        >
+          <img
+            src={imgPath}
+            alt={`Gallery image ${index + 1}`}
+            loading="lazy"
+            decoding="async"
+          />
+        </button>
+      </figure>
+    ))
+  )}
+</div>
+
+<!-- Lightbox Modal -->
+<div class="lightbox" id={`${galleryId}-lightbox`} style="display: none;">
+  <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+  <button class="lightbox-prev" aria-label="Previous image">&larr;</button>
+  <button class="lightbox-next" aria-label="Next image">&rarr;</button>
+  <div class="lightbox-content">
+    <img src="" alt="" class="lightbox-image" />
+    <div class="lightbox-counter"></div>
+  </div>
+</div>
+
+<style>
+  .gallery {
+    column-count: var(--gallery-columns, 3);
+    column-gap: 0.5rem;
+    margin: 2rem 0;
+  }
+
+  .gallery[data-columns="2"] {
+    --gallery-columns: 2;
+  }
+
+  .gallery[data-columns="3"] {
+    --gallery-columns: 3;
+  }
+
+  .gallery[data-columns="4"] {
+    --gallery-columns: 4;
+  }
+
+  @media (max-width: 768px) {
+    .gallery {
+      column-count: 2;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .gallery {
+      column-count: 1;
+    }
+  }
+
+  .gallery-item {
+    margin: 0 0 0.5rem 0;
+    break-inside: avoid;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #f0f0f0;
+  }
+
+  .gallery-btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gallery-btn img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .gallery-btn:hover img {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+
+  .gallery-btn:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+  }
+
+  /* Lightbox Styles */
+  .lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .lightbox-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lightbox-image {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  .lightbox-counter {
+    color: white;
+    font-size: 1rem;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .lightbox-close,
+  .lightbox-prev,
+  .lightbox-next {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 1rem;
+    transition: background 0.2s ease;
+    z-index: 10000;
+    border-radius: 4px;
+  }
+
+  .lightbox-close:hover,
+  .lightbox-prev:hover,
+  .lightbox-next:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox-close {
+    top: 1rem;
+    right: 1rem;
+    font-size: 2.5rem;
+    line-height: 1;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+  }
+
+  .lightbox-prev {
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lightbox-next {
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .gallery-empty {
+    padding: 2rem;
+    background: #f5f5f5;
+    border-radius: 4px;
+    color: #666;
+  }
+
+  .gallery-empty code {
+    background: #e0e0e0;
+    padding: 0.125rem 0.25rem;
+    border-radius: 2px;
+    font-size: 0.875em;
+  }
+</style>
+
+<script define:vars={{ galleryId, imagePaths }}>
+  // Lightbox functionality
+  const gallery = document.getElementById(galleryId);
+  const lightbox = document.getElementById(`${galleryId}-lightbox`);
+  const lightboxImage = lightbox.querySelector('.lightbox-image');
+  const lightboxCounter = lightbox.querySelector('.lightbox-counter');
+  const closeBtn = lightbox.querySelector('.lightbox-close');
+  const prevBtn = lightbox.querySelector('.lightbox-prev');
+  const nextBtn = lightbox.querySelector('.lightbox-next');
+
+  let currentIndex = 0;
+
+  function showImage(index) {
+    currentIndex = index;
+    lightboxImage.src = imagePaths[index];
+    lightboxImage.alt = `Gallery image ${index + 1}`;
+    lightboxCounter.textContent = `${index + 1} / ${imagePaths.length}`;
+    lightbox.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function hideImage() {
+    lightbox.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function showNext() {
+    currentIndex = (currentIndex + 1) % imagePaths.length;
+    showImage(currentIndex);
+  }
+
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + imagePaths.length) % imagePaths.length;
+    showImage(currentIndex);
+  }
+
+  // Event listeners
+  gallery.querySelectorAll('.gallery-btn').forEach((btn, index) => {
+    btn.addEventListener('click', () => showImage(index));
+  });
+
+  closeBtn.addEventListener('click', hideImage);
+  prevBtn.addEventListener('click', showPrev);
+  nextBtn.addEventListener('click', showNext);
+
+  // Close on background click
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      hideImage();
+    }
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.style.display === 'flex') {
+      if (e.key === 'Escape') hideImage();
+      if (e.key === 'ArrowRight') showNext();
+      if (e.key === 'ArrowLeft') showPrev();
+    }
+  });
+</script>

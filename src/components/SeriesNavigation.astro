@@ -1,0 +1,250 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentPost: CollectionEntry<'posts'>;
+}
+
+const { currentPost } = Astro.props;
+const series = currentPost.data.series;
+const currentOrder = currentPost.data.seriesOrder;
+
+// If no series, don't render anything
+if (!series || !currentOrder) {
+  return null;
+}
+
+// Get all posts in the same series
+const allPosts = await getCollection('posts');
+const seriesPosts = allPosts
+  .filter(post => post.data.series === series && post.data.seriesOrder)
+  .sort((a, b) => (a.data.seriesOrder || 0) - (b.data.seriesOrder || 0));
+
+const totalPosts = seriesPosts.length;
+const currentIndex = seriesPosts.findIndex(p => p.id === currentPost.id);
+const prevPost = currentIndex > 0 ? seriesPosts[currentIndex - 1] : null;
+const nextPost = currentIndex < totalPosts - 1 ? seriesPosts[currentIndex + 1] : null;
+---
+
+<div
+  class="series-navigation mb-8 rounded-lg p-6 border transition-all duration-300 hover:shadow-xl"
+  style="background: var(--sw-bg-secondary); border-color: rgba(199, 146, 234, 0.3);"
+>
+  <!-- Series Header -->
+  <div class="flex items-start gap-3 mb-4">
+    <svg
+      class="w-5 h-5 mt-1 flex-shrink-0"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      style="color: var(--sw-purple);"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+      />
+    </svg>
+    <div class="flex-1">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--sw-cyan);">
+        Series
+      </div>
+      <h3 class="text-xl font-bold synthwave-gradient">
+        {series}
+      </h3>
+      <div class="text-sm mt-1" style="color: var(--sw-text-muted);">
+        Part {currentOrder} of {totalPosts}
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="mb-4 h-1 rounded-full overflow-hidden" style="background: var(--sw-bg-tertiary);">
+    <div
+      class="h-full transition-all duration-500 rounded-full"
+      style={`width: ${(currentOrder / totalPosts) * 100}%; background: linear-gradient(90deg, var(--sw-cyan), var(--sw-purple));`}
+    />
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="flex gap-3 mb-4">
+    {prevPost ? (
+      <a
+        href={`/${prevPost.data.slug || prevPost.slug}`}
+        class="flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border transition-all duration-200 hover:scale-105 hover:shadow-lg group"
+        style="background: var(--sw-bg-tertiary); border-color: rgba(127, 219, 202, 0.3);"
+      >
+        <svg
+          class="w-4 h-4 transition-transform group-hover:-translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          style="color: var(--sw-cyan);"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <div class="flex-1 text-left">
+          <div class="text-xs" style="color: var(--sw-text-muted);">Previous</div>
+          <div class="text-sm font-medium line-clamp-1" style="color: var(--sw-text-primary);">
+            {prevPost.data.title}
+          </div>
+        </div>
+      </a>
+    ) : (
+      <div
+        class="flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border opacity-50 cursor-not-allowed"
+        style="background: var(--sw-bg-tertiary); border-color: rgba(127, 219, 202, 0.15);"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          style="color: var(--sw-text-muted);"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <div class="flex-1 text-left">
+          <div class="text-xs" style="color: var(--sw-text-muted);">First post</div>
+        </div>
+      </div>
+    )}
+
+    {nextPost ? (
+      <a
+        href={`/${nextPost.data.slug || nextPost.slug}`}
+        class="flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border transition-all duration-200 hover:scale-105 hover:shadow-lg group"
+        style="background: var(--sw-bg-tertiary); border-color: rgba(255, 88, 116, 0.3);"
+      >
+        <div class="flex-1 text-right">
+          <div class="text-xs" style="color: var(--sw-text-muted);">Next</div>
+          <div class="text-sm font-medium line-clamp-1" style="color: var(--sw-text-primary);">
+            {nextPost.data.title}
+          </div>
+        </div>
+        <svg
+          class="w-4 h-4 transition-transform group-hover:translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          style="color: var(--sw-pink);"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    ) : (
+      <div
+        class="flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border opacity-50 cursor-not-allowed"
+        style="background: var(--sw-bg-tertiary); border-color: rgba(255, 88, 116, 0.15);"
+      >
+        <div class="flex-1 text-right">
+          <div class="text-xs" style="color: var(--sw-text-muted);">Last post</div>
+        </div>
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          style="color: var(--sw-text-muted);"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </div>
+    )}
+  </div>
+
+  <!-- All Posts in Series (Collapsible) -->
+  <details class="group">
+    <summary
+      class="cursor-pointer flex items-center gap-2 text-sm font-medium py-2 px-3 rounded-lg transition-colors hover:bg-opacity-50 list-none"
+      style="color: var(--sw-text-secondary); background: var(--sw-bg-tertiary);"
+    >
+      <svg
+        class="w-4 h-4 transition-transform group-open:rotate-90"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      View all {totalPosts} posts in this series
+    </summary>
+    <div class="mt-3 space-y-2 pl-2">
+      {seriesPosts.map((post, index) => (
+        <a
+          href={`/${post.data.slug || post.slug}`}
+          class:list={[
+            "block px-4 py-2 rounded-lg border transition-all duration-200",
+            post.id === currentPost.id ? "border-opacity-100 shadow-md" : "border-opacity-30 hover:border-opacity-60 hover:shadow-sm"
+          ]}
+          style={
+            post.id === currentPost.id
+              ? "background: var(--sw-bg-tertiary); border-color: var(--sw-purple); box-shadow: 0 0 10px rgba(199, 146, 234, 0.2);"
+              : "background: var(--sw-bg-tertiary); border-color: rgba(127, 219, 202, 0.2);"
+          }
+        >
+          <div class="flex items-start gap-3">
+            <div
+              class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+              style={
+                post.id === currentPost.id
+                  ? "background: linear-gradient(135deg, var(--sw-cyan), var(--sw-purple)); color: var(--sw-bg-primary);"
+                  : "background: var(--sw-bg-secondary); color: var(--sw-text-muted);"
+              }
+            >
+              {post.data.seriesOrder}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div
+                class="font-medium text-sm"
+                style={
+                  post.id === currentPost.id
+                    ? "color: var(--sw-text-primary);"
+                    : "color: var(--sw-text-secondary);"
+                }
+              >
+                {post.data.title}
+                {post.id === currentPost.id && (
+                  <span
+                    class="ml-2 text-xs px-2 py-0.5 rounded-full"
+                    style="background: var(--sw-purple); color: var(--sw-text-primary);"
+                  >
+                    Current
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </details>
+</div>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .synthwave-gradient {
+    background: linear-gradient(135deg, var(--sw-cyan), var(--sw-purple), var(--sw-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Smooth hover effects */
+  .series-navigation:hover {
+    box-shadow: 0 0 30px rgba(199, 146, 234, 0.2);
+  }
+
+  /* Custom details arrow removal */
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

@@ -1,0 +1,359 @@
+---
+// Liquid glass header using animated SVG filters
+// Applies actual distortion to text via SVG displacement
+// Includes scroll-based quote rotation and avatar spin animation
+import { headerQuotes } from '../config/site';
+---
+
+<!-- SVG filter for liquid glass text distortion -->
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position: absolute;">
+  <defs>
+    <filter id="liquid-distortion" x="-50%" y="-50%" width="200%" height="200%">
+      <feTurbulence id="turbulence" type="fractalNoise" baseFrequency="0.009 0.009" numOctaves="3" seed="2" result="noise">
+        <animate attributeName="baseFrequency" dur="20s" values="0.009 0.009;0.011 0.010;0.009 0.009" repeatCount="indefinite" />
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+</svg>
+
+<div class="liquid-glass-header" id="liquid-header">
+  <div class="container mx-auto px-4 py-4 relative z-10 liquid-text-container">
+    <div class="flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3 text-xl font-bold transition-all duration-300 hover:scale-105 neon-glow-cyan" style="color: var(--sw-cyan);">
+        <!-- Avatar container with fixed width to prevent overlap -->
+        <div id="avatar-container" class="relative flex-shrink-0" style="width: 2.5rem; height: 2.5rem;">
+          <!-- Circular avatar -->
+          <img
+            id="avatar-logo"
+            src="/avatar-skitch-sheldon.png"
+            alt="Sheldon Hull Avatar"
+            class="w-10 h-10 rounded-full avatar-image"
+            style="transition: transform 600ms ease;"
+          />
+          <!-- Speech bubble -->
+          <div id="speech-bubble" class="speech-bubble">
+            Greetings & Salutations!
+          </div>
+        </div>
+        <!-- Text container for overlapping title/quote -->
+        <div class="relative">
+          <!-- Site name (default) -->
+          <span id="site-name" class="header-text transition-opacity duration-500">sheldonhull.com</span>
+          <!-- Tech quote (scrolled) - absolutely positioned to overlay site name exactly -->
+          <span id="tech-quote" class="header-text absolute top-0 left-0 opacity-0 transition-opacity duration-500 whitespace-nowrap" style="color: var(--sw-cyan);">
+          </span>
+        </div>
+      </a>
+      <div class="flex gap-6">
+        <a href="/" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Home</a>
+        <a href="/posts" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Posts</a>
+        <a href="/tags" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Tags</a>
+        <a href="/about" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">About</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .liquid-text-container {
+    filter: url(#liquid-distortion);
+    will-change: filter;
+  }
+
+  .header-text {
+    transition: opacity 500ms ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Mobile: hide quote feature */
+  @media (max-width: 767px) {
+    #tech-quote {
+      display: none !important;
+    }
+  }
+
+  /* Avatar hover peek and wobble animation */
+  @keyframes peekAndWobble {
+    0% {
+      transform: scale(1) rotateZ(0deg) rotateY(0deg);
+    }
+    15% {
+      transform: scale(4) rotateZ(0deg) rotateY(0deg);
+    }
+    25% {
+      transform: scale(4) rotateZ(-8deg) rotateY(-15deg);
+    }
+    35% {
+      transform: scale(4) rotateZ(8deg) rotateY(15deg);
+    }
+    45% {
+      transform: scale(4) rotateZ(-8deg) rotateY(-15deg);
+    }
+    55% {
+      transform: scale(4) rotateZ(8deg) rotateY(15deg);
+    }
+    65% {
+      transform: scale(4) rotateZ(0deg) rotateY(0deg);
+    }
+    100% {
+      transform: scale(4) rotateZ(0deg) rotateY(0deg);
+    }
+  }
+
+  @keyframes speechBubbleFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .avatar-image.peeking {
+    animation: peekAndWobble 1.4s ease-in-out forwards;
+    position: relative;
+    z-index: 10000;
+    transform-origin: top left;
+    transform-style: preserve-3d;
+    backface-visibility: visible;
+  }
+
+  .avatar-image {
+    cursor: pointer;
+    transform-origin: center center;
+    position: relative;
+    transform-style: preserve-3d;
+    z-index: 50;
+  }
+
+  #avatar-container {
+    cursor: pointer;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    position: relative;
+    z-index: 9998;
+    isolation: isolate;
+  }
+
+  .speech-bubble {
+    position: fixed;
+    top: 70px;
+    left: 180px;
+    background: white;
+    color: #2c3e50;
+    padding: 1rem 1.5rem;
+    border-radius: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    opacity: 0;
+    z-index: 9999;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 3px solid #2c3e50;
+  }
+
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    width: 25px;
+    height: 25px;
+    background: white;
+    border: 3px solid #2c3e50;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: 60%;
+    left: -35px;
+    width: 15px;
+    height: 15px;
+    background: white;
+    border: 3px solid #2c3e50;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+  }
+
+  .speech-bubble.show {
+    animation: speechBubbleFadeIn 0.3s ease-out forwards;
+  }
+</style>
+
+<script define:vars={{ techQuotes: headerQuotes }}>
+  // Tech shower thought quotes loaded from site config
+
+  function initHeaderScrollEffect() {
+    // Skip on mobile
+    if (window.innerWidth < 768) {
+      return;
+    }
+
+    const avatarLogo = document.getElementById('avatar-logo');
+    const siteName = document.getElementById('site-name');
+    const techQuote = document.getElementById('tech-quote');
+
+    if (!avatarLogo || !siteName || !techQuote) {
+      return;
+    }
+
+    let isScrolled = false;
+    let ticking = false;
+    let lastScrollTop = 0;
+
+    // Get random quote
+    function getRandomQuote() {
+      return techQuotes[Math.floor(Math.random() * techQuotes.length)];
+    }
+
+    // Handle scroll state change
+    function updateHeaderState() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollThreshold = 50;
+
+      // Detect if we just scrolled from top
+      const wasAtTop = lastScrollTop <= scrollThreshold;
+      const isAtTop = scrollTop <= scrollThreshold;
+      const justScrolledDown = wasAtTop && !isAtTop;
+
+      if (scrollTop > scrollThreshold && !isScrolled) {
+        // Scrolled down - show quote and rotate avatar
+        isScrolled = true;
+
+        // Pick new quote
+        techQuote.textContent = getRandomQuote();
+
+        // Rotate avatar and swap text
+        avatarLogo.style.transform = 'rotate(360deg)';
+        siteName.style.opacity = '0';
+
+        // Delay quote fade-in slightly for smoother effect
+        setTimeout(() => {
+          techQuote.style.opacity = '0.6';
+        }, 200);
+
+      } else if (scrollTop <= scrollThreshold && isScrolled) {
+        // Scrolled back to top - restore original state
+        isScrolled = false;
+
+        avatarLogo.style.transform = 'rotate(0deg)';
+        siteName.style.opacity = '1';
+        techQuote.style.opacity = '0';
+      }
+
+      // Pick new quote each time we scroll down from top
+      if (justScrolledDown) {
+        techQuote.textContent = getRandomQuote();
+      }
+
+      lastScrollTop = scrollTop;
+      ticking = false;
+    }
+
+    // Throttled scroll handler
+    function requestTick() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeaderState);
+        ticking = true;
+      }
+    }
+
+    // Attach scroll listener
+    window.addEventListener('scroll', requestTick, { passive: true });
+
+    // Initial state
+    updateHeaderState();
+  }
+
+  // Avatar hover peek and wobble effect
+  function initAvatarHoverEffect() {
+    const avatarContainer = document.getElementById('avatar-container');
+    const avatarLogo = document.getElementById('avatar-logo');
+    const speechBubble = document.getElementById('speech-bubble');
+
+    if (!avatarContainer || !avatarLogo || !speechBubble) {
+      return;
+    }
+
+    let hoverTimeout = null;
+    let speechTimeout = null;
+    let hideTimeout = null;
+    let isAnimating = false;
+
+    // Mouseenter: start 1-second timer - listen to container, not image
+    avatarContainer.addEventListener('mouseenter', () => {
+      if (isAnimating) return;
+
+      // Clear any pending hide timeout
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        hideTimeout = null;
+      }
+
+      hoverTimeout = setTimeout(() => {
+        isAnimating = true;
+        avatarLogo.classList.add('peeking');
+
+        // Show speech bubble after avatar grows (0.4s into the animation)
+        speechTimeout = setTimeout(() => {
+          speechBubble.classList.add('show');
+        }, 400);
+
+        // No auto-hide - stays open until mouseleave
+      }, 1000);
+    });
+
+    // Mouseleave: cancel timer and return to normal - listen to container
+    avatarContainer.addEventListener('mouseleave', () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+      if (speechTimeout) {
+        clearTimeout(speechTimeout);
+        speechTimeout = null;
+      }
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        hideTimeout = null;
+      }
+
+      // Remove animation classes and reset
+      avatarLogo.classList.remove('peeking');
+      speechBubble.classList.remove('show');
+      isAnimating = false;
+
+      // Only reset if not currently scrolled (preserve scroll rotation)
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop <= 50) {
+        avatarLogo.style.transform = 'rotate(0deg)';
+      }
+    });
+  }
+
+  // Initialize on page load
+  document.addEventListener('astro:page-load', () => {
+    initHeaderScrollEffect();
+    initAvatarHoverEffect();
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initHeaderScrollEffect();
+      initAvatarHoverEffect();
+    });
+  } else {
+    initHeaderScrollEffect();
+    initAvatarHoverEffect();
+  }
+</script>

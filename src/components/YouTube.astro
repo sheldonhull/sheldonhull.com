@@ -1,0 +1,28 @@
+---
+/**
+ * YouTube Video Embed Component
+ * Wrapper around @astro-community/astro-embed-youtube
+ * Provides lightweight, performant YouTube embeds using lite-youtube-embed
+ *
+ * @param id - YouTube video ID (e.g., "dQw4w9WgXcQ")
+ * @param title - Optional title for accessibility (defaults to "YouTube video")
+ */
+import { YouTube as YouTubeEmbed } from '@astro-community/astro-embed-youtube';
+
+interface Props {
+  id: string;
+  title?: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<YouTubeEmbed id={id} title={title} />
+
+<style is:global>
+  /* Ensure responsive YouTube embeds */
+  lite-youtube {
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+</style>

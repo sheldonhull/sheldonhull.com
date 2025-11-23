@@ -1,0 +1,77 @@
+---
+interface Props {
+  type?: 'info' | 'warning' | 'danger' | 'success' | 'note' | 'tip';
+  title?: string;
+}
+
+const { type = 'info', title } = Astro.props;
+
+// Map types to colors and icons - Night Owl Theme colors
+const styles = {
+  info: {
+    container: 'text-white border-l-4 shadow-[0_0_8px_rgba(127,219,202,0.3)]',
+    bg: 'rgba(127, 219, 202, 0.15)',
+    borderColor: '#7fdbca',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`,
+    label: 'INFO'
+  },
+  warning: {
+    container: 'text-white border-l-4 shadow-[0_0_8px_rgba(236,196,141,0.3)]',
+    bg: 'rgba(236, 196, 141, 0.15)',
+    borderColor: '#ecc48d',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`,
+    label: 'WARNING'
+  },
+  danger: {
+    container: 'text-white border-l-4 shadow-[0_0_8px_rgba(255,88,116,0.3)]',
+    bg: 'rgba(255, 88, 116, 0.15)',
+    borderColor: '#ff5874',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 17h.01"/></svg>`,
+    label: 'DANGER'
+  },
+  success: {
+    container: 'text-white border-l-4 shadow-[0_0_8px_rgba(130,170,255,0.3)]',
+    bg: 'rgba(130, 170, 255, 0.15)',
+    borderColor: '#82aaff',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>`,
+    label: 'SUCCESS'
+  },
+  note: {
+    container: 'text-white border-l-4 shadow-[0_0_8px_rgba(199,146,234,0.3)]',
+    bg: 'rgba(199, 146, 234, 0.15)',
+    borderColor: '#c792ea',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>`,
+    label: 'NOTE'
+  },
+  tip: {
+    container: 'text-white border-l-4 shadow-[0_0_8px_rgba(127,219,202,0.3)]',
+    bg: 'rgba(127, 219, 202, 0.15)',
+    borderColor: '#7fdbca',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>`,
+    label: 'TIP'
+  }
+};
+
+const currentStyle = styles[type];
+---
+
+<aside
+  class={`${currentStyle.container} rounded-lg p-4 mb-4`}
+  style={`background: ${currentStyle.bg}; border-left-color: ${currentStyle.borderColor};`}
+  role="alert"
+>
+  <div class="flex items-start gap-3">
+    <div class="flex-shrink-0 mt-0.5" set:html={currentStyle.icon} />
+    <div class="flex-1 [&_a]:text-white [&_a]:underline [&_a:hover]:text-white/80 [&_code]:bg-black/20 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_pre]:bg-black/30 [&_pre]:p-3 [&_pre]:rounded-md [&_pre]:overflow-x-auto [&_strong]:font-bold [&_ul]:my-2 [&_ul]:ml-4 [&_ol]:my-2 [&_ol]:ml-4 [&_li]:my-1 [&_table]:w-full [&_table]:my-4 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:font-semibold [&_th]:border-b [&_th]:border-white/30 [&_td]:px-3 [&_td]:py-2 [&_td]:border-b [&_td]:border-white/20 [&_thead]:bg-black/20">
+      {title && (
+        <h3 class="font-bold text-lg mb-2">{title}</h3>
+      )}
+      {!title && (
+        <p class="font-semibold text-sm mb-1">{currentStyle.label}</p>
+      )}
+      <div class="text-white/95">
+        <slot />
+      </div>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,145 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SeriesNavigation from '../components/SeriesNavigation.astro';
+import { getCollection } from 'astro:content';
+import { humanizeDate, formatDate } from '../utils/date';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map(post => ({
+    params: { slug: post.data.slug || post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const humanizedDate = humanizeDate(post.data.date);
+const formattedDate = formatDate(post.data.date);
+---
+
+<BaseLayout title={`${post.data.title} - Sheldon Hull`} description={post.data.title}>
+  <article class="max-w-3xl mx-auto">
+    <!-- Back link -->
+    <div class="mb-8">
+      <a
+        href="/posts"
+        class="inline-flex items-center gap-2 transition-colors hover:text-[var(--sw-cyan)] text-sm"
+        style="color: var(--sw-text-secondary);"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to posts
+      </a>
+    </div>
+
+    <!-- Post header -->
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4 synthwave-gradient">
+        {post.data.title}
+      </h1>
+      <div class="flex items-center gap-4 text-sm" style="color: var(--sw-text-muted);">
+        <time datetime={post.data.date.toISOString()} title={formattedDate}>
+          {humanizedDate}
+        </time>
+        {post.data.authors && post.data.authors.length > 0 && (
+          <>
+            <span style="color: var(--sw-purple);">•</span>
+            <span>{post.data.authors.join(', ')}</span>
+          </>
+        )}
+      </div>
+      {post.data.tags && post.data.tags.length > 0 && (
+        <div class="flex gap-2 mt-4 flex-wrap">
+          {post.data.tags.map(tag => (
+            <span
+              key={tag}
+              class="text-xs px-3 py-1 rounded-full"
+              style="color: var(--sw-cyan); background: var(--sw-bg-tertiary); border: 1px solid rgba(127, 219, 202, 0.3);"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <!-- Series Navigation -->
+    <SeriesNavigation currentPost={post} />
+
+    <!-- Post content -->
+    <div class="prose prose-invert max-w-none">
+      <style>
+        .prose {
+          --tw-prose-body: var(--sw-text-secondary);
+          --tw-prose-headings: var(--sw-text-primary);
+          --tw-prose-links: var(--sw-cyan);
+          --tw-prose-bold: var(--sw-text-primary);
+          --tw-prose-code: var(--sw-pink);
+          --tw-prose-quotes: var(--sw-text-secondary);
+        }
+        .prose a {
+          color: var(--sw-cyan);
+          text-decoration: none;
+          transition: all 0.2s;
+        }
+        .prose a:hover {
+          opacity: 0.8;
+        }
+        .prose code {
+          color: var(--sw-pink);
+          background: var(--sw-bg-tertiary);
+          padding: 0.2em 0.4em;
+          border-radius: 0.25rem;
+        }
+        .prose pre {
+          background: var(--sw-bg-secondary);
+          border: 1px solid var(--sw-purple);
+        }
+        .prose blockquote {
+          border-left-color: var(--sw-cyan);
+          color: var(--sw-text-secondary);
+        }
+        .prose table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1.5rem 0;
+        }
+        .prose thead {
+          border-bottom: 2px solid var(--sw-cyan);
+        }
+        .prose th {
+          padding: 0.75rem 1rem;
+          text-align: left;
+          font-weight: 600;
+          color: var(--sw-cyan);
+        }
+        .prose td {
+          padding: 0.75rem 1rem;
+          border-bottom: 1px solid rgba(127, 219, 202, 0.2);
+          color: var(--sw-text-secondary);
+        }
+        .prose tbody tr:hover {
+          background: rgba(127, 219, 202, 0.05);
+        }
+      </style>
+      <Content />
+    </div>
+
+    <!-- Post footer -->
+    <footer class="mt-16 pt-8" style="border-top: 1px solid rgba(199, 146, 234, 0.3);">
+      <a
+        href="/posts"
+        class="inline-flex items-center gap-2 transition-colors hover:opacity-80"
+        style="color: var(--sw-pink);"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        View all posts
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

@@ -54,7 +54,7 @@ pre-commit:
           hugo:
             tags: build
             name: hugo-build
-            run: MAGEFILE_HASHFAST=1 mage hugo:build
+            run: MAGEFILE_HASHFAST=1 go tool mage hugo:build
     #yarn run markdownlint-cli2-fix "{files}"
     # markdownlint-cli2  "{files}"
     #"**/*.md" "#node_modules"

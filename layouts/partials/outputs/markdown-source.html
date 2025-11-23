@@ -1,0 +1,10 @@
+{{- $path := "" -}}
+{{- with .File -}}
+{{- $path = .Path -}}
+{{- end -}}
+{{- if $path -}}
+{{- /* Read original Markdown (including front matter) */ -}}
+{{- readFile $path -}}
+{{- else -}}
+{{- .RawContent -}}
+{{- end -}}
