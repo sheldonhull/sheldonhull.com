@@ -1,618 +1,745 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FAIcon from '../components/FAIcon.astro';
-import MermaidGraph from '../components/MermaidGraph.astro';
 
-interface CommitNode {
-  date: string;
-  calver: string; // YYYY.MM format
+interface Achievement {
+  year: number;
   title: string;
-  blurb: string;
+  description: string;
   icon: string;
   iconStyle: 'solid' | 'brands' | 'regular';
-  color: 'cyan' | 'purple' | 'pink' | 'yellow';
-  lane: number; // 0 = main branch, 1+ = feature branches
-  type: 'commit' | 'branch' | 'merge';
-  branchFrom?: number; // which lane this branches from
-  mergeTo?: number; // which lane this merges to
   xp: number;
 }
 
-const commits: CommitNode[] = [
+interface Level {
+  level: number;
+  title: string;
+  yearRange: string;
+  achievements: Achievement[];
+  totalXP: number;
+}
+
+const levels: Level[] = [
   {
-    date: '2025-11-23',
-    calver: '2025.11',
-    title: 'Hugo → Astro Migration',
-    blurb: 'Migrated entire site from Hugo to Astro for modern DX and tooling',
-    icon: 'rocket',
-    iconStyle: 'solid',
-    color: 'cyan',
-    lane: 0,
-    type: 'commit',
-    xp: 150,
+    level: 1,
+    title: 'The Awakening',
+    yearRange: '2008-2012',
+    totalXP: 650,
+    achievements: [
+      { year: 2008, title: 'Guitar Passion', description: 'Electric and acoustic guitar became lifelong passion', icon: 'guitar', iconStyle: 'solid', xp: 150 },
+      { year: 2010, title: 'Stick Shift Trial', description: 'Bought Mazdaspeed3 without knowing manual', icon: 'car', iconStyle: 'solid', xp: 100 },
+      { year: 2012, title: 'PowerShell Era', description: 'Began automating everything with PowerShell', icon: 'bolt', iconStyle: 'solid', xp: 200 },
+      { year: 2012, title: 'SQL Deep Dive', description: 'Database optimization and query tuning mastery', icon: 'database', iconStyle: 'solid', xp: 200 },
+    ]
   },
   {
-    date: '2024-10-01',
-    calver: '2024.10',
-    title: 'AI for Diagnostics',
-    blurb: 'Started using GPT/ChatGPT for troubleshooting and problem-solving',
-    icon: 'brain',
-    iconStyle: 'solid',
-    color: 'purple',
-    lane: 0,
-    type: 'commit',
-    xp: 50,
+    level: 2,
+    title: 'Creative Expansion',
+    yearRange: '2014-2017',
+    totalXP: 550,
+    achievements: [
+      { year: 2015, title: 'Photography & Video', description: 'Started capturing light and visual stories', icon: 'camera', iconStyle: 'solid', xp: 200 },
+      { year: 2016, title: 'Music Production', description: 'Dove into DAW and digital audio', icon: 'sliders', iconStyle: 'solid', xp: 75 },
+      { year: 2017, title: 'Family Thanksgiving', description: 'Hosted family gathering, captured memories', icon: 'turkey', iconStyle: 'solid', xp: 75 },
+    ]
   },
   {
-    date: '2023-12-01',
-    calver: '2023.12',
-    title: 'Local AI Exploration',
-    blurb: 'Set up Ollama to run local LLMs (llama2:13b) on M2 Max',
-    icon: 'microchip',
-    iconStyle: 'solid',
-    color: 'purple',
-    lane: 0,
-    type: 'commit',
-    xp: 75,
+    level: 3,
+    title: 'Go Journey',
+    yearRange: '2020-2021',
+    totalXP: 300,
+    achievements: [
+      { year: 2020, title: 'Go Learning', description: 'Started 100 Days of Code with Go', icon: 'code-branch', iconStyle: 'solid', xp: 100 },
+      { year: 2021, title: 'Go Career', description: 'Joined role using Go professionally', icon: 'code-merge', iconStyle: 'solid', xp: 200 },
+    ]
   },
   {
-    date: '2023-12-02',
-    calver: '2023.12',
-    title: 'London & Chunnel',
-    blurb: 'Crossed under English Channel by train, explored London pubs',
-    icon: 'train',
-    iconStyle: 'solid',
-    color: 'yellow',
-    lane: 1,
-    type: 'merge',
-    mergeTo: 0,
-    xp: 125,
+    level: 4,
+    title: 'Digital Nomad',
+    yearRange: '2023',
+    totalXP: 625,
+    achievements: [
+      { year: 2023, title: 'Digital Garden', description: 'Published personal knowledge base', icon: 'seedling', iconStyle: 'solid', xp: 100 },
+      { year: 2023, title: 'Manual F150', description: 'Drove manual truck without stalling', icon: 'truck', iconStyle: 'solid', xp: 75 },
+      { year: 2023, title: 'NYC Visit', description: 'Conquered concrete jungle', icon: 'building', iconStyle: 'solid', xp: 125 },
+      { year: 2023, title: 'Paris Adventure', description: 'Led family through City of Lights', icon: 'tower-broadcast', iconStyle: 'solid', xp: 150 },
+      { year: 2023, title: 'Versailles', description: 'Wandered grand palace grounds', icon: 'monument', iconStyle: 'solid', xp: 100 },
+      { year: 2023, title: 'London & Chunnel', description: 'Crossed under English Channel', icon: 'train', iconStyle: 'solid', xp: 125 },
+    ]
   },
   {
-    date: '2023-11-27',
-    calver: '2023.11',
-    title: 'Palace of Versailles',
-    blurb: 'Wandered grand palace grounds outside Paris',
-    icon: 'monument',
-    iconStyle: 'solid',
-    color: 'yellow',
-    lane: 1,
-    type: 'commit',
-    xp: 100,
+    level: 5,
+    title: 'AI Era',
+    yearRange: '2023-2024',
+    totalXP: 125,
+    achievements: [
+      { year: 2023, title: 'Local AI', description: 'Set up Ollama with local LLMs', icon: 'microchip', iconStyle: 'solid', xp: 75 },
+      { year: 2024, title: 'AI Diagnostics', description: 'Using GPT for troubleshooting', icon: 'brain', iconStyle: 'solid', xp: 50 },
+    ]
   },
   {
-    date: '2023-11-14',
-    calver: '2023.11',
-    title: 'Paris with Family',
-    blurb: 'Led family through City of Lights, navigated metro system',
-    icon: 'tower-broadcast',
-    iconStyle: 'solid',
-    color: 'yellow',
-    lane: 1,
-    type: 'commit',
-    xp: 150,
-  },
-  {
-    date: '2023-11-06',
-    calver: '2023.11',
-    title: 'First NYC Visit',
-    blurb: 'Conquered concrete jungle, won rat-spotting challenge',
-    icon: 'building',
-    iconStyle: 'solid',
-    color: 'yellow',
-    lane: 0,
-    type: 'branch',
-    branchFrom: 0,
-    xp: 125,
-  },
-  {
-    date: '2023-10-20',
-    calver: '2023.10',
-    title: 'Manual F150 Mastery',
-    blurb: 'Drove manual truck for first time without stalling',
-    icon: 'truck',
-    iconStyle: 'solid',
-    color: 'pink',
-    lane: 0,
-    type: 'commit',
-    xp: 75,
-  },
-  {
-    date: '2023-03-12',
-    calver: '2023.03',
-    title: 'Digital Garden Launch',
-    blurb: 'Published personal knowledge base to web',
-    icon: 'seedling',
-    iconStyle: 'solid',
-    color: 'purple',
-    lane: 0,
-    type: 'commit',
-    xp: 100,
-  },
-  {
-    date: '2021-08-12',
-    calver: '2021.08',
-    title: 'Go Career Merge',
-    blurb: 'Joined role using Go professionally after learning journey',
-    icon: 'code-merge',
-    iconStyle: 'solid',
-    color: 'cyan',
-    lane: 1,
-    type: 'merge',
-    mergeTo: 0,
-    xp: 200,
-  },
-  {
-    date: '2020-06-01',
-    calver: '2020.06',
-    title: 'Go Journey Branch',
-    blurb: 'Started 100 Days of Code with Go, building DevOps tools',
-    icon: 'code-branch',
-    iconStyle: 'solid',
-    color: 'cyan',
-    lane: 0,
-    type: 'branch',
-    branchFrom: 0,
-    xp: 100,
-  },
-  {
-    date: '2017-11-23',
-    calver: '2017.11',
-    title: 'Family Thanksgiving',
-    blurb: 'Hosted family gathering, captured memories on video',
-    icon: 'turkey',
-    iconStyle: 'solid',
-    color: 'pink',
-    lane: 0,
-    type: 'commit',
-    xp: 75,
-  },
-  {
-    date: '2016-09-20',
-    calver: '2016.09',
-    title: 'Music Production',
-    blurb: 'Dove into DAW (Studio One) and digital audio',
-    icon: 'sliders',
-    iconStyle: 'solid',
-    color: 'purple',
-    lane: 0,
-    type: 'commit',
-    xp: 75,
-  },
-  {
-    date: '2015-10-14',
-    calver: '2015.10',
-    title: 'Photography & Video',
-    blurb: 'Started capturing light and visual stories',
-    icon: 'camera',
-    iconStyle: 'solid',
-    color: 'purple',
-    lane: 0,
-    type: 'commit',
-    xp: 200,
-  },
-  {
-    date: '2014-05-19',
-    calver: '2014.05',
-    title: 'SQL Deep Dive',
-    blurb: 'Database optimization, query tuning, schema design',
-    icon: 'database',
-    iconStyle: 'solid',
-    color: 'cyan',
-    lane: 0,
-    type: 'commit',
-    xp: 200,
-  },
-  {
-    date: '2012-01-01',
-    calver: '2012.01',
-    title: 'PowerShell Era',
-    blurb: 'Began automating everything with PowerShell',
-    icon: 'bolt',
-    iconStyle: 'solid',
-    color: 'cyan',
-    lane: 0,
-    type: 'commit',
-    xp: 200,
-  },
-  {
-    date: '2010-01-01',
-    calver: '2010.01',
-    title: 'Stick Shift Trial by Fire',
-    blurb: 'Bought Mazdaspeed3 without knowing manual',
-    icon: 'car',
-    iconStyle: 'solid',
-    color: 'pink',
-    lane: 0,
-    type: 'commit',
-    xp: 100,
-  },
-  {
-    date: '2008-01-01',
-    calver: '2008.01',
-    title: 'Guitar Passion',
-    blurb: 'Electric and acoustic guitar became lifelong passion',
-    icon: 'guitar',
-    iconStyle: 'solid',
-    color: 'purple',
-    lane: 0,
-    type: 'commit',
-    xp: 150,
-  },
+    level: 6,
+    title: 'Modern Stack',
+    yearRange: '2025',
+    totalXP: 150,
+    achievements: [
+      { year: 2025, title: 'Astro Migration', description: 'Migrated site to Astro for modern DX', icon: 'rocket', iconStyle: 'solid', xp: 150 },
+    ]
+  }
 ];
 
-const totalXP = commits.reduce((sum, c) => sum + c.xp, 0);
-
-const colorMap = {
-  cyan: '#7FDBCA',
-  purple: '#C792EA',
-  pink: '#FF5874',
-  yellow: '#ECC48D',
-};
-
-// Group by CalVer for display
-const calverGroups = commits.reduce(
-  (groups, commit) => {
-    if (!groups[commit.calver]) {
-      groups[commit.calver] = [];
-    }
-    groups[commit.calver].push(commit);
-    return groups;
-  },
-  {} as Record<string, CommitNode[]>
-);
-
-const mermaidChart = `%%{init: {
-  'theme': 'base',
-  'themeVariables': {
-    'git0': '#7FDBCA',
-    'git1': '#C792EA',
-    'git2': '#FF5874',
-    'git3': '#ECC48D',
-    'gitBranchLabel0': '#7FDBCA',
-    'gitBranchLabel1': '#C792EA',
-    'gitBranchLabel2': '#FF5874',
-    'gitBranchLabel3': '#ECC48D',
-    'commitLabelColor': '#FFFFFF',
-    'commitLabelBackground': '#1A1B26',
-    'commitLabelFontSize': '12px',
-    'tagLabelColor': '#FFFFFF',
-    'tagLabelBackground': '#7FDBCA',
-    'tagLabelBorder': '#7FDBCA',
-    'tagLabelFontSize': '10px'
-  },
-  'gitGraph': {
-    'mainBranchName': 'life',
-    'showCommitLabel': true,
-    'rotateCommitLabel': false
-  }
-}%%
-gitGraph TB:
-  commit id: "2008.01 Guitar Passion" tag: "🎸"
-  commit id: "2010.01 Stick Shift" tag: "🚗"
-  commit id: "2012.01 PowerShell Era" tag: "⚡"
-  commit id: "2014.05 SQL Deep Dive" tag: "🗄️"
-  commit id: "2015.10 Photography" tag: "📷"
-  commit id: "2016.09 Music Production" tag: "🎚️"
-  commit id: "2017.11 Thanksgiving" tag: "🦃"
-  branch go-journey
-  checkout go-journey
-  commit id: "2020.06 Go Learning" tag: "🔀"
-  checkout life
-  commit id: "2023.03 Digital Garden" tag: "🌱"
-  commit id: "2023.10 F150 Manual" tag: "🛻"
-  branch europe-travel
-  checkout europe-travel
-  commit id: "2023.11 NYC Visit" tag: "🏙️"
-  commit id: "2023.11 Paris" tag: "🗼"
-  commit id: "2023.11 Versailles" tag: "🏛️"
-  commit id: "2023.12 London" tag: "🚄"
-  checkout life
-  merge europe-travel tag: "merge-europe"
-  checkout go-journey
-  commit id: "2021.08 Go Career" tag: "🔗"
-  checkout life
-  merge go-journey tag: "merge-go"
-  commit id: "2023.12 AI Exploration" tag: "🤖"
-  commit id: "2024.10 AI Diagnostics" tag: "🧠"
-  commit id: "2025.11 Astro Migration" tag: "🚀"`;
+const totalXP = levels.reduce((sum, level) => sum + level.totalXP, 0);
 ---
 
-<BaseLayout title="git log --graph --all | Sheldon Hull" description="Life as git commits">
-  <div class="max-w-5xl mx-auto">
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold mb-2 synthwave-gradient font-mono">
-        <FAIcon style="solid" icon="code-branch" class="mr-2" />
-        git log --graph --all --oneline
-      </h1>
-      <div class="text-sm font-mono" style="color: var(--sw-text-muted);">
-        {Object.keys(calverGroups).length} releases · {totalXP.toLocaleString()} commits
+<BaseLayout title="RPG Life Stats | Sheldon Hull" description="Life as an RPG adventure">
+  <div class="rpg-container">
+    <!-- Character that walks with scroll -->
+    <div class="character-container">
+      <div class="pixel-mage" id="mage">
+        <!-- Pixel art mage using CSS -->
+        <div class="mage-pixels"></div>
       </div>
     </div>
 
-    <!-- Git Graph -->
-    <div class="git-graph">
-      {
-        commits.map((commit, index) => {
-          const nextCommit = commits[index + 1];
-          const prevCommit = commits[index - 1];
-          const color = colorMap[commit.color];
-          const laneOffset = commit.lane * 40;
-
-          return (
-            <div class="commit-row group" data-lane={commit.lane}>
-              {/* Graph visualization */}
-              <div class="graph-container">
-                <svg class="graph-svg" viewBox="0 0 200 80" preserveAspectRatio="xMinYMin meet">
-                  {/* Main branch line */}
-                  {commit.lane === 0 && nextCommit && (
-                    <line x1="20" y1="40" x2="20" y2="80" stroke="var(--sw-cyan)" stroke-width="2" />
-                  )}
-
-                  {/* Branch line */}
-                  {commit.lane > 0 && nextCommit && nextCommit.lane === commit.lane && (
-                    <line
-                      x1={20 + commit.lane * 40}
-                      y1="40"
-                      x2={20 + commit.lane * 40}
-                      y2="80"
-                      stroke={color}
-                      stroke-width="2"
-                    />
-                  )}
-
-                  {/* Branch creation curve */}
-                  {commit.type === 'branch' && (
-                    <path
-                      d={`M 20 40 Q 30 40, ${20 + 40} 50 L ${20 + 40} 80`}
-                      stroke={color}
-                      stroke-width="2"
-                      fill="none"
-                    />
-                  )}
-
-                  {/* Merge curve */}
-                  {commit.type === 'merge' && commit.mergeTo !== undefined && (
-                    <path
-                      d={`M ${20 + commit.lane * 40} 0 L ${20 + commit.lane * 40} 30 Q ${20 + commit.lane * 40} 40, ${20 + commit.mergeTo * 40} 40`}
-                      stroke={color}
-                      stroke-width="2"
-                      fill="none"
-                    />
-                  )}
-
-                  {/* Commit node */}
-                  <circle
-                    cx={20 + commit.lane * 40}
-                    cy="40"
-                    r="8"
-                    fill={color}
-                    class="commit-node"
-                    stroke="var(--sw-bg-primary)"
-                    stroke-width="2"
-                  />
-
-                  {/* Icon in node */}
-                  <foreignObject x={20 + commit.lane * 40 - 6} y="34" width="12" height="12">
-                    <div class="node-icon" style={`color: var(--sw-bg-primary);`}>
-                      <FAIcon style={commit.iconStyle} icon={commit.icon} />
-                    </div>
-                  </foreignObject>
-                </svg>
+    <!-- Horizontal scrolling sections -->
+    <div class="levels-wrapper" id="levelsWrapper">
+      {levels.map((level, index) => (
+        <section class="level-section" data-level={level.level}>
+          <div class="level-content">
+            <div class="level-header">
+              <div class="level-badge">
+                <span class="level-number">LVL {level.level}</span>
               </div>
-
-              {/* Commit content */}
-              <div class="commit-content">
-                <div class="commit-header">
-                  <span class="calver" style={`color: ${color};`}>{commit.calver}</span>
-                  <button
-                    class="commit-title"
-                    onclick="this.closest('.commit-row').classList.toggle('expanded')"
-                    style={`color: ${color};`}
-                  >
-                    {commit.title}
-                    <span class="xp-badge" style={`background: ${color}22; color: ${color};`}>+{commit.xp}</span>
-                    <FAIcon style="solid" icon="chevron-down" class="expand-chevron" />
-                  </button>
-                </div>
-                <div class="commit-blurb" style="color: var(--sw-text-secondary);">{commit.blurb}</div>
+              <h2 class="level-title">{level.title}</h2>
+              <p class="level-years">{level.yearRange}</p>
+              <div class="level-xp">
+                <FAIcon style="solid" icon="star" />
+                {level.totalXP} XP
               </div>
             </div>
-          );
-        })
-      }
 
-      {/* HEAD marker */}
-      <div class="head-marker">
-        <svg class="graph-svg" viewBox="0 0 200 40" preserveAspectRatio="xMinYMin meet">
-          <circle cx="20" cy="20" r="6" fill="var(--sw-cyan)" class="pulse" />
-        </svg>
-        <span class="head-text" style="color: var(--sw-cyan);">
-          <FAIcon style="solid" icon="infinity" class="mr-1" />
-          HEAD
-        </span>
-      </div>
+            <div class="achievements-grid">
+              {level.achievements.map((achievement) => (
+                <div class="achievement-card">
+                  <div class="achievement-icon">
+                    <FAIcon style={achievement.iconStyle} icon={achievement.icon} />
+                  </div>
+                  <div class="achievement-info">
+                    <h3 class="achievement-title">{achievement.title}</h3>
+                    <p class="achievement-desc">{achievement.description}</p>
+                    <span class="achievement-xp">+{achievement.xp} XP</span>
+                  </div>
+                  <div class="achievement-year">{achievement.year}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ))}
+
+      <!-- Final section -->
+      <section class="level-section final-section">
+        <div class="level-content">
+          <div class="final-stats">
+            <h2 class="final-title">Journey Continues...</h2>
+            <div class="total-stats">
+              <div class="stat-box">
+                <FAIcon style="solid" icon="trophy" />
+                <span class="stat-value">{levels.length}</span>
+                <span class="stat-label">Levels</span>
+              </div>
+              <div class="stat-box">
+                <FAIcon style="solid" icon="star" />
+                <span class="stat-value">{totalXP}</span>
+                <span class="stat-label">Total XP</span>
+              </div>
+              <div class="stat-box">
+                <FAIcon style="solid" icon="award" />
+                <span class="stat-value">{levels.reduce((sum, l) => sum + l.achievements.length, 0)}</span>
+                <span class="stat-label">Achievements</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <!-- Mermaid Comparison -->
-    <div class="mt-16 border-t pt-12" style="border-color: var(--sw-bg-tertiary);">
-      <div class="mb-6">
-        <h2 class="text-2xl font-bold mb-2 synthwave-gradient font-mono">
-          <FAIcon style="solid" icon="diagram-project" class="mr-2" />
-          Mermaid Gitgraph (Comparison)
-        </h2>
-        <p class="text-sm" style="color: var(--sw-text-muted);">
-          Alternative visualization using Mermaid.js with custom theming
-        </p>
-      </div>
+    <!-- Navigation controls (mobile) -->
+    <button class="nav-btn nav-prev" id="navPrev" aria-label="Previous level">
+      <FAIcon style="solid" icon="chevron-left" />
+    </button>
+    <button class="nav-btn nav-next" id="navNext" aria-label="Next level">
+      <FAIcon style="solid" icon="chevron-right" />
+    </button>
 
-      <MermaidGraph chart={mermaidChart} />
-
-      <div class="text-xs mt-4 p-4 rounded" style="background: var(--sw-bg-secondary); color: var(--sw-text-muted);">
-        <strong>Comparison Notes:</strong> Mermaid provides automatic layout but less customization.
-        Custom SVG version above offers more control over styling and interactivity.
-      </div>
+    <!-- Level indicator dots -->
+    <div class="level-dots">
+      {levels.map((level, index) => (
+        <button class="dot" data-index={index} class:list={[{ active: index === 0 }]}>
+          <span class="sr-only">Level {level.level}</span>
+        </button>
+      ))}
+      <button class="dot" data-index={levels.length}>
+        <span class="sr-only">Stats</span>
+      </button>
     </div>
   </div>
 </BaseLayout>
 
+<script>
+  let currentSection = 0;
+  const wrapper = document.getElementById('levelsWrapper');
+  const mage = document.getElementById('mage');
+  const sections = document.querySelectorAll('.level-section');
+  const dots = document.querySelectorAll('.dot');
+  const navPrev = document.getElementById('navPrev');
+  const navNext = document.getElementById('navNext');
+
+  let isScrolling = false;
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  function updateSection(index: number) {
+    if (index < 0 || index >= sections.length) return;
+
+    currentSection = index;
+    const scrollAmount = currentSection * window.innerWidth;
+
+    wrapper?.scrollTo({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+
+    // Update dots
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === currentSection);
+    });
+
+    // Animate mage walking
+    if (mage) {
+      const progress = (currentSection / (sections.length - 1)) * 100;
+      mage.style.left = `${Math.min(progress, 85)}%`;
+      mage.classList.add('walking');
+      setTimeout(() => mage.classList.remove('walking'), 600);
+    }
+
+    // Update nav buttons
+    if (navPrev) navPrev.style.opacity = currentSection === 0 ? '0.3' : '1';
+    if (navNext) navNext.style.opacity = currentSection === sections.length - 1 ? '0.3' : '1';
+  }
+
+  // Wheel scroll
+  wrapper?.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (isScrolling) return;
+
+    isScrolling = true;
+    setTimeout(() => isScrolling = false, 800);
+
+    if (e.deltaY > 0 || e.deltaX > 0) {
+      updateSection(currentSection + 1);
+    } else if (e.deltaY < 0 || e.deltaX < 0) {
+      updateSection(currentSection - 1);
+    }
+  }, { passive: false });
+
+  // Touch/swipe support
+  wrapper?.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  });
+
+  wrapper?.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        updateSection(currentSection + 1);
+      } else {
+        updateSection(currentSection - 1);
+      }
+    }
+  }
+
+  // Navigation buttons
+  navPrev?.addEventListener('click', () => updateSection(currentSection - 1));
+  navNext?.addEventListener('click', () => updateSection(currentSection + 1));
+
+  // Dot navigation
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => updateSection(index));
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') updateSection(currentSection + 1);
+    if (e.key === 'ArrowLeft') updateSection(currentSection - 1);
+  });
+
+  // Initialize
+  updateSection(0);
+</script>
+
 <style>
-  .synthwave-gradient {
-    background: linear-gradient(45deg, var(--sw-cyan), var(--sw-purple), var(--sw-pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .rpg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0a0e27 0%, #1a1b26 50%, #16213e 100%);
   }
 
-  .git-graph {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 13px;
+  .character-container {
+    position: fixed;
+    bottom: 60px;
+    left: 10%;
+    z-index: 100;
+    pointer-events: none;
   }
 
-  .commit-row {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 0;
-    min-height: 80px;
+  .pixel-mage {
+    width: 64px;
+    height: 64px;
+    position: relative;
+    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  .pixel-mage.walking {
+    animation: walk 0.6s steps(4);
+  }
+
+  @keyframes walk {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-2px); }
+    75% { transform: translateY(-2px); }
+  }
+
+  /* Pixel art mage using CSS */
+  .mage-pixels {
+    width: 100%;
+    height: 100%;
+    background:
+      /* Hood */
+      radial-gradient(circle at 50% 20%, #6b46c1 0%, #6b46c1 30%, transparent 30%),
+      /* Body */
+      linear-gradient(180deg, #7c3aed 40%, #5b21b6 70%, #4c1d95 100%),
+      /* Staff glow */
+      radial-gradient(circle at 85% 50%, #fbbf24 0%, #f59e0b 15%, transparent 25%);
+    box-shadow:
+      0 0 20px rgba(139, 92, 246, 0.6),
+      inset 0 0 10px rgba(167, 139, 250, 0.3);
+    border-radius: 4px;
     position: relative;
   }
 
-  .graph-container {
-    flex-shrink: 0;
-    width: 200px;
+  .mage-pixels::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 40px;
+    background: #92400e;
+    right: 8px;
+    top: 20px;
+    border-radius: 1px;
   }
 
-  .graph-svg {
-    width: 100%;
-    height: 80px;
+  .mage-pixels::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #fbbf24;
+    right: 5px;
+    top: 15px;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #fbbf24;
+    animation: pulse 2s infinite;
   }
 
-  .commit-node {
-    transition: r 0.2s ease;
+  .levels-wrapper {
+    display: flex;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
   }
 
-  .commit-row:hover .commit-node {
-    r: 10;
-  }
-
-  .node-icon {
-    font-size: 8px;
+  .level-section {
+    min-width: 100vw;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 80px 40px 120px;
+    scroll-snap-align: start;
+    position: relative;
+  }
+
+  .level-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(139, 92, 246, 0.1) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .level-content {
+    max-width: 1200px;
     width: 100%;
-    height: 100%;
+    animation: fadeIn 0.6s ease-out;
   }
 
-  .commit-content {
-    flex: 1;
-    min-width: 0;
-    padding-top: 24px;
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .commit-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+  .level-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .level-badge {
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+
+  .level-number {
+    display: inline-block;
+    padding: 8px 24px;
+    background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 2px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+    text-transform: uppercase;
+  }
+
+  .level-title {
+    font-size: 48px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 8px;
   }
 
-  .calver {
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.05em;
-    min-width: 70px;
+  .level-years {
+    font-size: 18px;
+    color: var(--sw-text-muted);
+    margin-bottom: 12px;
   }
 
-  .commit-title {
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
+  .level-xp {
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: none;
-    border: none;
-    padding: 0;
-    transition: opacity 0.2s ease;
+    padding: 6px 16px;
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 12px;
+    color: #fbbf24;
+    font-weight: 600;
+    font-size: 14px;
   }
 
-  .commit-title:hover {
-    opacity: 0.8;
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
   }
 
-  .xp-badge {
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 500;
+  .achievement-card {
+    background: rgba(139, 92, 246, 0.05);
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
   }
 
-  .expand-chevron {
-    font-size: 10px;
+  .achievement-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #7c3aed, #c792ea);
+    transform: scaleX(0);
     transition: transform 0.3s ease;
   }
 
-  .commit-row.expanded .expand-chevron {
-    transform: rotate(180deg);
+  .achievement-card:hover {
+    border-color: rgba(139, 92, 246, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
   }
 
-  .commit-blurb {
-    font-size: 12px;
-    line-height: 1.5;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, margin-top 0.3s ease;
-    padding-left: 82px;
+  .achievement-card:hover::before {
+    transform: scaleX(1);
   }
 
-  .commit-row.expanded .commit-blurb {
-    max-height: 100px;
-    margin-top: 4px;
-  }
-
-  .head-marker {
+  .achievement-icon {
+    width: 48px;
+    height: 48px;
     display: flex;
-    gap: 16px;
     align-items: center;
-    margin-top: 12px;
-    padding-left: 8px;
+    justify-content: center;
+    background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
   }
 
-  .head-marker .graph-svg {
-    width: 200px;
-    height: 40px;
+  .achievement-info {
+    flex: 1;
   }
 
-  .head-text {
-    font-weight: 600;
+  .achievement-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--sw-text-primary);
+    margin-bottom: 8px;
+  }
+
+  .achievement-desc {
+    font-size: 14px;
+    color: var(--sw-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .achievement-xp {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 8px;
+    color: #fbbf24;
     font-size: 12px;
+    font-weight: 600;
   }
 
-  .pulse {
-    animation: pulse 2s ease-in-out infinite;
+  .achievement-year {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 12px;
+    color: var(--sw-text-muted);
+    font-weight: 600;
   }
 
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-      filter: drop-shadow(0 0 4px currentColor);
-    }
-    50% {
-      opacity: 0.6;
-      filter: drop-shadow(0 0 8px currentColor);
-    }
+  .final-section {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(124, 58, 237, 0.15) 0%,
+      transparent 70%
+    );
+  }
+
+  .final-stats {
+    text-align: center;
+  }
+
+  .final-title {
+    font-size: 56px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 48px;
+  }
+
+  .total-stats {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 32px;
+    background: rgba(139, 92, 246, 0.1);
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    border-radius: 16px;
+    min-width: 180px;
+    transition: all 0.3s ease;
+  }
+
+  .stat-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.6);
+  }
+
+  .stat-box :global(svg) {
+    font-size: 40px;
+    color: #7c3aed;
+  }
+
+  .stat-value {
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--sw-text-primary);
+  }
+
+  .stat-label {
+    font-size: 14px;
+    color: var(--sw-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Navigation */
+  .nav-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    background: rgba(139, 92, 246, 0.2);
+    border: 2px solid rgba(139, 92, 246, 0.4);
+    border-radius: 50%;
+    color: #a78bfa;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 50;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-btn:hover {
+    background: rgba(139, 92, 246, 0.4);
+    border-color: rgba(139, 92, 246, 0.8);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .nav-prev { left: 20px; }
+  .nav-next { right: 20px; }
+
+  .level-dots {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 50;
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    background: rgba(139, 92, 246, 0.3);
+    border: 2px solid rgba(139, 92, 246, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .dot.active {
+    background: #7c3aed;
+    border-color: #7c3aed;
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
+    transform: scale(1.3);
+  }
+
+  .dot:hover {
+    background: rgba(139, 92, 246, 0.6);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 
   @media (max-width: 768px) {
-    .graph-container {
-      width: 120px;
+    .level-title {
+      font-size: 32px;
     }
 
-    .commit-blurb {
-      padding-left: 0;
+    .final-title {
+      font-size: 36px;
+    }
+
+    .achievements-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .level-section {
+      padding: 60px 20px 100px;
+    }
+
+    .character-container {
+      bottom: 80px;
+      left: 5%;
+    }
+
+    .pixel-mage {
+      width: 48px;
+      height: 48px;
+    }
+
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      font-size: 16px;
+    }
+
+    .total-stats {
+      gap: 16px;
+    }
+
+    .stat-box {
+      min-width: 140px;
+      padding: 24px;
+    }
+
+    .stat-value {
+      font-size: 36px;
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.2);
     }
   }
 </style>
