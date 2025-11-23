@@ -14,6 +14,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "astro": "^5.16.0",
     "astro-icon": "^1.1.5",
+    "mermaid": "^11.12.1",
     "tailwindcss": "^4.1.17",
     "typeit": "^8.8.7",
     "unist-util-visit": "^5.0.0"
