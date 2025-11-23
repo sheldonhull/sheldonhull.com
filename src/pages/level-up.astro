@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FAIcon from '../components/FAIcon.astro';
+import MermaidGraph from '../components/MermaidGraph.astro';
 
 interface CommitNode {
   date: string;
@@ -260,6 +261,61 @@ const calverGroups = commits.reduce(
   },
   {} as Record<string, CommitNode[]>
 );
+
+const mermaidChart = `%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'git0': '#7FDBCA',
+    'git1': '#C792EA',
+    'git2': '#FF5874',
+    'git3': '#ECC48D',
+    'gitBranchLabel0': '#7FDBCA',
+    'gitBranchLabel1': '#C792EA',
+    'gitBranchLabel2': '#FF5874',
+    'gitBranchLabel3': '#ECC48D',
+    'commitLabelColor': '#FFFFFF',
+    'commitLabelBackground': '#1A1B26',
+    'commitLabelFontSize': '12px',
+    'tagLabelColor': '#FFFFFF',
+    'tagLabelBackground': '#7FDBCA',
+    'tagLabelBorder': '#7FDBCA',
+    'tagLabelFontSize': '10px'
+  },
+  'gitGraph': {
+    'mainBranchName': 'life',
+    'showCommitLabel': true,
+    'rotateCommitLabel': false
+  }
+}%%
+gitGraph TB:
+  commit id: "2008.01 Guitar Passion" tag: "🎸"
+  commit id: "2010.01 Stick Shift" tag: "🚗"
+  commit id: "2012.01 PowerShell Era" tag: "⚡"
+  commit id: "2014.05 SQL Deep Dive" tag: "🗄️"
+  commit id: "2015.10 Photography" tag: "📷"
+  commit id: "2016.09 Music Production" tag: "🎚️"
+  commit id: "2017.11 Thanksgiving" tag: "🦃"
+  branch go-journey
+  checkout go-journey
+  commit id: "2020.06 Go Learning" tag: "🔀"
+  checkout life
+  commit id: "2023.03 Digital Garden" tag: "🌱"
+  commit id: "2023.10 F150 Manual" tag: "🛻"
+  branch europe-travel
+  checkout europe-travel
+  commit id: "2023.11 NYC Visit" tag: "🏙️"
+  commit id: "2023.11 Paris" tag: "🗼"
+  commit id: "2023.11 Versailles" tag: "🏛️"
+  commit id: "2023.12 London" tag: "🚄"
+  checkout life
+  merge europe-travel tag: "merge-europe"
+  checkout go-journey
+  commit id: "2021.08 Go Career" tag: "🔗"
+  checkout life
+  merge go-journey tag: "merge-go"
+  commit id: "2023.12 AI Exploration" tag: "🤖"
+  commit id: "2024.10 AI Diagnostics" tag: "🧠"
+  commit id: "2025.11 Astro Migration" tag: "🚀"`;
 ---
 
 <BaseLayout title="git log --graph --all | Sheldon Hull" description="Life as git commits">
@@ -390,64 +446,7 @@ const calverGroups = commits.reduce(
         </p>
       </div>
 
-      <div class="mermaid-container">
-        <pre class="mermaid">
-%%{init: {
-  'theme': 'base',
-  'themeVariables': {
-    'git0': '#7FDBCA',
-    'git1': '#C792EA',
-    'git2': '#FF5874',
-    'git3': '#ECC48D',
-    'gitBranchLabel0': '#7FDBCA',
-    'gitBranchLabel1': '#C792EA',
-    'gitBranchLabel2': '#FF5874',
-    'gitBranchLabel3': '#ECC48D',
-    'commitLabelColor': '#FFFFFF',
-    'commitLabelBackground': '#1A1B26',
-    'commitLabelFontSize': '12px',
-    'tagLabelColor': '#FFFFFF',
-    'tagLabelBackground': '#7FDBCA',
-    'tagLabelBorder': '#7FDBCA',
-    'tagLabelFontSize': '10px'
-  },
-  'gitGraph': {
-    'mainBranchName': 'life',
-    'showCommitLabel': true,
-    'rotateCommitLabel': false
-  }
-}%%
-gitGraph TB:
-  commit id: "2008.01 Guitar Passion" tag: "🎸"
-  commit id: "2010.01 Stick Shift" tag: "🚗"
-  commit id: "2012.01 PowerShell Era" tag: "⚡"
-  commit id: "2014.05 SQL Deep Dive" tag: "🗄️"
-  commit id: "2015.10 Photography" tag: "📷"
-  commit id: "2016.09 Music Production" tag: "🎚️"
-  commit id: "2017.11 Thanksgiving" tag: "🦃"
-  branch go-journey
-  checkout go-journey
-  commit id: "2020.06 Go Learning" tag: "🔀"
-  checkout life
-  commit id: "2023.03 Digital Garden" tag: "🌱"
-  commit id: "2023.10 F150 Manual" tag: "🛻"
-  branch europe-travel
-  checkout europe-travel
-  commit id: "2023.11 NYC Visit" tag: "🏙️"
-  commit id: "2023.11 Paris" tag: "🗼"
-  commit id: "2023.11 Versailles" tag: "🏛️"
-  commit id: "2023.12 London" tag: "🚄"
-  checkout life
-  merge europe-travel tag: "merge-europe"
-  checkout go-journey
-  commit id: "2021.08 Go Career" tag: "🔗"
-  checkout life
-  merge go-journey tag: "merge-go"
-  commit id: "2023.12 AI Exploration" tag: "🤖"
-  commit id: "2024.10 AI Diagnostics" tag: "🧠"
-  commit id: "2025.11 Astro Migration" tag: "🚀"
-        </pre>
-      </div>
+      <MermaidGraph chart={mermaidChart} />
 
       <div class="text-xs mt-4 p-4 rounded" style="background: var(--sw-bg-secondary); color: var(--sw-text-muted);">
         <strong>Comparison Notes:</strong> Mermaid provides automatic layout but less customization.
@@ -456,35 +455,6 @@ gitGraph TB:
     </div>
   </div>
 </BaseLayout>
-
-<!-- Mermaid.js -->
-<script>
-  import mermaid from 'mermaid';
-
-  mermaid.initialize({
-    startOnLoad: true,
-    theme: 'base',
-    themeVariables: {
-      darkMode: true,
-      background: '#1A1B26',
-      primaryColor: '#7FDBCA',
-      primaryTextColor: '#FFFFFF',
-      primaryBorderColor: '#7FDBCA',
-      lineColor: '#7FDBCA',
-      secondaryColor: '#C792EA',
-      tertiaryColor: '#FF5874',
-      fontSize: '12px',
-      fontFamily: 'Monaco, Menlo, Ubuntu Mono, monospace'
-    },
-    gitGraph: {
-      mainBranchName: 'life',
-      mainBranchOrder: 0,
-      showCommitLabel: true,
-      showBranches: true,
-      rotateCommitLabel: false
-    }
-  });
-</script>
 
 <style>
   .synthwave-gradient {
@@ -644,35 +614,5 @@ gitGraph TB:
     .commit-blurb {
       padding-left: 0;
     }
-  }
-
-  /* Mermaid styling */
-  .mermaid-container {
-    background: var(--sw-bg-secondary);
-    border-radius: 8px;
-    padding: 24px;
-    overflow-x: auto;
-  }
-
-  .mermaid-container pre {
-    margin: 0;
-    background: transparent;
-  }
-
-  /* Override Mermaid defaults to match theme */
-  :global(.mermaid svg) {
-    max-width: 100%;
-    height: auto;
-  }
-
-  :global(.mermaid .commit-label) {
-    fill: var(--sw-text-primary) !important;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
-    font-size: 11px !important;
-  }
-
-  :global(.mermaid .branch-label) {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
-    font-weight: 600 !important;
   }
 </style>

@@ -1,0 +1,69 @@
+---
+interface Props {
+  chart: string;
+}
+
+const { chart } = Astro.props;
+---
+
+<div class="mermaid-container">
+  <pre class="mermaid">{chart}</pre>
+</div>
+
+<script>
+  import mermaid from 'mermaid';
+
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      darkMode: true,
+      background: '#1A1B26',
+      primaryColor: '#7FDBCA',
+      primaryTextColor: '#FFFFFF',
+      primaryBorderColor: '#7FDBCA',
+      lineColor: '#7FDBCA',
+      secondaryColor: '#C792EA',
+      tertiaryColor: '#FF5874',
+      fontSize: '12px',
+      fontFamily: 'Monaco, Menlo, Ubuntu Mono, monospace'
+    },
+    gitGraph: {
+      mainBranchName: 'life',
+      mainBranchOrder: 0,
+      showCommitLabel: true,
+      showBranches: true,
+      rotateCommitLabel: false
+    }
+  });
+</script>
+
+<style>
+  .mermaid-container {
+    background: var(--sw-bg-secondary);
+    border-radius: 8px;
+    padding: 24px;
+    overflow-x: auto;
+  }
+
+  .mermaid-container pre {
+    margin: 0;
+    background: transparent;
+  }
+
+  :global(.mermaid svg) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  :global(.mermaid .commit-label) {
+    fill: var(--sw-text-primary) !important;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+    font-size: 11px !important;
+  }
+
+  :global(.mermaid .branch-label) {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+    font-weight: 600 !important;
+  }
+</style>
