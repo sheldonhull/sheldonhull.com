@@ -3,6 +3,27 @@
 > **Generated:** 2024-11-21
 > **Purpose:** Complete inventory of Hugo shortcodes requiring Astro component replacements
 
+## Migration Progress Checklist
+
+### Phase 1: Critical Components (Must Have)
+- [x] **Admonition** - 127 uses (~33% of content) ✅ COMPLETED
+- [x] **GistEmbed** - 94 uses (~22% of content) ✅ COMPLETED
+- [ ] **FAIcon** - 32 uses, needed for recent posts 🔴 PENDING
+
+### Phase 2: Important Components (Should Have)
+- [x] **Gallery** - 6 uses, visual content ✅ COMPLETED
+- [ ] **YouTube** - 6 uses, media content 🟡 PENDING
+- [x] **RelRef** - 12 uses, internal linking ✅ COMPLETED
+
+### Phase 3: Nice to Have
+- [ ] **Conversation** - 1 use ⚪ PENDING
+- [ ] **Asciinema** - 2 uses ⚪ PENDING
+- [ ] **TypeIt** - 1 use ⚪ PENDING
+
+**Overall Progress:** 4/9 components completed (44%)
+
+---
+
 ## Content Inventory Summary
 
 **Total Posts:** 427 markdown files (2013-2024)
