@@ -3,62 +3,98 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import FAIcon from '../components/FAIcon.astro';
 
 interface Event {
-  date: string; // YYYY-MM or YYYY
-  category: string;
+  date: string;
+  title: string;
   blurb: string;
   icon: string;
   iconStyle: 'solid' | 'brands' | 'regular';
   color: 'cyan' | 'purple' | 'pink' | 'yellow';
-  type: 'commit' | 'branch' | 'merge'; // Git graph types
+  type: 'commit' | 'branch-start' | 'branch-commit' | 'branch-end' | 'tag';
+  branchLevel?: number; // 0 = main, 1 = first branch, 2 = nested
   xp: number;
+  tag?: string;
 }
 
-// Chronological order: newest first
 const events: Event[] = [
   {
+    date: '2025-11',
+    title: 'Hugo → Astro Migration',
+    blurb: 'Migrated entire site from Hugo static generator to Astro for better DX and modern tooling',
+    icon: 'rocket',
+    iconStyle: 'solid',
+    color: 'cyan',
+    type: 'tag',
+    tag: 'v3.0.0',
+    xp: 150,
+  },
+  {
+    date: '2024-10',
+    title: 'AI for Diagnostics',
+    blurb: 'Started using GPT/ChatGPT for troubleshooting audio equipment and general problem-solving',
+    icon: 'brain',
+    iconStyle: 'solid',
+    color: 'purple',
+    type: 'commit',
+    xp: 50,
+  },
+  {
     date: '2023-12',
-    category: 'London & Chunnel',
-    blurb: 'Crossed under the English Channel by train, explored London pubs',
+    title: 'Local AI Exploration',
+    blurb: 'Set up Ollama to run local LLMs (llama2:13b) on M2 Max, exploring AI tooling',
+    icon: 'microchip',
+    iconStyle: 'solid',
+    color: 'purple',
+    type: 'commit',
+    xp: 75,
+  },
+  {
+    date: '2023-12',
+    title: 'London & Chunnel',
+    blurb: 'Crossed under English Channel by train, explored London pubs with family',
     icon: 'train',
     iconStyle: 'solid',
     color: 'yellow',
-    type: 'commit',
+    type: 'branch-end',
+    branchLevel: 1,
     xp: 125,
   },
   {
     date: '2023-11',
-    category: 'Palace of Versailles',
-    blurb: 'Wandered the grand palace grounds and gardens outside Paris',
+    title: 'Palace of Versailles',
+    blurb: 'Wandered grand palace grounds and gardens outside Paris',
     icon: 'monument',
     iconStyle: 'solid',
     color: 'yellow',
-    type: 'commit',
+    type: 'branch-commit',
+    branchLevel: 1,
     xp: 100,
   },
   {
     date: '2023-11',
-    category: 'Paris Adventure',
-    blurb: 'Led family through City of Lights, navigated metro system, experienced French culture',
+    title: 'Paris with Family',
+    blurb: 'Led family through City of Lights, navigated metro, experienced French culture',
     icon: 'tower-broadcast',
     iconStyle: 'solid',
     color: 'yellow',
-    type: 'merge',
+    type: 'branch-commit',
+    branchLevel: 1,
     xp: 150,
   },
   {
     date: '2023-11',
-    category: 'First NYC Visit',
-    blurb: 'Conquered the concrete jungle with family, won the rat-spotting challenge',
+    title: 'First NYC Visit',
+    blurb: 'Conquered concrete jungle with family, won rat-spotting challenge',
     icon: 'building',
     iconStyle: 'solid',
     color: 'yellow',
-    type: 'branch',
+    type: 'branch-start',
+    branchLevel: 1,
     xp: 125,
   },
   {
     date: '2023-10',
-    category: 'Beast Tamer',
-    blurb: 'Drove manual transmission F150 for first time without stalling once',
+    title: 'Manual F150 Mastery',
+    blurb: 'Drove manual transmission truck for first time without stalling once',
     icon: 'truck',
     iconStyle: 'solid',
     color: 'pink',
@@ -67,37 +103,40 @@ const events: Event[] = [
   },
   {
     date: '2023-03',
-    category: 'Digital Garden',
-    blurb: 'Published personal knowledge base and digital garden to the web',
+    title: 'Digital Garden Launch',
+    blurb: 'Published personal knowledge base and digital garden to web',
     icon: 'seedling',
     iconStyle: 'solid',
     color: 'purple',
-    type: 'commit',
+    type: 'tag',
+    tag: 'v2.5.0',
     xp: 100,
   },
   {
     date: '2021-08',
-    category: 'Go Development: Merge to Main',
-    blurb: 'Joined Dataleon using Go professionally, journey from learning to career',
-    icon: 'golang',
-    iconStyle: 'brands',
+    title: 'Go Career Merge',
+    blurb: 'Joined role using Go professionally after year-long learning journey',
+    icon: 'code-merge',
+    iconStyle: 'solid',
     color: 'cyan',
-    type: 'merge',
+    type: 'branch-end',
+    branchLevel: 1,
     xp: 200,
   },
   {
     date: '2020-06',
-    category: 'Go Journey: Branch Created',
+    title: 'Go Journey Branch',
     blurb: 'Started 100 Days of Code with Go, building automation and DevOps tools',
     icon: 'code-branch',
     iconStyle: 'solid',
     color: 'cyan',
-    type: 'branch',
+    type: 'branch-start',
+    branchLevel: 1,
     xp: 100,
   },
   {
     date: '2017-11',
-    category: 'Family Thanksgiving',
+    title: 'Family Thanksgiving',
     blurb: 'Hosted family gathering, captured memories on video',
     icon: 'turkey',
     iconStyle: 'solid',
@@ -107,7 +146,7 @@ const events: Event[] = [
   },
   {
     date: '2016',
-    category: 'Music Production',
+    title: 'Music Production',
     blurb: 'Dove into DAW (Studio One), exploring digital audio architecture',
     icon: 'sliders',
     iconStyle: 'solid',
@@ -117,8 +156,8 @@ const events: Event[] = [
   },
   {
     date: '2015',
-    category: 'Photography & Videography',
-    blurb: 'Started capturing light and crafting visual stories frame by frame',
+    title: 'Photography & Video',
+    blurb: 'Started capturing light, crafting visual stories frame by frame',
     icon: 'camera',
     iconStyle: 'solid',
     color: 'purple',
@@ -127,17 +166,18 @@ const events: Event[] = [
   },
   {
     date: '2014',
-    category: 'SQL Sorcery',
-    blurb: 'Deep dive into database optimization, query tuning, and schema design',
+    title: 'SQL Deep Dive',
+    blurb: 'Deep dive into database optimization, query tuning, schema design',
     icon: 'database',
     iconStyle: 'solid',
     color: 'cyan',
-    type: 'commit',
+    type: 'tag',
+    tag: 'v2.0.0',
     xp: 200,
   },
   {
     date: '2012',
-    category: 'PowerShell Automation',
+    title: 'PowerShell Era',
     blurb: 'Began automating everything with PowerShell scripting and pipelines',
     icon: 'bolt',
     iconStyle: 'solid',
@@ -147,7 +187,7 @@ const events: Event[] = [
   },
   {
     date: '2010',
-    category: 'Stick Shift Mastery',
+    title: 'Stick Shift Trial by Fire',
     blurb: 'Bought Mazdaspeed3 without knowing manual, learned through trial by fire',
     icon: 'car',
     iconStyle: 'solid',
@@ -157,17 +197,18 @@ const events: Event[] = [
   },
   {
     date: '~2008',
-    category: 'Six-String Bard',
+    title: 'Guitar Passion',
     blurb: 'Electric and acoustic guitar became lifelong passion, post-rock soundtrack',
     icon: 'guitar',
     iconStyle: 'solid',
     color: 'purple',
-    type: 'commit',
+    type: 'tag',
+    tag: 'v1.0.0',
     xp: 150,
   },
   {
     date: '~2000s',
-    category: 'Parent Class: Unlocked',
+    title: 'Parent Class Init',
     blurb: 'Three kids, endless adventures, party leader of family expeditions',
     icon: 'baby',
     iconStyle: 'solid',
@@ -178,7 +219,7 @@ const events: Event[] = [
 ];
 
 const totalXP = events.reduce((sum, e) => sum + e.xp, 0);
-const level = Math.floor(totalXP / 100) + 1;
+const tags = events.filter((e) => e.type === 'tag').map((e) => e.tag);
 
 const colorMap = {
   cyan: 'var(--sw-cyan)',
@@ -187,105 +228,150 @@ const colorMap = {
   yellow: 'var(--sw-yellow)',
 };
 
-const getGraphChar = (type: string) => {
-  switch (type) {
-    case 'branch':
-      return '┬';
-    case 'merge':
-      return '┴';
-    default:
-      return '●';
-  }
+const getBranchIndent = (level: number) => {
+  return level * 32; // 32px per branch level
 };
 ---
 
-<BaseLayout title="Level Up - Life RPG | Sheldon Hull" description="Life journey as a git graph">
-  <div class="max-w-3xl mx-auto">
-    <!-- Header -->
-    <div class="mb-10 text-center">
+<BaseLayout title="Life Git Graph | Sheldon Hull" description="Life journey as git commits">
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-8 text-center">
       <h1 class="text-4xl font-bold mb-3 synthwave-gradient">
         <FAIcon style="solid" icon="code-branch" class="mr-2" />
-        Life Git Graph
+        git log --all --graph
       </h1>
-      <p class="text-sm" style="color: var(--sw-text-secondary);">
-        Level {level} · {totalXP.toLocaleString()} XP · Commits, Branches & Merges
-      </p>
+      <div class="flex justify-center gap-4 flex-wrap text-xs" style="color: var(--sw-text-muted);">
+        {tags.map((tag) => (
+          <span class="px-2 py-1 rounded border" style="border-color: var(--sw-cyan); color: var(--sw-cyan);">
+            <FAIcon style="solid" icon="tag" class="mr-1" />
+            {tag}
+          </span>
+        ))}
+        <span style="color: var(--sw-text-secondary);">· {totalXP.toLocaleString()} XP</span>
+      </div>
     </div>
 
     <!-- Git Graph -->
-    <div class="font-mono text-sm relative">
+    <div class="font-mono text-sm">
       {
         events.map((event, index) => {
           const color = colorMap[event.color];
+          const branchLevel = event.branchLevel || 0;
+          const indent = getBranchIndent(branchLevel);
           const nextEvent = events[index + 1];
-          const isBranch = event.type === 'branch';
-          const isMerge = event.type === 'merge';
-          const graphChar = getGraphChar(event.type);
+          const isBranchStart = event.type === 'branch-start';
+          const isBranchEnd = event.type === 'branch-end';
+          const isBranchCommit = event.type === 'branch-commit';
+          const isTag = event.type === 'tag';
 
           return (
-            <div class="group mb-6">
-              {/* Git line */}
-              <div class="flex items-start gap-3">
-                {/* Date */}
-                <div class="text-xs pt-1 w-16 flex-shrink-0" style="color: var(--sw-text-muted);">
-                  {event.date}
-                </div>
-
-                {/* Graph character */}
-                <div class="flex-shrink-0 w-8 flex items-center justify-center">
-                  <div
-                    class="w-6 h-6 rounded-full flex items-center justify-center text-base font-bold transition-all group-hover:scale-110"
-                    style={`background: ${color}; color: var(--sw-bg-primary);`}
-                  >
-                    <FAIcon style={event.iconStyle} icon={event.icon} class="text-sm" />
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div class="flex-1 min-w-0 pb-3">
-                  <div class="flex items-baseline gap-2 mb-1 flex-wrap">
-                    <span class="font-semibold" style={`color: ${color};`}>
-                      {event.category}
-                    </span>
-                    <span class="text-xs px-1.5 py-0.5 rounded" style={`background: ${color}33; color: ${color};`}>
-                      +{event.xp}
-                    </span>
-                  </div>
-                  <p class="text-xs leading-relaxed" style="color: var(--sw-text-secondary);">
-                    {event.blurb}
-                  </p>
-                </div>
-              </div>
-
-              {/* Connecting line */}
-              {nextEvent && (
-                <div class="flex">
-                  <div class="w-16 flex-shrink-0"></div>
-                  <div class="w-8 flex justify-center">
-                    <div
-                      class="w-0.5 h-4"
-                      style={`background: ${isBranch || isMerge ? color : 'var(--sw-cyan)'};`}
-                    ></div>
-                  </div>
+            <>
+              {/* Tag marker */}
+              {isTag && (
+                <div class="flex items-center gap-2 mb-2 ml-24">
+                  <div class="h-px flex-1" style={`background: ${color};`}></div>
+                  <span class="text-xs px-2 py-1 rounded" style={`background: ${color}33; color: ${color};`}>
+                    <FAIcon style="solid" icon="tag" class="mr-1" />
+                    {event.tag}
+                  </span>
+                  <div class="h-px flex-1" style={`background: ${color};`}></div>
                 </div>
               )}
-            </div>
+
+              {/* Event */}
+              <div
+                class="commit-line group mb-4"
+                style={`margin-left: ${indent}px;`}
+                data-expanded="false"
+              >
+                <div class="flex items-start gap-3">
+                  {/* Date */}
+                  <div class="text-xs pt-1.5 w-16 flex-shrink-0" style="color: var(--sw-text-muted);">
+                    {event.date}
+                  </div>
+
+                  {/* Graph connector */}
+                  <div class="relative flex items-center justify-center flex-shrink-0 w-8 h-8">
+                    {/* Branch line to left */}
+                    {branchLevel > 0 && (isBranchStart || isBranchCommit) && (
+                      <div
+                        class="absolute right-full top-1/2 h-px w-8"
+                        style={`background: ${color};`}
+                      ></div>
+                    )}
+                    {branchLevel > 0 && isBranchEnd && (
+                      <div
+                        class="absolute right-full top-1/2 h-px w-8"
+                        style={`background: ${color};`}
+                      ></div>
+                    )}
+
+                    {/* Node */}
+                    <div
+                      class="relative z-10 w-6 h-6 rounded-full flex items-center justify-center text-xs transition-all group-hover:scale-125"
+                      style={`background: ${color}; color: var(--sw-bg-primary);`}
+                    >
+                      <FAIcon style={event.iconStyle} icon={event.icon} />
+                    </div>
+
+                    {/* Vertical line */}
+                    {nextEvent && branchLevel === 0 && (
+                      <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 w-px h-4"
+                        style="background: var(--sw-cyan);"
+                      ></div>
+                    )}
+                    {nextEvent && branchLevel > 0 && !isBranchEnd && (
+                      <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 w-px h-4"
+                        style={`background: ${color};`}
+                      ></div>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div class="flex-1 min-w-0">
+                    <button
+                      class="w-full text-left group/btn"
+                      onclick="this.closest('.commit-line').dataset.expanded = this.closest('.commit-line').dataset.expanded === 'true' ? 'false' : 'true'"
+                    >
+                      <div class="flex items-baseline gap-2 flex-wrap">
+                        <span class="font-semibold group-hover/btn:underline" style={`color: ${color};`}>
+                          {event.title}
+                        </span>
+                        <span class="text-xs px-1.5 py-0.5 rounded" style={`background: ${color}22; color: ${color};`}>
+                          +{event.xp}
+                        </span>
+                        <FAIcon
+                          style="solid"
+                          icon="chevron-down"
+                          class="text-xs transition-transform expand-icon"
+                          style={`color: ${color};`}
+                        />
+                      </div>
+                    </button>
+
+                    {/* Expandable blurb */}
+                    <div class="blurb-content mt-2 text-xs leading-relaxed" style="color: var(--sw-text-secondary);">
+                      {event.blurb}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
           );
         })
       }
 
       {/* End */}
-      <div class="flex items-center gap-3 mt-6 text-xs" style="color: var(--sw-text-muted);">
-        <div class="w-16"></div>
-        <div class="w-8 flex justify-center">
-          <div
-            class="w-3 h-3 rounded-full"
-            style="background: var(--sw-cyan); box-shadow: 0 0 8px var(--sw-cyan);"
-          ></div>
-        </div>
+      <div class="flex items-center gap-3 ml-24 text-xs" style="color: var(--sw-text-muted);">
+        <div
+          class="w-3 h-3 rounded-full"
+          style="background: var(--sw-cyan); box-shadow: 0 0 8px var(--sw-cyan);"
+        ></div>
         <span>
           <FAIcon style="solid" icon="infinity" class="mr-1" />
-          The journey continues...
+          HEAD
         </span>
       </div>
     </div>
@@ -298,5 +384,23 @@ const getGraphChar = (type: string) => {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .commit-line .blurb-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .commit-line[data-expanded='true'] .blurb-content {
+    max-height: 200px;
+  }
+
+  .commit-line[data-expanded='true'] .expand-icon {
+    transform: rotate(180deg);
+  }
+
+  .commit-line button {
+    cursor: pointer;
   }
 </style>
