@@ -19,7 +19,7 @@ Some great features I've seen in latest updates (`Version 2.9.0 (x64)` on macOS)
 - Being able to squash commits by just dragging is a great design decision.
 Having to click to rebase on GitGraph or other tools always feels easy to do wrong.
 - Update from `main` already built in.
-This is fantastic, and I can see how this provides a UI to do something similar to [Git Town](https://www.git-town.com/) which I blogged on earlier here: [2021-02-23-git-workflow-with-git-town](./2021-02-23-git-workflow-with-git-town/)
+This is fantastic, and I can see how this provides a UI to do something similar to [Git Town](https://www.git-town.com/) which I blogged on earlier here: [2021-02-23-git-workflow-with-git-town](2021-02-23-git-workflow-with-git-town/)
 
 ## Things Missing
 
