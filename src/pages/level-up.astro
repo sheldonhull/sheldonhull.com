@@ -2,374 +2,376 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FAIcon from '../components/FAIcon.astro';
 
-interface Event {
+interface CommitNode {
   date: string;
+  calver: string; // YYYY.MM format
   title: string;
   blurb: string;
   icon: string;
   iconStyle: 'solid' | 'brands' | 'regular';
   color: 'cyan' | 'purple' | 'pink' | 'yellow';
-  type: 'commit' | 'branch-start' | 'branch-commit' | 'branch-end' | 'tag';
-  branchLevel?: number; // 0 = main, 1 = first branch, 2 = nested
+  lane: number; // 0 = main branch, 1+ = feature branches
+  type: 'commit' | 'branch' | 'merge';
+  branchFrom?: number; // which lane this branches from
+  mergeTo?: number; // which lane this merges to
   xp: number;
-  tag?: string;
 }
 
-const events: Event[] = [
+const commits: CommitNode[] = [
   {
-    date: '2025-11',
+    date: '2025-11-23',
+    calver: '2025.11',
     title: 'Hugo → Astro Migration',
-    blurb: 'Migrated entire site from Hugo static generator to Astro for better DX and modern tooling',
+    blurb: 'Migrated entire site from Hugo to Astro for modern DX and tooling',
     icon: 'rocket',
     iconStyle: 'solid',
     color: 'cyan',
-    type: 'tag',
-    tag: 'v3.0.0',
+    lane: 0,
+    type: 'commit',
     xp: 150,
   },
   {
-    date: '2024-10',
+    date: '2024-10-01',
+    calver: '2024.10',
     title: 'AI for Diagnostics',
-    blurb: 'Started using GPT/ChatGPT for troubleshooting audio equipment and general problem-solving',
+    blurb: 'Started using GPT/ChatGPT for troubleshooting and problem-solving',
     icon: 'brain',
     iconStyle: 'solid',
     color: 'purple',
+    lane: 0,
     type: 'commit',
     xp: 50,
   },
   {
-    date: '2023-12',
+    date: '2023-12-01',
+    calver: '2023.12',
     title: 'Local AI Exploration',
-    blurb: 'Set up Ollama to run local LLMs (llama2:13b) on M2 Max, exploring AI tooling',
+    blurb: 'Set up Ollama to run local LLMs (llama2:13b) on M2 Max',
     icon: 'microchip',
     iconStyle: 'solid',
     color: 'purple',
+    lane: 0,
     type: 'commit',
     xp: 75,
   },
   {
-    date: '2023-12',
+    date: '2023-12-02',
+    calver: '2023.12',
     title: 'London & Chunnel',
-    blurb: 'Crossed under English Channel by train, explored London pubs with family',
+    blurb: 'Crossed under English Channel by train, explored London pubs',
     icon: 'train',
     iconStyle: 'solid',
     color: 'yellow',
-    type: 'branch-end',
-    branchLevel: 1,
+    lane: 1,
+    type: 'merge',
+    mergeTo: 0,
     xp: 125,
   },
   {
-    date: '2023-11',
+    date: '2023-11-27',
+    calver: '2023.11',
     title: 'Palace of Versailles',
-    blurb: 'Wandered grand palace grounds and gardens outside Paris',
+    blurb: 'Wandered grand palace grounds outside Paris',
     icon: 'monument',
     iconStyle: 'solid',
     color: 'yellow',
-    type: 'branch-commit',
-    branchLevel: 1,
+    lane: 1,
+    type: 'commit',
     xp: 100,
   },
   {
-    date: '2023-11',
+    date: '2023-11-14',
+    calver: '2023.11',
     title: 'Paris with Family',
-    blurb: 'Led family through City of Lights, navigated metro, experienced French culture',
+    blurb: 'Led family through City of Lights, navigated metro system',
     icon: 'tower-broadcast',
     iconStyle: 'solid',
     color: 'yellow',
-    type: 'branch-commit',
-    branchLevel: 1,
+    lane: 1,
+    type: 'commit',
     xp: 150,
   },
   {
-    date: '2023-11',
+    date: '2023-11-06',
+    calver: '2023.11',
     title: 'First NYC Visit',
-    blurb: 'Conquered concrete jungle with family, won rat-spotting challenge',
+    blurb: 'Conquered concrete jungle, won rat-spotting challenge',
     icon: 'building',
     iconStyle: 'solid',
     color: 'yellow',
-    type: 'branch-start',
-    branchLevel: 1,
+    lane: 0,
+    type: 'branch',
+    branchFrom: 0,
     xp: 125,
   },
   {
-    date: '2023-10',
+    date: '2023-10-20',
+    calver: '2023.10',
     title: 'Manual F150 Mastery',
-    blurb: 'Drove manual transmission truck for first time without stalling once',
+    blurb: 'Drove manual truck for first time without stalling',
     icon: 'truck',
     iconStyle: 'solid',
     color: 'pink',
+    lane: 0,
     type: 'commit',
     xp: 75,
   },
   {
-    date: '2023-03',
+    date: '2023-03-12',
+    calver: '2023.03',
     title: 'Digital Garden Launch',
-    blurb: 'Published personal knowledge base and digital garden to web',
+    blurb: 'Published personal knowledge base to web',
     icon: 'seedling',
     iconStyle: 'solid',
     color: 'purple',
-    type: 'tag',
-    tag: 'v2.5.0',
+    lane: 0,
+    type: 'commit',
     xp: 100,
   },
   {
-    date: '2021-08',
+    date: '2021-08-12',
+    calver: '2021.08',
     title: 'Go Career Merge',
-    blurb: 'Joined role using Go professionally after year-long learning journey',
+    blurb: 'Joined role using Go professionally after learning journey',
     icon: 'code-merge',
     iconStyle: 'solid',
     color: 'cyan',
-    type: 'branch-end',
-    branchLevel: 1,
+    lane: 1,
+    type: 'merge',
+    mergeTo: 0,
     xp: 200,
   },
   {
-    date: '2020-06',
+    date: '2020-06-01',
+    calver: '2020.06',
     title: 'Go Journey Branch',
-    blurb: 'Started 100 Days of Code with Go, building automation and DevOps tools',
+    blurb: 'Started 100 Days of Code with Go, building DevOps tools',
     icon: 'code-branch',
     iconStyle: 'solid',
     color: 'cyan',
-    type: 'branch-start',
-    branchLevel: 1,
+    lane: 0,
+    type: 'branch',
+    branchFrom: 0,
     xp: 100,
   },
   {
-    date: '2017-11',
+    date: '2017-11-23',
+    calver: '2017.11',
     title: 'Family Thanksgiving',
     blurb: 'Hosted family gathering, captured memories on video',
     icon: 'turkey',
     iconStyle: 'solid',
     color: 'pink',
+    lane: 0,
     type: 'commit',
     xp: 75,
   },
   {
-    date: '2016',
+    date: '2016-09-20',
+    calver: '2016.09',
     title: 'Music Production',
-    blurb: 'Dove into DAW (Studio One), exploring digital audio architecture',
+    blurb: 'Dove into DAW (Studio One) and digital audio',
     icon: 'sliders',
     iconStyle: 'solid',
     color: 'purple',
+    lane: 0,
     type: 'commit',
     xp: 75,
   },
   {
-    date: '2015',
+    date: '2015-10-14',
+    calver: '2015.10',
     title: 'Photography & Video',
-    blurb: 'Started capturing light, crafting visual stories frame by frame',
+    blurb: 'Started capturing light and visual stories',
     icon: 'camera',
     iconStyle: 'solid',
     color: 'purple',
+    lane: 0,
     type: 'commit',
     xp: 200,
   },
   {
-    date: '2014',
+    date: '2014-05-19',
+    calver: '2014.05',
     title: 'SQL Deep Dive',
-    blurb: 'Deep dive into database optimization, query tuning, schema design',
+    blurb: 'Database optimization, query tuning, schema design',
     icon: 'database',
     iconStyle: 'solid',
     color: 'cyan',
-    type: 'tag',
-    tag: 'v2.0.0',
-    xp: 200,
-  },
-  {
-    date: '2012',
-    title: 'PowerShell Era',
-    blurb: 'Began automating everything with PowerShell scripting and pipelines',
-    icon: 'bolt',
-    iconStyle: 'solid',
-    color: 'cyan',
+    lane: 0,
     type: 'commit',
     xp: 200,
   },
   {
-    date: '2010',
+    date: '2012-01-01',
+    calver: '2012.01',
+    title: 'PowerShell Era',
+    blurb: 'Began automating everything with PowerShell',
+    icon: 'bolt',
+    iconStyle: 'solid',
+    color: 'cyan',
+    lane: 0,
+    type: 'commit',
+    xp: 200,
+  },
+  {
+    date: '2010-01-01',
+    calver: '2010.01',
     title: 'Stick Shift Trial by Fire',
-    blurb: 'Bought Mazdaspeed3 without knowing manual, learned through trial by fire',
+    blurb: 'Bought Mazdaspeed3 without knowing manual',
     icon: 'car',
     iconStyle: 'solid',
     color: 'pink',
+    lane: 0,
     type: 'commit',
     xp: 100,
   },
   {
-    date: '~2008',
+    date: '2008-01-01',
+    calver: '2008.01',
     title: 'Guitar Passion',
-    blurb: 'Electric and acoustic guitar became lifelong passion, post-rock soundtrack',
+    blurb: 'Electric and acoustic guitar became lifelong passion',
     icon: 'guitar',
     iconStyle: 'solid',
     color: 'purple',
-    type: 'tag',
-    tag: 'v1.0.0',
-    xp: 150,
-  },
-  {
-    date: '~2000s',
-    title: 'Parent Class Init',
-    blurb: 'Three kids, endless adventures, party leader of family expeditions',
-    icon: 'baby',
-    iconStyle: 'solid',
-    color: 'pink',
+    lane: 0,
     type: 'commit',
-    xp: 500,
+    xp: 150,
   },
 ];
 
-const totalXP = events.reduce((sum, e) => sum + e.xp, 0);
-const tags = events.filter((e) => e.type === 'tag').map((e) => e.tag);
+const totalXP = commits.reduce((sum, c) => sum + c.xp, 0);
 
 const colorMap = {
-  cyan: 'var(--sw-cyan)',
-  purple: 'var(--sw-purple)',
-  pink: 'var(--sw-pink)',
-  yellow: 'var(--sw-yellow)',
+  cyan: '#7FDBCA',
+  purple: '#C792EA',
+  pink: '#FF5874',
+  yellow: '#ECC48D',
 };
 
-const getBranchIndent = (level: number) => {
-  return level * 32; // 32px per branch level
-};
+// Group by CalVer for display
+const calverGroups = commits.reduce(
+  (groups, commit) => {
+    if (!groups[commit.calver]) {
+      groups[commit.calver] = [];
+    }
+    groups[commit.calver].push(commit);
+    return groups;
+  },
+  {} as Record<string, CommitNode[]>
+);
 ---
 
-<BaseLayout title="Life Git Graph | Sheldon Hull" description="Life journey as git commits">
-  <div class="max-w-4xl mx-auto">
-    <div class="mb-8 text-center">
-      <h1 class="text-4xl font-bold mb-3 synthwave-gradient">
+<BaseLayout title="git log --graph --all | Sheldon Hull" description="Life as git commits">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold mb-2 synthwave-gradient font-mono">
         <FAIcon style="solid" icon="code-branch" class="mr-2" />
-        git log --all --graph
+        git log --graph --all --oneline
       </h1>
-      <div class="flex justify-center gap-4 flex-wrap text-xs" style="color: var(--sw-text-muted);">
-        {tags.map((tag) => (
-          <span class="px-2 py-1 rounded border" style="border-color: var(--sw-cyan); color: var(--sw-cyan);">
-            <FAIcon style="solid" icon="tag" class="mr-1" />
-            {tag}
-          </span>
-        ))}
-        <span style="color: var(--sw-text-secondary);">· {totalXP.toLocaleString()} XP</span>
+      <div class="text-sm font-mono" style="color: var(--sw-text-muted);">
+        {Object.keys(calverGroups).length} releases · {totalXP.toLocaleString()} commits
       </div>
     </div>
 
     <!-- Git Graph -->
-    <div class="font-mono text-sm">
+    <div class="git-graph">
       {
-        events.map((event, index) => {
-          const color = colorMap[event.color];
-          const branchLevel = event.branchLevel || 0;
-          const indent = getBranchIndent(branchLevel);
-          const nextEvent = events[index + 1];
-          const isBranchStart = event.type === 'branch-start';
-          const isBranchEnd = event.type === 'branch-end';
-          const isBranchCommit = event.type === 'branch-commit';
-          const isTag = event.type === 'tag';
+        commits.map((commit, index) => {
+          const nextCommit = commits[index + 1];
+          const prevCommit = commits[index - 1];
+          const color = colorMap[commit.color];
+          const laneOffset = commit.lane * 40;
 
           return (
-            <>
-              {/* Tag marker */}
-              {isTag && (
-                <div class="flex items-center gap-2 mb-2 ml-24">
-                  <div class="h-px flex-1" style={`background: ${color};`}></div>
-                  <span class="text-xs px-2 py-1 rounded" style={`background: ${color}33; color: ${color};`}>
-                    <FAIcon style="solid" icon="tag" class="mr-1" />
-                    {event.tag}
-                  </span>
-                  <div class="h-px flex-1" style={`background: ${color};`}></div>
-                </div>
-              )}
+            <div class="commit-row group" data-lane={commit.lane}>
+              {/* Graph visualization */}
+              <div class="graph-container">
+                <svg class="graph-svg" viewBox="0 0 200 80" preserveAspectRatio="xMinYMin meet">
+                  {/* Main branch line */}
+                  {commit.lane === 0 && nextCommit && (
+                    <line x1="20" y1="40" x2="20" y2="80" stroke="var(--sw-cyan)" stroke-width="2" />
+                  )}
 
-              {/* Event */}
-              <div
-                class="commit-line group mb-4"
-                style={`margin-left: ${indent}px;`}
-                data-expanded="false"
-              >
-                <div class="flex items-start gap-3">
-                  {/* Date */}
-                  <div class="text-xs pt-1.5 w-16 flex-shrink-0" style="color: var(--sw-text-muted);">
-                    {event.date}
-                  </div>
+                  {/* Branch line */}
+                  {commit.lane > 0 && nextCommit && nextCommit.lane === commit.lane && (
+                    <line
+                      x1={20 + commit.lane * 40}
+                      y1="40"
+                      x2={20 + commit.lane * 40}
+                      y2="80"
+                      stroke={color}
+                      stroke-width="2"
+                    />
+                  )}
 
-                  {/* Graph connector */}
-                  <div class="relative flex items-center justify-center flex-shrink-0 w-8 h-8">
-                    {/* Branch line to left */}
-                    {branchLevel > 0 && (isBranchStart || isBranchCommit) && (
-                      <div
-                        class="absolute right-full top-1/2 h-px w-8"
-                        style={`background: ${color};`}
-                      ></div>
-                    )}
-                    {branchLevel > 0 && isBranchEnd && (
-                      <div
-                        class="absolute right-full top-1/2 h-px w-8"
-                        style={`background: ${color};`}
-                      ></div>
-                    )}
+                  {/* Branch creation curve */}
+                  {commit.type === 'branch' && (
+                    <path
+                      d={`M 20 40 Q 30 40, ${20 + 40} 50 L ${20 + 40} 80`}
+                      stroke={color}
+                      stroke-width="2"
+                      fill="none"
+                    />
+                  )}
 
-                    {/* Node */}
-                    <div
-                      class="relative z-10 w-6 h-6 rounded-full flex items-center justify-center text-xs transition-all group-hover:scale-125"
-                      style={`background: ${color}; color: var(--sw-bg-primary);`}
-                    >
-                      <FAIcon style={event.iconStyle} icon={event.icon} />
+                  {/* Merge curve */}
+                  {commit.type === 'merge' && commit.mergeTo !== undefined && (
+                    <path
+                      d={`M ${20 + commit.lane * 40} 0 L ${20 + commit.lane * 40} 30 Q ${20 + commit.lane * 40} 40, ${20 + commit.mergeTo * 40} 40`}
+                      stroke={color}
+                      stroke-width="2"
+                      fill="none"
+                    />
+                  )}
+
+                  {/* Commit node */}
+                  <circle
+                    cx={20 + commit.lane * 40}
+                    cy="40"
+                    r="8"
+                    fill={color}
+                    class="commit-node"
+                    stroke="var(--sw-bg-primary)"
+                    stroke-width="2"
+                  />
+
+                  {/* Icon in node */}
+                  <foreignObject x={20 + commit.lane * 40 - 6} y="34" width="12" height="12">
+                    <div class="node-icon" style={`color: var(--sw-bg-primary);`}>
+                      <FAIcon style={commit.iconStyle} icon={commit.icon} />
                     </div>
-
-                    {/* Vertical line */}
-                    {nextEvent && branchLevel === 0 && (
-                      <div
-                        class="absolute top-full left-1/2 -translate-x-1/2 w-px h-4"
-                        style="background: var(--sw-cyan);"
-                      ></div>
-                    )}
-                    {nextEvent && branchLevel > 0 && !isBranchEnd && (
-                      <div
-                        class="absolute top-full left-1/2 -translate-x-1/2 w-px h-4"
-                        style={`background: ${color};`}
-                      ></div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div class="flex-1 min-w-0">
-                    <button
-                      class="w-full text-left group/btn"
-                      onclick="this.closest('.commit-line').dataset.expanded = this.closest('.commit-line').dataset.expanded === 'true' ? 'false' : 'true'"
-                    >
-                      <div class="flex items-baseline gap-2 flex-wrap">
-                        <span class="font-semibold group-hover/btn:underline" style={`color: ${color};`}>
-                          {event.title}
-                        </span>
-                        <span class="text-xs px-1.5 py-0.5 rounded" style={`background: ${color}22; color: ${color};`}>
-                          +{event.xp}
-                        </span>
-                        <FAIcon
-                          style="solid"
-                          icon="chevron-down"
-                          class="text-xs transition-transform expand-icon"
-                          style={`color: ${color};`}
-                        />
-                      </div>
-                    </button>
-
-                    {/* Expandable blurb */}
-                    <div class="blurb-content mt-2 text-xs leading-relaxed" style="color: var(--sw-text-secondary);">
-                      {event.blurb}
-                    </div>
-                  </div>
-                </div>
+                  </foreignObject>
+                </svg>
               </div>
-            </>
+
+              {/* Commit content */}
+              <div class="commit-content">
+                <div class="commit-header">
+                  <span class="calver" style={`color: ${color};`}>{commit.calver}</span>
+                  <button
+                    class="commit-title"
+                    onclick="this.closest('.commit-row').classList.toggle('expanded')"
+                    style={`color: ${color};`}
+                  >
+                    {commit.title}
+                    <span class="xp-badge" style={`background: ${color}22; color: ${color};`}>+{commit.xp}</span>
+                    <FAIcon style="solid" icon="chevron-down" class="expand-chevron" />
+                  </button>
+                </div>
+                <div class="commit-blurb" style="color: var(--sw-text-secondary);">{commit.blurb}</div>
+              </div>
+            </div>
           );
         })
       }
 
-      {/* End */}
-      <div class="flex items-center gap-3 ml-24 text-xs" style="color: var(--sw-text-muted);">
-        <div
-          class="w-3 h-3 rounded-full"
-          style="background: var(--sw-cyan); box-shadow: 0 0 8px var(--sw-cyan);"
-        ></div>
-        <span>
+      {/* HEAD marker */}
+      <div class="head-marker">
+        <svg class="graph-svg" viewBox="0 0 200 40" preserveAspectRatio="xMinYMin meet">
+          <circle cx="20" cy="20" r="6" fill="var(--sw-cyan)" class="pulse" />
+        </svg>
+        <span class="head-text" style="color: var(--sw-cyan);">
           <FAIcon style="solid" icon="infinity" class="mr-1" />
           HEAD
         </span>
@@ -386,21 +388,155 @@ const getBranchIndent = (level: number) => {
     background-clip: text;
   }
 
-  .commit-line .blurb-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
+  .git-graph {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 13px;
   }
 
-  .commit-line[data-expanded='true'] .blurb-content {
-    max-height: 200px;
+  .commit-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 0;
+    min-height: 80px;
+    position: relative;
   }
 
-  .commit-line[data-expanded='true'] .expand-icon {
+  .graph-container {
+    flex-shrink: 0;
+    width: 200px;
+  }
+
+  .graph-svg {
+    width: 100%;
+    height: 80px;
+  }
+
+  .commit-node {
+    transition: r 0.2s ease;
+  }
+
+  .commit-row:hover .commit-node {
+    r: 10;
+  }
+
+  .node-icon {
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .commit-content {
+    flex: 1;
+    min-width: 0;
+    padding-top: 24px;
+  }
+
+  .commit-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .calver {
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    min-width: 70px;
+  }
+
+  .commit-title {
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .commit-title:hover {
+    opacity: 0.8;
+  }
+
+  .xp-badge {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .expand-chevron {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  .commit-row.expanded .expand-chevron {
     transform: rotate(180deg);
   }
 
-  .commit-line button {
-    cursor: pointer;
+  .commit-blurb {
+    font-size: 12px;
+    line-height: 1.5;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
+    padding-left: 82px;
+  }
+
+  .commit-row.expanded .commit-blurb {
+    max-height: 100px;
+    margin-top: 4px;
+  }
+
+  .head-marker {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-top: 12px;
+    padding-left: 8px;
+  }
+
+  .head-marker .graph-svg {
+    width: 200px;
+    height: 40px;
+  }
+
+  .head-text {
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .pulse {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+      filter: drop-shadow(0 0 4px currentColor);
+    }
+    50% {
+      opacity: 0.6;
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .graph-container {
+      width: 120px;
+    }
+
+    .commit-blurb {
+      padding-left: 0;
+    }
   }
 </style>
