@@ -102,6 +102,28 @@ const formattedDate = formatDate(post.data.date);
           border-left-color: var(--sw-cyan);
           color: var(--sw-text-secondary);
         }
+        .prose table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1.5rem 0;
+        }
+        .prose thead {
+          border-bottom: 2px solid var(--sw-cyan);
+        }
+        .prose th {
+          padding: 0.75rem 1rem;
+          text-align: left;
+          font-weight: 600;
+          color: var(--sw-cyan);
+        }
+        .prose td {
+          padding: 0.75rem 1rem;
+          border-bottom: 1px solid rgba(127, 219, 202, 0.2);
+          color: var(--sw-text-secondary);
+        }
+        .prose tbody tr:hover {
+          background: rgba(127, 219, 202, 0.05);
+        }
       </style>
       <Content />
     </div>

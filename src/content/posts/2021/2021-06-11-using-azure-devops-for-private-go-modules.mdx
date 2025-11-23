@@ -10,16 +10,16 @@ date: '2021-06-11T16:35:44-05:00'
 
 
 
-<Aside type="note" title="2022-12-14">
+
 ## TL;DR
 
 This took a few hours of work to iron out, so figured maybe I'd save someone time.
 
-:zap: Just keep it simple and use SSH
+⚡ Just keep it simple and use SSH
 
-:zap: Use `dev.azure.com` even if using older `project.visualstudio.com` to keep things simple.
+⚡ Use `dev.azure.com` even if using older `project.visualstudio.com` to keep things simple.
 
-</Aside>
+
 
 
 ## Modules Support
@@ -41,7 +41,7 @@ Compare the path.
 | Type                   | Path                                                        |
 | ---------------------- | ----------------------------------------------------------- |
 | HTTPS                    | `go get dev.azure.com/<organization>/<project>/_git/<repo>` |
-| :zap: What I used with SSH | `go get dev.azure.com/<project>/_git/<repo>`                |
+| ⚡ What I used with SSH | `go get dev.azure.com/<project>/_git/<repo>`                |
 | SSH                  | `go get dev.azure.com/<organization>/<project>/<repo>.git`  |
 
 ## Git Config
@@ -57,12 +57,22 @@ There are two approaches you can take.
 One seems focused on allowing other `dev.azure.com` public projects to be used.
 I've never had that need, so I'm ok with my `dev.azure.com` references being resolved only to my own organization.
 
-| Type                              | Command                                                                                                               | GitConfig                                                                                      |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Support All Azure DevOps (Public) | `git config --global url."git@ssh.dev.azure.com:v3/<organization>/".insteadOf "https://dev.azure.com/<organization>"` | `[url "git@ssh.dev.azure.com:v3"]<br/>`<br/><br/>`insteadOf = https://dev.azure.com`            |
-| :zap: What I Used for  Private Org    | `git config --global url."git@ssh.dev.azure.com:v3/<organization>/".insteadOf "https://dev.azure.com/`                | `[url "git@ssh.dev.azure.com:v3/<organization>/"]`<br/><br/>`insteadOf = https://dev.azure.com/` |
+<ComparisonCards items={[
+  {
+    title: "Support All Azure DevOps (Public)",
+    command: `git config --global url."git@ssh.dev.azure.com:v3/<organization>/".insteadOf "https://dev.azure.com/<organization>"`,
+    gitConfig: `[url "git@ssh.dev.azure.com:v3"]
+    insteadOf = https://dev.azure.com`
+  },
+  {
+    title: "What I Used for Private Org",
+    command: `git config --global url."git@ssh.dev.azure.com:v3/<organization>/".insteadOf "https://dev.azure.com/"`,
+    gitConfig: `[url "git@ssh.dev.azure.com:v3/<organization>/"]
+    insteadOf = https://dev.azure.com/`,
+    highlighted: true
+  }
+]} />
 
-</Aside>
 
 <Aside type="tip" title="Organization in Dependency Path">
 

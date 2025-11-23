@@ -40,6 +40,10 @@ export function mdxAutoImports(): Plugin {
       {
         name: 'FAIcon',
         path: '../../../components/FAIcon.astro'
+      },
+      {
+        name: 'ComparisonCards',
+        path: '../../../components/ComparisonCards.astro'
       }
     ];
 
