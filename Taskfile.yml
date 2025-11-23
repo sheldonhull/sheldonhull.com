@@ -100,6 +100,6 @@ tasks:
       - yarn preview
 
   astro:install:
-    desc: Install Astro dependencies
+    desc: Install Astro dependencies (runs yarn install - lockfile will be immutable in CI)
     cmds:
       - yarn install
