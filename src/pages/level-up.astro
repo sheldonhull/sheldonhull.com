@@ -2,169 +2,515 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FAIcon from '../components/FAIcon.astro';
 
+interface AttributeMod {
+  name: string;
+  value: number;
+}
+
 interface Achievement {
-  year: number;
   title: string;
   description: string;
   icon: string;
   iconStyle: 'solid' | 'brands' | 'regular';
   xp: number;
+  attributes: AttributeMod[];
 }
 
-interface Level {
+interface YearLevel {
+  year: number;
   level: number;
   title: string;
-  yearRange: string;
+  subtitle: string;
   achievements: Achievement[];
-  totalXP: number;
 }
 
-const levels: Level[] = [
+// Define all year levels with creative descriptions and attribute modifiers
+const yearLevels: YearLevel[] = [
   {
+    year: 2008,
     level: 1,
-    title: 'The Awakening',
-    yearRange: '2008-2012',
-    totalXP: 650,
+    title: 'The Riff Master',
+    subtitle: 'Six strings, endless possibilities',
     achievements: [
-      { year: 2008, title: 'Guitar Passion', description: 'Electric and acoustic guitar became lifelong passion', icon: 'guitar', iconStyle: 'solid', xp: 150 },
-      { year: 2010, title: 'Stick Shift Trial', description: 'Bought Mazdaspeed3 without knowing manual', icon: 'car', iconStyle: 'solid', xp: 100 },
-      { year: 2012, title: 'PowerShell Era', description: 'Began automating everything with PowerShell', icon: 'bolt', iconStyle: 'solid', xp: 200 },
-      { year: 2012, title: 'SQL Deep Dive', description: 'Database optimization and query tuning mastery', icon: 'database', iconStyle: 'solid', xp: 200 },
+      {
+        title: 'Guitar Awakening',
+        description: 'Electric and acoustic guitar became an obsession. Neighbors learned patience.',
+        icon: 'guitar',
+        iconStyle: 'solid',
+        xp: 150,
+        attributes: [
+          { name: 'Music', value: 3 },
+          { name: 'Creativity', value: 2 },
+          { name: 'Finger Calluses', value: 5 }
+        ]
+      }
     ]
   },
   {
+    year: 2010,
     level: 2,
-    title: 'Creative Expansion',
-    yearRange: '2014-2017',
-    totalXP: 550,
+    title: 'Manual Transmission Baptism',
+    subtitle: 'Trial by fire and clutch',
     achievements: [
-      { year: 2015, title: 'Photography & Video', description: 'Started capturing light and visual stories', icon: 'camera', iconStyle: 'solid', xp: 200 },
-      { year: 2016, title: 'Music Production', description: 'Dove into DAW and digital audio', icon: 'sliders', iconStyle: 'solid', xp: 75 },
-      { year: 2017, title: 'Family Thanksgiving', description: 'Hosted family gathering, captured memories', icon: 'turkey', iconStyle: 'solid', xp: 75 },
+      {
+        title: 'Stick Shift Survivor',
+        description: 'Bought a Mazdaspeed3 without knowing manual. Learned on the highway home. Peak anxiety achieved.',
+        icon: 'car',
+        iconStyle: 'solid',
+        xp: 100,
+        attributes: [
+          { name: 'Driving', value: 3 },
+          { name: 'Clutch Control', value: 4 },
+          { name: 'Sanity', value: -2 },
+          { name: 'Confidence', value: 2 }
+        ]
+      }
     ]
   },
   {
+    year: 2012,
     level: 3,
-    title: 'Go Journey',
-    yearRange: '2020-2021',
-    totalXP: 300,
+    title: 'The PowerShell Obsession',
+    subtitle: 'Making it do things it was never meant to do',
     achievements: [
-      { year: 2020, title: 'Go Learning', description: 'Started 100 Days of Code with Go', icon: 'code-branch', iconStyle: 'solid', xp: 100 },
-      { year: 2021, title: 'Go Career', description: 'Joined role using Go professionally', icon: 'code-merge', iconStyle: 'solid', xp: 200 },
+      {
+        title: 'Script Everything',
+        description: 'Obsessively automated with PowerShell. If it could be scripted, it was. If it couldn\'t, made it anyway. GUI? What GUI?',
+        icon: 'bolt',
+        iconStyle: 'solid',
+        xp: 200,
+        attributes: [
+          { name: 'Scripting', value: 4 },
+          { name: 'Automation', value: 5 },
+          { name: 'GUI Skills', value: -3 },
+          { name: 'Sleep', value: -1 }
+        ]
+      }
     ]
   },
   {
+    year: 2014,
     level: 4,
-    title: 'Digital Nomad',
-    yearRange: '2023',
-    totalXP: 625,
+    title: 'Query Whisperer',
+    subtitle: 'Speaking fluent SQL',
     achievements: [
-      { year: 2023, title: 'Digital Garden', description: 'Published personal knowledge base', icon: 'seedling', iconStyle: 'solid', xp: 100 },
-      { year: 2023, title: 'Manual F150', description: 'Drove manual truck without stalling', icon: 'truck', iconStyle: 'solid', xp: 75 },
-      { year: 2023, title: 'NYC Visit', description: 'Conquered concrete jungle', icon: 'building', iconStyle: 'solid', xp: 125 },
-      { year: 2023, title: 'Paris Adventure', description: 'Led family through City of Lights', icon: 'tower-broadcast', iconStyle: 'solid', xp: 150 },
-      { year: 2023, title: 'Versailles', description: 'Wandered grand palace grounds', icon: 'monument', iconStyle: 'solid', xp: 100 },
-      { year: 2023, title: 'London & Chunnel', description: 'Crossed under English Channel', icon: 'train', iconStyle: 'solid', xp: 125 },
+      {
+        title: 'Database Deep Dive',
+        description: 'Optimized queries that made DBAs weep with joy. Learned to think in JOINs and dream in indexes.',
+        icon: 'database',
+        iconStyle: 'solid',
+        xp: 200,
+        attributes: [
+          { name: 'Database', value: 4 },
+          { name: 'Query Optimization', value: 3 },
+          { name: 'Patience', value: 2 }
+        ]
+      }
     ]
   },
   {
+    year: 2015,
     level: 5,
-    title: 'AI Era',
-    yearRange: '2023-2024',
-    totalXP: 125,
+    title: 'Light Chaser',
+    subtitle: 'Capturing moments in pixels',
     achievements: [
-      { year: 2023, title: 'Local AI', description: 'Set up Ollama with local LLMs', icon: 'microchip', iconStyle: 'solid', xp: 75 },
-      { year: 2024, title: 'AI Diagnostics', description: 'Using GPT for troubleshooting', icon: 'brain', iconStyle: 'solid', xp: 50 },
+      {
+        title: 'Photography & Video',
+        description: 'Started obsessing over light, composition, and that perfect golden hour shot. Camera gear collection initiated.',
+        icon: 'camera',
+        iconStyle: 'solid',
+        xp: 200,
+        attributes: [
+          { name: 'Photography', value: 4 },
+          { name: 'Creativity', value: 3 },
+          { name: 'Wallet', value: -3 }
+        ]
+      }
     ]
   },
   {
+    year: 2016,
     level: 6,
-    title: 'Modern Stack',
-    yearRange: '2025',
-    totalXP: 150,
+    title: 'The Producer',
+    subtitle: 'DAW wizard in training',
     achievements: [
-      { year: 2025, title: 'Astro Migration', description: 'Migrated site to Astro for modern DX', icon: 'rocket', iconStyle: 'solid', xp: 150 },
+      {
+        title: 'Music Production Journey',
+        description: 'Dove into Studio One and digital audio. Spent hours tweaking EQ nobody else could hear.',
+        icon: 'sliders',
+        iconStyle: 'solid',
+        xp: 75,
+        attributes: [
+          { name: 'Music Production', value: 3 },
+          { name: 'Audio Engineering', value: 2 },
+          { name: 'Perfectionism', value: 2 }
+        ]
+      }
+    ]
+  },
+  {
+    year: 2017,
+    level: 7,
+    title: 'Family Archivist',
+    subtitle: 'Memories captured, turkey conquered',
+    achievements: [
+      {
+        title: 'Thanksgiving Champion',
+        description: 'Hosted family gathering. Filmed everything. Turkey was dry but memories were perfect.',
+        icon: 'users',
+        iconStyle: 'solid',
+        xp: 75,
+        attributes: [
+          { name: 'Hosting', value: 2 },
+          { name: 'Videography', value: 2 },
+          { name: 'Cooking', value: -1 }
+        ]
+      }
+    ]
+  },
+  {
+    year: 2020,
+    level: 8,
+    title: 'Go Gopher Initiate',
+    subtitle: '100 days of channel confusion',
+    achievements: [
+      {
+        title: 'Go Learning Quest',
+        description: 'Started 100 Days of Code with Go. Wrestled with goroutines. Lost to interfaces. Persisted anyway.',
+        icon: 'code-branch',
+        iconStyle: 'solid',
+        xp: 100,
+        attributes: [
+          { name: 'Go', value: 3 },
+          { name: 'Concurrency', value: 2 },
+          { name: 'DevOps', value: 2 },
+          { name: 'Sanity', value: -1 }
+        ]
+      }
+    ]
+  },
+  {
+    year: 2021,
+    level: 9,
+    title: 'Go Professional',
+    subtitle: 'They pay me for this now',
+    achievements: [
+      {
+        title: 'Go Career Unlocked',
+        description: 'Landed role using Go professionally. Imposter syndrome at maximum. Actually knew stuff though.',
+        icon: 'briefcase',
+        iconStyle: 'solid',
+        xp: 200,
+        attributes: [
+          { name: 'Go', value: 3 },
+          { name: 'Professional Dev', value: 4 },
+          { name: 'Confidence', value: 3 }
+        ]
+      }
+    ]
+  },
+  {
+    year: 2023,
+    level: 10,
+    title: 'Renaissance Year',
+    subtitle: 'Maximum chaos, maximum growth',
+    achievements: [
+      {
+        title: 'Digital Garden Planted',
+        description: 'Published personal knowledge base. Now everyone can see my organized chaos.',
+        icon: 'seedling',
+        iconStyle: 'solid',
+        xp: 100,
+        attributes: [
+          { name: 'Knowledge Management', value: 3 },
+          { name: 'Writing', value: 2 }
+        ]
+      },
+      {
+        title: 'Manual Truck Redemption',
+        description: 'Drove F150 manual without stalling. Growth from 2010 Mazdaspeed3 trauma complete.',
+        icon: 'truck',
+        iconStyle: 'solid',
+        xp: 75,
+        attributes: [
+          { name: 'Driving', value: 2 },
+          { name: 'Confidence', value: 2 }
+        ]
+      },
+      {
+        title: 'NYC Survival',
+        description: 'Conquered concrete jungle. Won unofficial rat-spotting competition. Subway navigation mastered.',
+        icon: 'city',
+        iconStyle: 'solid',
+        xp: 125,
+        attributes: [
+          { name: 'Travel', value: 3 },
+          { name: 'Urban Navigation', value: 2 },
+          { name: 'Rat Recognition', value: 4 }
+        ]
+      },
+      {
+        title: 'Parisian Navigator',
+        description: 'Led family through Paris metro system without getting lost (much). Croissant consumption maxed.',
+        icon: 'map-location-dot',
+        iconStyle: 'solid',
+        xp: 150,
+        attributes: [
+          { name: 'Travel', value: 3 },
+          { name: 'French', value: 1 },
+          { name: 'Metro Skills', value: 3 }
+        ]
+      },
+      {
+        title: 'Versailles Wanderer',
+        description: 'Walked palace grounds until feet hurt. Gold leaf appreciation intensified.',
+        icon: 'crown',
+        iconStyle: 'solid',
+        xp: 100,
+        attributes: [
+          { name: 'History', value: 2 },
+          { name: 'Walking Endurance', value: 3 }
+        ]
+      },
+      {
+        title: 'Chunnel Champion',
+        description: 'Crossed under English Channel by train. London pubs thoroughly researched.',
+        icon: 'train-subway',
+        iconStyle: 'solid',
+        xp: 125,
+        attributes: [
+          { name: 'Travel', value: 2 },
+          { name: 'Pub Expertise', value: 3 }
+        ]
+      },
+      {
+        title: 'Local AI Tinkerer',
+        description: 'Set up Ollama to run llama2:13b on M2 Max. Computer fan became jet engine.',
+        icon: 'microchip',
+        iconStyle: 'solid',
+        xp: 75,
+        attributes: [
+          { name: 'AI', value: 2 },
+          { name: 'DevOps', value: 1 },
+          { name: 'Electricity Bill', value: -2 }
+        ]
+      }
+    ]
+  },
+  {
+    year: 2024,
+    level: 11,
+    title: 'AI Assistant Adopter',
+    subtitle: 'ChatGPT is basically my coworker now',
+    achievements: [
+      {
+        title: 'GPT Diagnostics Pro',
+        description: 'Started using ChatGPT for troubleshooting. Rubber duck debugging evolved to AI debugging.',
+        icon: 'robot',
+        iconStyle: 'solid',
+        xp: 50,
+        attributes: [
+          { name: 'AI', value: 2 },
+          { name: 'Problem Solving', value: 2 },
+          { name: 'Googling', value: -1 }
+        ]
+      }
+    ]
+  },
+  {
+    year: 2025,
+    level: 12,
+    title: 'Modern Stack Embracer',
+    subtitle: 'Hugo was so 2023',
+    achievements: [
+      {
+        title: 'Astro Migration',
+        description: 'Migrated entire site to Astro. Modern DX achieved. Component islands everywhere.',
+        icon: 'rocket',
+        iconStyle: 'solid',
+        xp: 150,
+        attributes: [
+          { name: 'Frontend', value: 3 },
+          { name: 'Modern JS', value: 2 },
+          { name: 'Static Site Gen', value: 2 }
+        ]
+      }
     ]
   }
 ];
 
-const totalXP = levels.reduce((sum, level) => sum + level.totalXP, 0);
+// Calculate cumulative stats
+interface Stats {
+  [key: string]: number;
+}
+
+function calculateCumulativeStats(upToLevel: number): Stats {
+  const stats: Stats = {};
+
+  for (let i = 0; i <= upToLevel && i < yearLevels.length; i++) {
+    const level = yearLevels[i];
+    level.achievements.forEach(achievement => {
+      achievement.attributes.forEach(attr => {
+        stats[attr.name] = (stats[attr.name] || 0) + attr.value;
+      });
+    });
+  }
+
+  return stats;
+}
+
+const totalXP = yearLevels.reduce((sum, level) =>
+  sum + level.achievements.reduce((achSum, ach) => achSum + ach.xp, 0), 0
+);
+
+const finalStats = calculateCumulativeStats(yearLevels.length - 1);
 ---
 
 <BaseLayout title="RPG Life Stats | Sheldon Hull" description="Life as an RPG adventure">
   <div class="rpg-container">
-    <!-- Character that walks with scroll -->
-    <div class="character-container">
-      <div class="pixel-mage" id="mage">
-        <!-- Pixel art mage using CSS -->
-        <div class="mage-pixels"></div>
+    <!-- Pixel Art Character - Improved and More Visible -->
+    <div class="character-display">
+      <div class="pixel-mage-large">
+        <!-- Better pixel art character -->
+        <svg viewBox="0 0 32 32" class="mage-sprite">
+          <!-- Hood -->
+          <rect x="10" y="4" width="12" height="2" fill="#6b46c1"/>
+          <rect x="8" y="6" width="16" height="2" fill="#6b46c1"/>
+          <rect x="7" y="8" width="18" height="2" fill="#7c3aed"/>
+
+          <!-- Face -->
+          <rect x="12" y="10" width="8" height="6" fill="#d4a574"/>
+          <rect x="13" y="12" width="2" height="1" fill="#4a2511"/>
+          <rect x="17" y="12" width="2" height="1" fill="#4a2511"/>
+
+          <!-- Body/Robe -->
+          <rect x="9" y="16" width="14" height="2" fill="#8b5cf6"/>
+          <rect x="8" y="18" width="16" height="4" fill="#7c3aed"/>
+          <rect x="7" y="22" width="18" height="4" fill="#6b21a8"/>
+          <rect x="9" y="26" width="5" height="4" fill="#5b21b6"/>
+          <rect x="18" y="26" width="5" height="4" fill="#5b21b6"/>
+
+          <!-- Staff -->
+          <rect x="26" y="14" width="2" height="14" fill="#92400e"/>
+          <rect x="25" y="12" width="4" height="4" fill="#fbbf24" opacity="0.8"/>
+          <circle cx="27" cy="14" r="2" fill="#fde047" opacity="0.9"/>
+
+          <!-- Magic glow effect -->
+          <circle cx="27" cy="14" r="3" fill="#fbbf24" opacity="0.3" class="staff-glow"/>
+        </svg>
+      </div>
+      <div class="character-label">Level {yearLevels.length} Mage</div>
+    </div>
+
+    <!-- Stats Tracker -->
+    <div class="stats-tracker" id="statsTracker">
+      <div class="stats-header">
+        <FAIcon style="solid" icon="chart-line" />
+        <span>Current Stats</span>
+      </div>
+      <div class="stats-grid" id="statsGrid">
+        <!-- Stats will be populated by JavaScript -->
       </div>
     </div>
 
-    <!-- Horizontal scrolling sections -->
-    <div class="levels-wrapper" id="levelsWrapper">
-      {levels.map((level, index) => (
-        <section class="level-section" data-level={level.level}>
-          <div class="level-content">
-            <div class="level-header">
-              <div class="level-badge">
-                <span class="level-number">LVL {level.level}</span>
+    <!-- Horizontal scrolling card sections -->
+    <div class="cards-wrapper" id="cardsWrapper">
+      {yearLevels.map((level, index) => {
+        const cumulativeStats = calculateCumulativeStats(index);
+
+        return (
+          <section class="card-section" data-level={level.level}>
+            <div class="rpg-card">
+              <div class="card-header">
+                <div class="card-level">LEVEL {level.level}</div>
+                <div class="card-year">{level.year}</div>
               </div>
-              <h2 class="level-title">{level.title}</h2>
-              <p class="level-years">{level.yearRange}</p>
-              <div class="level-xp">
-                <FAIcon style="solid" icon="star" />
-                {level.totalXP} XP
+
+              <div class="card-title-block">
+                <h2 class="card-title">{level.title}</h2>
+                <p class="card-subtitle">{level.subtitle}</p>
+              </div>
+
+              <div class="card-body">
+                {level.achievements.map((achievement) => (
+                  <div class="achievement-block">
+                    <div class="achievement-header">
+                      <div class="achievement-icon-circle">
+                        <FAIcon style={achievement.iconStyle} icon={achievement.icon} />
+                      </div>
+                      <div class="achievement-title-wrap">
+                        <h3 class="achievement-title">{achievement.title}</h3>
+                        <span class="achievement-xp">+{achievement.xp} XP</span>
+                      </div>
+                    </div>
+
+                    <p class="achievement-description">{achievement.description}</p>
+
+                    <div class="attributes-list">
+                      {achievement.attributes.map((attr) => (
+                        <div class="attribute-tag" class:list={[attr.value < 0 && 'negative']}>
+                          <span class="attr-name">{attr.name}</span>
+                          <span class="attr-value">{attr.value > 0 ? '+' : ''}{attr.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div class="card-footer">
+                <div class="footer-stat">
+                  <FAIcon style="solid" icon="star" />
+                  <span>{level.achievements.reduce((sum, a) => sum + a.xp, 0)} XP</span>
+                </div>
               </div>
             </div>
+          </section>
+        );
+      })}
 
-            <div class="achievements-grid">
-              {level.achievements.map((achievement) => (
-                <div class="achievement-card">
-                  <div class="achievement-icon">
-                    <FAIcon style={achievement.iconStyle} icon={achievement.icon} />
-                  </div>
-                  <div class="achievement-info">
-                    <h3 class="achievement-title">{achievement.title}</h3>
-                    <p class="achievement-desc">{achievement.description}</p>
-                    <span class="achievement-xp">+{achievement.xp} XP</span>
-                  </div>
-                  <div class="achievement-year">{achievement.year}</div>
-                </div>
-              ))}
+      <!-- Final Stats Card -->
+      <section class="card-section final-card">
+        <div class="rpg-card">
+          <div class="card-title-block">
+            <h2 class="card-title">Journey Complete</h2>
+            <p class="card-subtitle">For now...</p>
+          </div>
+
+          <div class="final-stats-display">
+            <div class="final-stat-box">
+              <FAIcon style="solid" icon="trophy" />
+              <span class="final-stat-value">{yearLevels.length}</span>
+              <span class="final-stat-label">Levels</span>
+            </div>
+            <div class="final-stat-box">
+              <FAIcon style="solid" icon="star" />
+              <span class="final-stat-value">{totalXP}</span>
+              <span class="final-stat-label">Total XP</span>
+            </div>
+            <div class="final-stat-box">
+              <FAIcon style="solid" icon="medal" />
+              <span class="final-stat-value">{Object.keys(finalStats).length}</span>
+              <span class="final-stat-label">Attributes</span>
             </div>
           </div>
-        </section>
-      ))}
 
-      <!-- Final section -->
-      <section class="level-section final-section">
-        <div class="level-content">
-          <div class="final-stats">
-            <h2 class="final-title">Journey Continues...</h2>
-            <div class="total-stats">
-              <div class="stat-box">
-                <FAIcon style="solid" icon="trophy" />
-                <span class="stat-value">{levels.length}</span>
-                <span class="stat-label">Levels</span>
-              </div>
-              <div class="stat-box">
-                <FAIcon style="solid" icon="star" />
-                <span class="stat-value">{totalXP}</span>
-                <span class="stat-label">Total XP</span>
-              </div>
-              <div class="stat-box">
-                <FAIcon style="solid" icon="award" />
-                <span class="stat-value">{levels.reduce((sum, l) => sum + l.achievements.length, 0)}</span>
-                <span class="stat-label">Achievements</span>
-              </div>
+          <div class="final-attributes">
+            <h3 class="final-attributes-title">Final Attributes</h3>
+            <div class="final-attributes-grid">
+              {Object.entries(finalStats).sort((a, b) => b[1] - a[1]).map(([name, value]) => (
+                <div class="final-attribute-item">
+                  <span class="final-attr-name">{name}</span>
+                  <span class="final-attr-value">{value > 0 ? '+' : ''}{value}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
     </div>
 
-    <!-- Navigation controls (mobile) -->
+    <!-- Navigation -->
     <button class="nav-btn nav-prev" id="navPrev" aria-label="Previous level">
       <FAIcon style="solid" icon="chevron-left" />
     </button>
@@ -172,34 +518,62 @@ const totalXP = levels.reduce((sum, level) => sum + level.totalXP, 0);
       <FAIcon style="solid" icon="chevron-right" />
     </button>
 
-    <!-- Level indicator dots -->
-    <div class="level-dots">
-      {levels.map((level, index) => (
-        <button class="dot" data-index={index} class:list={[{ active: index === 0 }]}>
+    <!-- Progress dots -->
+    <div class="progress-dots">
+      {yearLevels.map((level, index) => (
+        <button class="progress-dot" data-index={index} class:list={[{ active: index === 0 }]}>
           <span class="sr-only">Level {level.level}</span>
         </button>
       ))}
-      <button class="dot" data-index={levels.length}>
-        <span class="sr-only">Stats</span>
+      <button class="progress-dot" data-index={yearLevels.length}>
+        <span class="sr-only">Final Stats</span>
       </button>
     </div>
   </div>
 </BaseLayout>
 
-<script>
+<script define:vars={{ yearLevels }}>
   let currentSection = 0;
-  const wrapper = document.getElementById('levelsWrapper');
-  const mage = document.getElementById('mage');
-  const sections = document.querySelectorAll('.level-section');
-  const dots = document.querySelectorAll('.dot');
+  const wrapper = document.getElementById('cardsWrapper');
+  const sections = document.querySelectorAll('.card-section');
+  const dots = document.querySelectorAll('.progress-dot');
   const navPrev = document.getElementById('navPrev');
   const navNext = document.getElementById('navNext');
+  const statsGrid = document.getElementById('statsGrid');
 
   let isScrolling = false;
   let touchStartX = 0;
-  let touchEndX = 0;
 
-  function updateSection(index: number) {
+  function calculateCumulativeStats(upToIndex) {
+    const stats = {};
+
+    for (let i = 0; i <= upToIndex && i < yearLevels.length; i++) {
+      const level = yearLevels[i];
+      level.achievements.forEach(achievement => {
+        achievement.attributes.forEach(attr => {
+          stats[attr.name] = (stats[attr.name] || 0) + attr.value;
+        });
+      });
+    }
+
+    return stats;
+  }
+
+  function updateStatsDisplay(stats) {
+    if (!statsGrid) return;
+
+    const sortedStats = Object.entries(stats).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+    const topStats = sortedStats.slice(0, 6);
+
+    statsGrid.innerHTML = topStats.map(([name, value]) => `
+      <div class="stat-item ${value < 0 ? 'negative' : ''}">
+        <span class="stat-name">${name}</span>
+        <span class="stat-value">${value > 0 ? '+' : ''}${value}</span>
+      </div>
+    `).join('');
+  }
+
+  function updateSection(index) {
     if (index < 0 || index >= sections.length) return;
 
     currentSection = index;
@@ -210,20 +584,16 @@ const totalXP = levels.reduce((sum, level) => sum + level.totalXP, 0);
       behavior: 'smooth'
     });
 
-    // Update dots
     dots.forEach((dot, i) => {
       dot.classList.toggle('active', i === currentSection);
     });
 
-    // Animate mage walking
-    if (mage) {
-      const progress = (currentSection / (sections.length - 1)) * 100;
-      mage.style.left = `${Math.min(progress, 85)}%`;
-      mage.classList.add('walking');
-      setTimeout(() => mage.classList.remove('walking'), 600);
+    // Update stats display
+    if (currentSection < yearLevels.length) {
+      const stats = calculateCumulativeStats(currentSection);
+      updateStatsDisplay(stats);
     }
 
-    // Update nav buttons
     if (navPrev) navPrev.style.opacity = currentSection === 0 ? '0.3' : '1';
     if (navNext) navNext.style.opacity = currentSection === sections.length - 1 ? '0.3' : '1';
   }
@@ -243,128 +613,160 @@ const totalXP = levels.reduce((sum, level) => sum + level.totalXP, 0);
     }
   }, { passive: false });
 
-  // Touch/swipe support
+  // Touch support
   wrapper?.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;
   });
 
   wrapper?.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].clientX;
-    handleSwipe();
-  });
-
-  function handleSwipe() {
+    const touchEndX = e.changedTouches[0].clientX;
     const diff = touchStartX - touchEndX;
     if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        updateSection(currentSection + 1);
-      } else {
-        updateSection(currentSection - 1);
-      }
+      updateSection(currentSection + (diff > 0 ? 1 : -1));
     }
-  }
+  });
 
-  // Navigation buttons
   navPrev?.addEventListener('click', () => updateSection(currentSection - 1));
   navNext?.addEventListener('click', () => updateSection(currentSection + 1));
 
-  // Dot navigation
   dots.forEach((dot, index) => {
     dot.addEventListener('click', () => updateSection(index));
   });
 
-  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') updateSection(currentSection + 1);
     if (e.key === 'ArrowLeft') updateSection(currentSection - 1);
   });
 
-  // Initialize
   updateSection(0);
 </script>
 
 <style>
   .rpg-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    inset: 0;
     overflow: hidden;
-    background: linear-gradient(180deg, #0a0e27 0%, #1a1b26 50%, #16213e 100%);
+    background:
+      radial-gradient(ellipse at top, rgba(123, 58, 237, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(16, 33, 62, 0.8) 0%, transparent 50%),
+      linear-gradient(180deg, #0a0e27 0%, #1a1b26 100%);
   }
 
-  .character-container {
+  /* Character Display - Improved */
+  .character-display {
     position: fixed;
-    bottom: 60px;
-    left: 10%;
-    z-index: 100;
-    pointer-events: none;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
 
-  .pixel-mage {
-    width: 64px;
-    height: 64px;
-    position: relative;
-    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  .pixel-mage-large {
+    width: 128px;
+    height: 128px;
+    padding: 12px;
+    background: rgba(16, 21, 38, 0.8);
+    border: 3px solid rgba(139, 92, 246, 0.5);
+    border-radius: 12px;
+    box-shadow:
+      0 0 30px rgba(139, 92, 246, 0.4),
+      inset 0 0 20px rgba(139, 92, 246, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .mage-sprite {
+    width: 100%;
+    height: 100%;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
   }
 
-  .pixel-mage.walking {
-    animation: walk 0.6s steps(4);
+  .staff-glow {
+    animation: pulse 2s ease-in-out infinite;
   }
 
-  @keyframes walk {
-    0%, 100% { transform: translateY(0); }
-    25% { transform: translateY(-2px); }
-    75% { transform: translateY(-2px); }
+  .character-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #a78bfa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    background: rgba(139, 92, 246, 0.2);
+    border-radius: 8px;
+    border: 1px solid rgba(139, 92, 246, 0.3);
   }
 
-  /* Pixel art mage using CSS */
-  .mage-pixels {
-    width: 100%;
-    height: 100%;
-    background:
-      /* Hood */
-      radial-gradient(circle at 50% 20%, #6b46c1 0%, #6b46c1 30%, transparent 30%),
-      /* Body */
-      linear-gradient(180deg, #7c3aed 40%, #5b21b6 70%, #4c1d95 100%),
-      /* Staff glow */
-      radial-gradient(circle at 85% 50%, #fbbf24 0%, #f59e0b 15%, transparent 25%);
-    box-shadow:
-      0 0 20px rgba(139, 92, 246, 0.6),
-      inset 0 0 10px rgba(167, 139, 250, 0.3);
-    border-radius: 4px;
-    position: relative;
-  }
-
-  .mage-pixels::before {
-    content: '';
-    position: absolute;
-    width: 4px;
-    height: 40px;
-    background: #92400e;
-    right: 8px;
+  /* Stats Tracker */
+  .stats-tracker {
+    position: fixed;
     top: 20px;
-    border-radius: 1px;
+    left: 20px;
+    z-index: 200;
+    background: rgba(16, 21, 38, 0.9);
+    border: 2px solid rgba(139, 92, 246, 0.4);
+    border-radius: 12px;
+    padding: 16px;
+    min-width: 280px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
-  .mage-pixels::after {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: #fbbf24;
-    right: 5px;
-    top: 15px;
-    border-radius: 50%;
-    box-shadow: 0 0 12px #fbbf24;
-    animation: pulse 2s infinite;
+  .stats-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #a78bfa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.3);
   }
 
-  .levels-wrapper {
+  .stats-grid {
+    display: grid;
+    gap: 6px;
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .stat-item.negative {
+    background: rgba(248, 113, 113, 0.1);
+  }
+
+  .stat-name {
+    color: var(--sw-text-secondary);
+    font-weight: 500;
+  }
+
+  .stat-value {
+    color: #10b981;
+    font-weight: 700;
+    font-family: 'Monaco', monospace;
+  }
+
+  .stat-item.negative .stat-value {
+    color: #f87171;
+  }
+
+  /* Cards Wrapper */
+  .cards-wrapper {
     display: flex;
     height: 100vh;
     overflow-x: hidden;
@@ -373,246 +775,334 @@ const totalXP = levels.reduce((sum, level) => sum + level.totalXP, 0);
     scroll-behavior: smooth;
   }
 
-  .level-section {
+  .card-section {
     min-width: 100vw;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 80px 40px 120px;
+    padding: 40px 20px;
     scroll-snap-align: start;
-    position: relative;
   }
 
-  .level-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      ellipse at center,
-      rgba(139, 92, 246, 0.1) 0%,
-      transparent 70%
-    );
-    pointer-events: none;
-  }
-
-  .level-content {
-    max-width: 1200px;
+  /* RPG Card Styling */
+  .rpg-card {
+    max-width: 700px;
     width: 100%;
-    animation: fadeIn 0.6s ease-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .level-header {
-    text-align: center;
-    margin-bottom: 48px;
-  }
-
-  .level-badge {
-    display: inline-block;
-    margin-bottom: 16px;
-  }
-
-  .level-number {
-    display: inline-block;
-    padding: 8px 24px;
-    background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%);
-    color: #fff;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 2px;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
-    text-transform: uppercase;
-  }
-
-  .level-title {
-    font-size: 48px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 8px;
-  }
-
-  .level-years {
-    font-size: 18px;
-    color: var(--sw-text-muted);
-    margin-bottom: 12px;
-  }
-
-  .level-xp {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    background: rgba(251, 191, 36, 0.1);
-    border: 1px solid rgba(251, 191, 36, 0.3);
-    border-radius: 12px;
-    color: #fbbf24;
-    font-weight: 600;
-    font-size: 14px;
-  }
-
-  .achievements-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-  }
-
-  .achievement-card {
-    background: rgba(139, 92, 246, 0.05);
-    border: 2px solid rgba(139, 92, 246, 0.2);
-    border-radius: 12px;
-    padding: 20px;
-    transition: all 0.3s ease;
+    background:
+      linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(16, 21, 38, 0.95) 100%);
+    border: 3px solid;
+    border-image: linear-gradient(135deg, #7c3aed, #6b21a8, #5b21b6) 1;
+    border-radius: 16px;
+    padding: 0;
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(139, 92, 246, 0.2),
+      inset 0 0 30px rgba(139, 92, 246, 0.05);
+    animation: cardAppear 0.6s ease-out;
     position: relative;
     overflow: hidden;
   }
 
-  .achievement-card::before {
+  .rpg-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #7c3aed, #c792ea);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
+    height: 4px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(167, 139, 250, 0.8),
+      transparent
+    );
   }
 
-  .achievement-card:hover {
+  @keyframes cardAppear {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.3) 0%, rgba(107, 33, 168, 0.2) 100%);
+    border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+  }
+
+  .card-level {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fbbf24;
+    text-transform: uppercase;
+  }
+
+  .card-year {
+    font-size: 24px;
+    font-weight: 900;
+    color: #a78bfa;
+    font-family: 'Monaco', monospace;
+  }
+
+  .card-title-block {
+    padding: 24px 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+  }
+
+  .card-title {
+    font-size: 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .card-subtitle {
+    font-size: 16px;
+    color: var(--sw-text-muted);
+    font-style: italic;
+  }
+
+  .card-body {
+    padding: 24px;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+
+  .card-body::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .card-body::-webkit-scrollbar-track {
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: 4px;
+  }
+
+  .card-body::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.4);
+    border-radius: 4px;
+  }
+
+  .achievement-block {
+    padding: 20px;
+    background: rgba(139, 92, 246, 0.05);
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .achievement-block:hover {
     border-color: rgba(139, 92, 246, 0.5);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
+    background: rgba(139, 92, 246, 0.1);
+    transform: translateY(-2px);
   }
 
-  .achievement-card:hover::before {
-    transform: scaleX(1);
+  .achievement-block:last-child {
+    margin-bottom: 0;
   }
 
-  .achievement-icon {
+  .achievement-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .achievement-icon-circle {
     width: 48px;
     height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%);
-    border-radius: 12px;
+    background: linear-gradient(135deg, #7c3aed, #6b21a8);
+    border-radius: 10px;
     color: #fff;
-    font-size: 24px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    font-size: 22px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
   }
 
-  .achievement-info {
+  .achievement-title-wrap {
     flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
   }
 
   .achievement-title {
     font-size: 18px;
     font-weight: 700;
     color: var(--sw-text-primary);
-    margin-bottom: 8px;
-  }
-
-  .achievement-desc {
-    font-size: 14px;
-    color: var(--sw-text-secondary);
-    line-height: 1.5;
-    margin-bottom: 12px;
   }
 
   .achievement-xp {
-    display: inline-block;
     padding: 4px 12px;
-    background: rgba(251, 191, 36, 0.1);
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.4);
     border-radius: 8px;
     color: #fbbf24;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
   }
 
-  .achievement-year {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    font-size: 12px;
-    color: var(--sw-text-muted);
-    font-weight: 600;
+  .achievement-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--sw-text-secondary);
+    margin-bottom: 16px;
   }
 
-  .final-section {
-    background: radial-gradient(
-      ellipse at center,
-      rgba(124, 58, 237, 0.15) 0%,
-      transparent 70%
-    );
-  }
-
-  .final-stats {
-    text-align: center;
-  }
-
-  .final-title {
-    font-size: 56px;
-    font-weight: 900;
-    background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 48px;
-  }
-
-  .total-stats {
+  .attributes-list {
     display: flex;
-    gap: 32px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .attribute-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .attribute-tag.negative {
+    background: rgba(248, 113, 113, 0.15);
+    border-color: rgba(248, 113, 113, 0.4);
+  }
+
+  .attr-name {
+    color: var(--sw-text-secondary);
+  }
+
+  .attr-value {
+    color: #10b981;
+    font-family: 'Monaco', monospace;
+  }
+
+  .attribute-tag.negative .attr-value {
+    color: #f87171;
+  }
+
+  .card-footer {
+    padding: 16px 24px;
+    background: rgba(16, 21, 38, 0.6);
+    border-top: 2px solid rgba(139, 92, 246, 0.3);
+    display: flex;
     justify-content: center;
+  }
+
+  .footer-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fbbf24;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  /* Final Card */
+  .final-card .rpg-card {
+    max-width: 900px;
+  }
+
+  .final-stats-display {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    padding: 24px;
     flex-wrap: wrap;
   }
 
-  .stat-box {
+  .final-stat-box {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    padding: 32px;
+    gap: 8px;
+    padding: 24px;
     background: rgba(139, 92, 246, 0.1);
     border: 2px solid rgba(139, 92, 246, 0.3);
-    border-radius: 16px;
-    min-width: 180px;
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    min-width: 140px;
   }
 
-  .stat-box:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 32px rgba(139, 92, 246, 0.3);
-    border-color: rgba(139, 92, 246, 0.6);
-  }
-
-  .stat-box :global(svg) {
-    font-size: 40px;
+  .final-stat-box :global(svg) {
+    font-size: 32px;
     color: #7c3aed;
   }
 
-  .stat-value {
-    font-size: 48px;
+  .final-stat-value {
+    font-size: 40px;
     font-weight: 900;
     color: var(--sw-text-primary);
   }
 
-  .stat-label {
-    font-size: 14px;
+  .final-stat-label {
+    font-size: 12px;
     color: var(--sw-text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
+  }
+
+  .final-attributes {
+    padding: 0 24px 24px;
+  }
+
+  .final-attributes-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #a78bfa;
+    text-align: center;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .final-attributes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  .final-attribute-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .final-attr-name {
+    color: var(--sw-text-secondary);
+    font-weight: 500;
+  }
+
+  .final-attr-value {
+    color: #10b981;
+    font-weight: 700;
+    font-family: 'Monaco', monospace;
   }
 
   /* Navigation */
@@ -620,41 +1110,40 @@ const totalXP = levels.reduce((sum, level) => sum + level.totalXP, 0);
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
     background: rgba(139, 92, 246, 0.2);
-    border: 2px solid rgba(139, 92, 246, 0.4);
+    border: 2px solid rgba(139, 92, 246, 0.5);
     border-radius: 50%;
     color: #a78bfa;
     font-size: 20px;
     cursor: pointer;
-    z-index: 50;
+    z-index: 100;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
   }
 
   .nav-btn:hover {
     background: rgba(139, 92, 246, 0.4);
-    border-color: rgba(139, 92, 246, 0.8);
     transform: translateY(-50%) scale(1.1);
   }
 
   .nav-prev { left: 20px; }
   .nav-next { right: 20px; }
 
-  .level-dots {
+  .progress-dots {
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 12px;
-    z-index: 50;
+    gap: 10px;
+    z-index: 100;
   }
 
-  .dot {
-    width: 12px;
-    height: 12px;
+  .progress-dot {
+    width: 10px;
+    height: 10px;
     background: rgba(139, 92, 246, 0.3);
     border: 2px solid rgba(139, 92, 246, 0.5);
     border-radius: 50%;
@@ -662,84 +1151,67 @@ const totalXP = levels.reduce((sum, level) => sum + level.totalXP, 0);
     transition: all 0.3s ease;
   }
 
-  .dot.active {
+  .progress-dot.active {
     background: #7c3aed;
-    border-color: #7c3aed;
-    box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
-    transform: scale(1.3);
-  }
-
-  .dot:hover {
-    background: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.8);
+    transform: scale(1.4);
   }
 
   .sr-only {
     position: absolute;
     width: 1px;
     height: 1px;
-    padding: 0;
     margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
   }
 
   @media (max-width: 768px) {
-    .level-title {
-      font-size: 32px;
+    .character-display {
+      top: 10px;
+      right: 10px;
     }
 
-    .final-title {
-      font-size: 36px;
+    .pixel-mage-large {
+      width: 80px;
+      height: 80px;
+      padding: 8px;
     }
 
-    .achievements-grid {
-      grid-template-columns: 1fr;
+    .stats-tracker {
+      top: 10px;
+      left: 10px;
+      min-width: 200px;
+      padding: 12px;
     }
 
-    .level-section {
-      padding: 60px 20px 100px;
+    .card-title {
+      font-size: 28px;
     }
 
-    .character-container {
-      bottom: 80px;
-      left: 5%;
+    .card-subtitle {
+      font-size: 14px;
     }
 
-    .pixel-mage {
-      width: 48px;
-      height: 48px;
-    }
-
-    .nav-btn {
-      width: 40px;
-      height: 40px;
+    .achievement-title {
       font-size: 16px;
     }
 
-    .total-stats {
-      gap: 16px;
+    .card-body {
+      max-height: 60vh;
     }
 
-    .stat-box {
-      min-width: 140px;
-      padding: 24px;
-    }
-
-    .stat-value {
-      font-size: 36px;
+    .final-attributes-grid {
+      grid-template-columns: 1fr;
     }
   }
 
   @keyframes pulse {
     0%, 100% {
-      opacity: 1;
-      transform: scale(1);
+      opacity: 0.3;
     }
     50% {
-      opacity: 0.6;
-      transform: scale(1.2);
+      opacity: 0.9;
     }
   }
 </style>
