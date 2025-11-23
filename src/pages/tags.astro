@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getTagsByYear, sortTagsByCount } from '../utils/tags';
+
+// Get all posts
+const allPosts = await getCollection('posts');
+
+// Get tags grouped by year
+const tagsByYear = getTagsByYear(allPosts);
+
+// Get years sorted in descending order
+const years = Object.keys(tagsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+// Calculate total unique tags and total posts with tags
+const allTags = new Set<string>();
+let totalPostsWithTags = 0;
+allPosts.forEach(post => {
+  if (post.data.tags && post.data.tags.length > 0) {
+    totalPostsWithTags++;
+    post.data.tags.forEach(tag => allTags.add(tag));
+  }
+});
+
+// Aggregate all tags across all years for the bottom section
+const allTagCounts = new Map<string, number>();
+years.forEach(year => {
+  Object.entries(tagsByYear[year]).forEach(([tag, data]) => {
+    allTagCounts.set(tag, (allTagCounts.get(tag) || 0) + data.count);
+  });
+});
+
+// Sort by count descending
+const sortedAllTags = Array.from(allTagCounts.entries())
+  .sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout
+  title="Tags - Sheldon Hull"
+  description="Browse all topics and tags across my technical writing on software engineering, Go, DevOps, and cloud technologies"
+>
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold mb-4 synthwave-gradient">Tags</h1>
+      <p style="color: var(--sw-text-secondary);">
+        Explore {allTags.size} topics across {totalPostsWithTags} posts.
+      </p>
+    </div>
+
+    <div class="space-y-12">
+      {years.map(year => {
+        const yearTags = tagsByYear[year];
+        const sortedTags = sortTagsByCount(yearTags);
+        const yearPostCount = sortedTags.reduce((sum, [, data]) => sum + data.count, 0);
+
+        return (
+          <div key={year}>
+            <h2
+              class="text-2xl font-bold mb-6 border-b pb-2 flex items-center justify-between"
+              style="color: var(--sw-cyan); border-color: rgba(255, 88, 116, 0.3);"
+            >
+              <span>{year}</span>
+              <span class="text-sm font-normal" style="color: var(--sw-text-muted);">
+                {sortedTags.length} {sortedTags.length === 1 ? 'tag' : 'tags'} · {yearPostCount} {yearPostCount === 1 ? 'post' : 'posts'}
+              </span>
+            </h2>
+
+            <div class="flex flex-wrap gap-3">
+              {sortedTags.map(([tag, data]) => (
+                <a
+                  href={`/tags/${encodeURIComponent(tag)}`}
+                  class="group inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:scale-105"
+                  style="
+                    background: var(--sw-bg-tertiary);
+                    border: 1px solid rgba(127, 219, 202, 0.3);
+                    color: var(--sw-text-primary);
+                  "
+                >
+                  <span
+                    class="font-medium group-hover:text-[var(--sw-pink)] transition-colors"
+                    style="color: var(--sw-cyan);"
+                  >
+                    {tag}
+                  </span>
+                  <span
+                    class="text-xs px-2 py-0.5 rounded-full font-semibold"
+                    style="
+                      background: rgba(127, 219, 202, 0.2);
+                      color: var(--sw-cyan);
+                    "
+                  >
+                    {data.count}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="mt-16 pt-8 border-t" style="border-color: rgba(255, 88, 116, 0.3);">
+      <h3 class="text-xl font-bold mb-4" style="color: var(--sw-text-primary);">
+        All Tags (Sorted by Popularity)
+      </h3>
+      <div class="flex flex-wrap gap-2">
+        {sortedAllTags.map(([tag, count]) => (
+          <a
+            href={`/tags/${encodeURIComponent(tag)}`}
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-all hover:scale-105"
+            style="
+              background: var(--sw-bg-secondary);
+              border: 1px solid rgba(127, 219, 202, 0.2);
+              color: var(--sw-text-secondary);
+            "
+          >
+            <span>{tag}</span>
+            <span class="text-xs" style="color: var(--sw-text-muted);">
+              ({count})
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

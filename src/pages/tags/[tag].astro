@@ -1,0 +1,207 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { humanizeDate, formatDate } from '../../utils/date';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts');
+  const tags = new Set<string>();
+
+  // Collect all unique tags
+  allPosts.forEach(post => {
+    if (post.data.tags) {
+      post.data.tags.forEach(tag => tags.add(tag));
+    }
+  });
+
+  // Create a path for each tag
+  return Array.from(tags).map(tag => ({
+    params: { tag },
+    props: {
+      posts: allPosts
+        .filter(post => post.data.tags?.includes(tag))
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+
+// Group posts by year
+const postsByYear = posts.reduce((acc, post) => {
+  const year = post.data.date.getFullYear();
+  if (!acc[year]) {
+    acc[year] = [];
+  }
+  acc[year].push(post);
+  return acc;
+}, {} as Record<number, typeof posts>);
+
+const years = Object.keys(postsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+// Calculate metadata
+const oldestYear = Math.min(...years);
+const newestYear = Math.max(...years);
+const yearsActive = years.length;
+
+// Find related tags (tags that appear on posts with this tag)
+const relatedTagsCount = new Map<string, number>();
+posts.forEach(post => {
+  post.data.tags?.forEach(t => {
+    if (t !== tag) {
+      relatedTagsCount.set(t, (relatedTagsCount.get(t) || 0) + 1);
+    }
+  });
+});
+
+const relatedTags = Array.from(relatedTagsCount.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10);
+---
+
+<BaseLayout
+  title={`Posts tagged "${tag}" - Sheldon Hull`}
+  description={`All ${posts.length} posts about ${tag}, spanning ${yearsActive} ${yearsActive === 1 ? 'year' : 'years'} from ${oldestYear} to ${newestYear}.`}
+>
+  <div class="max-w-4xl mx-auto">
+    <!-- Back navigation -->
+    <div class="mb-8">
+      <a
+        href="/tags"
+        class="inline-flex items-center gap-2 text-sm transition-colors hover:text-[var(--sw-pink)]"
+        style="color: var(--sw-text-secondary);"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        All Tags
+      </a>
+    </div>
+
+    <!-- Header -->
+    <div class="mb-12">
+      <div class="flex items-center gap-3 mb-4">
+        <h1 class="text-4xl font-bold synthwave-gradient">
+          {tag}
+        </h1>
+        <span
+          class="text-lg px-3 py-1 rounded-full font-semibold"
+          style="
+            background: var(--sw-bg-tertiary);
+            border: 1px solid rgba(127, 219, 202, 0.3);
+            color: var(--sw-cyan);
+          "
+        >
+          {posts.length}
+        </span>
+      </div>
+      <p style="color: var(--sw-text-secondary);">
+        {posts.length} {posts.length === 1 ? 'post' : 'posts'} tagged with <strong style="color: var(--sw-cyan);">{tag}</strong>
+        {yearsActive > 1 && (
+          <span> across {yearsActive} years ({oldestYear}–{newestYear})</span>
+        )}
+        {yearsActive === 1 && (
+          <span> from {oldestYear}</span>
+        )}
+      </p>
+    </div>
+
+    <!-- Posts grouped by year -->
+    <div class="space-y-12">
+      {years.map(year => (
+        <div key={year}>
+          <h2
+            class="text-2xl font-bold mb-6 border-b pb-2 flex items-center justify-between"
+            style="color: var(--sw-cyan); border-color: rgba(255, 88, 116, 0.3);"
+          >
+            <span>{year}</span>
+            <span class="text-sm font-normal" style="color: var(--sw-text-muted);">
+              {postsByYear[year].length} {postsByYear[year].length === 1 ? 'post' : 'posts'}
+            </span>
+          </h2>
+
+          <div class="space-y-4">
+            {postsByYear[year].map(post => {
+              const humanizedDate = humanizeDate(post.data.date);
+              const formattedDate = formatDate(post.data.date);
+
+              return (
+                <a
+                  href={`/${post.data.slug || post.slug}`}
+                  class="block group"
+                >
+                  <article class="flex items-baseline gap-4 py-3 px-4 -mx-4 rounded-lg transition-colors hover:bg-[var(--sw-bg-secondary)]">
+                    <div class="flex-shrink-0">
+                      <time
+                        datetime={post.data.date.toISOString()}
+                        class="text-sm tabular-nums"
+                        style="color: var(--sw-text-muted);"
+                        title={formattedDate}
+                      >
+                        {humanizedDate}
+                      </time>
+                    </div>
+                    <div class="flex-grow min-w-0">
+                      <h3
+                        class="group-hover:text-[var(--sw-pink)] transition-colors font-medium"
+                        style="color: var(--sw-text-primary);"
+                      >
+                        {post.data.title}
+                      </h3>
+                      {post.data.tags && post.data.tags.length > 1 && (
+                        <div class="flex gap-2 mt-1 flex-wrap">
+                          {post.data.tags
+                            .filter(t => t !== tag)
+                            .map(t => (
+                              <a
+                                href={`/tags/${encodeURIComponent(t)}`}
+                                class="text-xs px-2 py-0.5 rounded hover:bg-opacity-80 transition-colors"
+                                style="color: var(--sw-cyan); background: var(--sw-bg-tertiary); border: 1px solid rgba(127, 219, 202, 0.3);"
+                                onclick={(e: MouseEvent) => e.stopPropagation()}
+                              >
+                                {t}
+                              </a>
+                            ))}
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Related tags section -->
+    {relatedTags.length > 0 && (
+      <div class="mt-16 pt-8 border-t" style="border-color: rgba(255, 88, 116, 0.3);">
+        <h3 class="text-xl font-bold mb-4" style="color: var(--sw-text-primary);">
+          Related Tags
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          {relatedTags.map(([relatedTag, count]) => (
+            <a
+              href={`/tags/${encodeURIComponent(relatedTag)}`}
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-all hover:scale-105"
+              style="
+                background: var(--sw-bg-secondary);
+                border: 1px solid rgba(127, 219, 202, 0.2);
+                color: var(--sw-text-secondary);
+              "
+            >
+              <span>{relatedTag}</span>
+              <span class="text-xs" style="color: var(--sw-text-muted);">
+                ({count})
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</BaseLayout>
