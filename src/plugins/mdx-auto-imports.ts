@@ -7,54 +7,67 @@ export function mdxAutoImports(): Plugin {
     // Check if the file is MDX
     if (!file.history[0]?.endsWith('.mdx')) return;
 
-    // Define the import statement we want to inject
-    const importNode = {
-      type: 'mdxjsEsm',
-      value: '',
-      data: {
-        estree: {
-          type: 'Program',
-          sourceType: 'module',
-          body: [
-            {
-              type: 'ImportDeclaration',
-              specifiers: [
-                {
-                  type: 'ImportDefaultSpecifier',
-                  local: { type: 'Identifier', name: 'GistWindow' }
-                }
-              ],
-              source: {
-                type: 'Literal',
-                value: '../../../components/GistWindow.astro',
-                raw: "'../../../components/GistWindow.astro'"
-              }
-            }
-          ]
-        }
+    // Define components to auto-import
+    const components = [
+      {
+        name: 'GistWindow',
+        path: '../../../components/GistWindow.astro'
+      },
+      {
+        name: 'Aside',
+        path: '../../../components/Aside.astro'
       }
-    };
+    ];
 
-    // Check if GistWindow is already imported
-    let hasImport = false;
-    visit(tree, 'mdxjsEsm', (node: any) => {
-      if (node.data?.estree?.body?.[0]?.source?.value?.includes('GistWindow')) {
-        hasImport = true;
-      }
-    });
-
-    // Only inject if not already imported and if GistWindow is used
-    if (!hasImport) {
-      let usesGistWindow = false;
-      visit(tree, 'mdxJsxFlowElement', (node: any) => {
-        if (node.name === 'GistWindow') {
-          usesGistWindow = true;
+    // Process each component
+    components.forEach(component => {
+      // Check if component is already imported
+      let hasImport = false;
+      visit(tree, 'mdxjsEsm', (node: any) => {
+        if (node.data?.estree?.body?.[0]?.source?.value?.includes(component.name)) {
+          hasImport = true;
         }
       });
 
-      if (usesGistWindow) {
-        tree.children.unshift(importNode);
+      // Only inject if not already imported and if component is used
+      if (!hasImport) {
+        let usesComponent = false;
+        visit(tree, 'mdxJsxFlowElement', (node: any) => {
+          if (node.name === component.name) {
+            usesComponent = true;
+          }
+        });
+
+        if (usesComponent) {
+          const importNode = {
+            type: 'mdxjsEsm',
+            value: '',
+            data: {
+              estree: {
+                type: 'Program',
+                sourceType: 'module',
+                body: [
+                  {
+                    type: 'ImportDeclaration',
+                    specifiers: [
+                      {
+                        type: 'ImportDefaultSpecifier',
+                        local: { type: 'Identifier', name: component.name }
+                      }
+                    ],
+                    source: {
+                      type: 'Literal',
+                      value: component.path,
+                      raw: `'${component.path}'`
+                    }
+                  }
+                ]
+              }
+            }
+          };
+          tree.children.unshift(importNode);
+        }
       }
-    }
+    });
   };
 }

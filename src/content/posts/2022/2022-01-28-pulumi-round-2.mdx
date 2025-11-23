@@ -106,16 +106,18 @@ I looked in the GitHub repo and couldn't find any examples, and the cli doesn't 
 
 Here's a little taste of what I ran:
 
-        Pulumi up --diff --refresh --config 'kubernetes:kubeconfig /workspaces/myproject/.cached/.kube/tmp.kube.config'
-        Pulumi up --diff --refresh --config 'kubernetes:kubeconfig' '/workspaces/myproject/.cached/.kube/tmp.kube.config'
-        Pulumi up --diff --refresh --config 'kubernetes:kubeconfig: /workspaces/myproject/.cached/.kube/tmp.kube.config'
-        Pulumi up --diff --refresh --config 'kubernetes:kubeconfig','/workspaces/myproject/.cached/.kube/tmp.kube.config'
-        Pulumi up --diff --refresh --config 'kubernetes:kubeconfig,/workspaces/myproject/.cached/.kube/tmp.kube.config'
-        Pulumi up --diff --refresh --config 'kubernetes:kubeconfig' /workspaces/myproject/.cached/.kube/tmp.kube.config
-        Pulumi up --diff --refresh --config '{ "kubernetes:kubeconfig": /workspaces/myproject/.cached/.kube/tmp.kube.config
-        Pulumi up --diff --refresh --config '{ "kubernetes:kubeconfig": "/workspaces/myproject/.cached/.kube/tmp.kube.config" }'
-        Pulumi up --diff --refresh --config '"kubernetes:kubeconfig": "/workspaces/myproject/.cached/.kube/tmp.kube.config"'
-        Pulumi up --diff --refresh --config kubernetes:kubeconfig /workspaces/myproject/.cached/.kube/tmp.kube.config
+```bash
+Pulumi up --diff --refresh --config 'kubernetes:kubeconfig /workspaces/myproject/.cached/.kube/tmp.kube.config'
+Pulumi up --diff --refresh --config 'kubernetes:kubeconfig' '/workspaces/myproject/.cached/.kube/tmp.kube.config'
+Pulumi up --diff --refresh --config 'kubernetes:kubeconfig: /workspaces/myproject/.cached/.kube/tmp.kube.config'
+Pulumi up --diff --refresh --config 'kubernetes:kubeconfig','/workspaces/myproject/.cached/.kube/tmp.kube.config'
+Pulumi up --diff --refresh --config 'kubernetes:kubeconfig,/workspaces/myproject/.cached/.kube/tmp.kube.config'
+Pulumi up --diff --refresh --config 'kubernetes:kubeconfig' /workspaces/myproject/.cached/.kube/tmp.kube.config
+Pulumi up --diff --refresh --config '{ "kubernetes:kubeconfig": /workspaces/myproject/.cached/.kube/tmp.kube.config
+Pulumi up --diff --refresh --config '{ "kubernetes:kubeconfig": "/workspaces/myproject/.cached/.kube/tmp.kube.config" }'
+Pulumi up --diff --refresh --config '"kubernetes:kubeconfig": "/workspaces/myproject/.cached/.kube/tmp.kube.config"'
+Pulumi up --diff --refresh --config kubernetes:kubeconfig /workspaces/myproject/.cached/.kube/tmp.kube.config
+```
 
 The variety of changes this made the kubeconfig were entertaining at least.
 I moved on, as this didn't seem to be a valid way to work.
@@ -160,18 +162,22 @@ Figured it might be something to do with maps, but I couldn't find anything with
 
 Gave this a shot and 🎉 it worked.
 
-    type MyConfig struct {
-        Onlyyaml          bool   `yaml:"onlyyaml"`
-        SpecialNested     struct {
-            Enabled              bool   `yaml:"enabled"`
-        } `yaml:"specialnested,inline"` // 👈 inline is needed
-    }
+```go
+type MyConfig struct {
+    Onlyyaml          bool   `yaml:"onlyyaml"`
+    SpecialNested     struct {
+        Enabled              bool   `yaml:"enabled"`
+    } `yaml:"specialnested,inline"` // 👈 inline is needed
+}
+```
 
 This parsed the value:
 
-    config:
-        specialnested:
-            enabled: true
+```yaml
+config:
+    specialnested:
+        enabled: true
+```
 
 Now I know. I didn't see anything about using this when reading the docs, so that's another one that shows it requires expertise in both Pulumi + the native language to figure out what's wrong.
 
@@ -192,33 +198,35 @@ I put some sample tasks on my magetools repo: [Magetools - Examples - Pulumi](ht
 
 Some examples from that:
 
-    // Pulumi namespace contains task to help with running Pulumi tools.
-    type Pulumi mg.Namespace
+```go
+// Pulumi namespace contains task to help with running Pulumi tools.
+type Pulumi mg.Namespace
 
-    // Get returns the fully qualified Pulumi stack name, including the org, project, and stage.
-    // This looks like `myorg/project/stage`.
-    func GetPulumiStackName(project, stage string) string {
-        mtu.CheckPtermDebug()
-        return strings.Join([]string{PulumiOrg, project, stage}, "/")
-    }
+// Get returns the fully qualified Pulumi stack name, including the org, project, and stage.
+// This looks like `myorg/project/stage`.
+func GetPulumiStackName(project, stage string) string {
+    mtu.CheckPtermDebug()
+    return strings.Join([]string{PulumiOrg, project, stage}, "/")
+}
 
 
-    // 🚀 Up 👉 Parameters(project, stack string): Eg: `mage pulumi:up myproject dev`.
-    // Runs pulumi up/apply to target.
-    //
-    // Example: `mage pulumi:up myproject dev`.
-    func (Pulumi) Up(project, stage string) error {
-        mtu.CheckPtermDebug()
-        return sh.RunV(
-            "pulumi",
-            "--cwd",
-            filepath.Join(PulumiProjectDir, project),
-            "--stack="+GetPulumiStackName(project, stage),
-            "up",
-            "--yes",
-            "--emoji",
-        )
-    }
+// 🚀 Up 👉 Parameters(project, stack string): Eg: `mage pulumi:up myproject dev`.
+// Runs pulumi up/apply to target.
+//
+// Example: `mage pulumi:up myproject dev`.
+func (Pulumi) Up(project, stage string) error {
+    mtu.CheckPtermDebug()
+    return sh.RunV(
+        "pulumi",
+        "--cwd",
+        filepath.Join(PulumiProjectDir, project),
+        "--stack="+GetPulumiStackName(project, stage),
+        "up",
+        "--yes",
+        "--emoji",
+    )
+}
+```
 
 ## My Feedback
 
