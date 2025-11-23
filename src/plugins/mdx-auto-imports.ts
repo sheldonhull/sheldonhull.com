@@ -20,6 +20,26 @@ export function mdxAutoImports(): Plugin {
       {
         name: 'Gallery',
         path: '../../../components/Gallery.astro'
+      },
+      {
+        name: 'Asciinema',
+        path: '../../../components/Asciinema.astro'
+      },
+      {
+        name: 'Conversation',
+        path: '../../../components/Conversation.astro'
+      },
+      {
+        name: 'TypeIt',
+        path: '../../../components/TypeIt.astro'
+      },
+      {
+        name: 'YouTube',
+        path: '../../../components/YouTube.astro'
+      },
+      {
+        name: 'FAIcon',
+        path: '../../../components/FAIcon.astro'
       }
     ];
 
@@ -36,7 +56,13 @@ export function mdxAutoImports(): Plugin {
       // Only inject if not already imported and if component is used
       if (!hasImport) {
         let usesComponent = false;
+        // Check for both block-level (Flow) and inline (Text) elements
         visit(tree, 'mdxJsxFlowElement', (node: any) => {
+          if (node.name === component.name) {
+            usesComponent = true;
+          }
+        });
+        visit(tree, 'mdxJsxTextElement', (node: any) => {
           if (node.name === component.name) {
             usesComponent = true;
           }

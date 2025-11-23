@@ -33,6 +33,11 @@
     0 0 8px rgba(199, 146, 234, 0.4);
 }
 
+.neon-glow-yellow {
+  text-shadow:
+    0 0 8px rgba(236, 196, 141, 0.4);
+}
+
 .neon-border-pink {
   box-shadow:
     0 0 8px rgba(255, 88, 116, 0.3);

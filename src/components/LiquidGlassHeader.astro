@@ -2,6 +2,7 @@
 // Liquid glass header using animated SVG filters
 // Applies actual distortion to text via SVG displacement
 // Includes scroll-based quote rotation and avatar spin animation
+import { headerQuotes } from '../config/site';
 ---
 
 <!-- SVG filter for liquid glass text distortion -->
@@ -35,12 +36,12 @@
             Greetings & Salutations!
           </div>
         </div>
-        <!-- Text container to prevent overlap -->
-        <div class="relative flex-shrink-0 min-w-0">
+        <!-- Text container for overlapping title/quote -->
+        <div class="relative">
           <!-- Site name (default) -->
-          <span id="site-name" class="header-text block transition-opacity duration-500">sheldonhull.com</span>
-          <!-- Tech quote (scrolled) -->
-          <span id="tech-quote" class="header-text block absolute top-0 left-0 opacity-0 transition-opacity duration-500 text-base font-normal whitespace-nowrap" style="color: var(--sw-cyan); opacity: 0.6;">
+          <span id="site-name" class="header-text transition-opacity duration-500">sheldonhull.com</span>
+          <!-- Tech quote (scrolled) - absolutely positioned to overlay site name exactly -->
+          <span id="tech-quote" class="header-text absolute top-0 left-0 opacity-0 transition-opacity duration-500 whitespace-nowrap" style="color: var(--sw-cyan);">
           </span>
         </div>
       </a>
@@ -189,30 +190,8 @@
   }
 </style>
 
-<script>
-  // Tech shower thought quotes
-  const techQuotes = [
-    "The best code is no code at all",
-    "Debugging is twice as hard as writing code",
-    "Premature optimization is the root of all evil",
-    "Code is read more than it is written",
-    "Make it work, make it right, make it fast",
-    "Complexity is the enemy of reliability",
-    "Good code is its own best documentation",
-    "Programs must be written for people to read",
-    "The cheapest, fastest, and most reliable components are those that aren't there",
-    "Software is a gas; it expands to fill its container",
-    "Simple is better than complex",
-    "Explicit is better than implicit",
-    "If it's not tested, it doesn't work",
-    "Delete code, not comments",
-    "A week of coding can save an hour of planning",
-    "The most dangerous phrase: 'we've always done it this way'",
-    "Perfect is the enemy of good",
-    "Automate everything you do more than twice",
-    "Documentation is a love letter to your future self",
-    "Fail fast, learn faster"
-  ];
+<script define:vars={{ techQuotes: headerQuotes }}>
+  // Tech shower thought quotes loaded from site config
 
   function initHeaderScrollEffect() {
     // Skip on mobile

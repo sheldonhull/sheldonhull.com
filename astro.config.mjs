@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import netlify from '@astrojs/netlify';
+// import icon from 'astro-icon';
 
 import tailwindcss from '@tailwindcss/vite';
 import { mdxAutoImports } from './src/plugins/mdx-auto-imports.ts';
@@ -19,6 +20,8 @@ export default defineConfig({
     remarkPlugins: [remarkRelativeLinks],
   },
   integrations: [
+    // Temporarily disabled due to Node.js compatibility issue
+    // icon(),
     mdx({
       // Automatically inject imports for components like GistWindow
       remarkPlugins: [mdxAutoImports, remarkRelativeLinks],

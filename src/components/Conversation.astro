@@ -1,0 +1,62 @@
+---
+/**
+ * Conversation Component
+ *
+ * Displays styled dialog/conversation blocks with alternating speaker styles.
+ * The first speaker's lines are left-aligned, subsequent speakers are right-aligned.
+ *
+ * Usage:
+ * <Conversation>
+ * Me: They were gross. No toilet paper.
+ * Karis: Thankfully, mom gave me a baby wipe.
+ * </Conversation>
+ */
+---
+
+<div class="conversation-card">
+  <slot />
+</div>
+
+<style>
+  .conversation-card {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+  }
+
+  .conversation-card :global(p) {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+
+  /* Parse dialog format: "Speaker: text" */
+  .conversation-card :global(p:has(strong)) {
+    background-color: var(--conversation-left-bg);
+  }
+
+  /* Alternate background for different speakers */
+  .conversation-card :global(p:nth-child(even):has(strong)) {
+    background-color: var(--conversation-right-bg);
+    text-align: right;
+    padding-left: 25%;
+  }
+
+  .conversation-card :global(strong) {
+    display: inline-block;
+    margin-right: 0.25rem;
+  }
+
+  /* Theme-specific colors */
+  :root {
+    --conversation-left-bg: #f3f4f6;
+    --conversation-right-bg: #e5e7eb;
+  }
+
+  :root[data-theme='dark'] {
+    --conversation-left-bg: rgba(255, 255, 255, 0.05);
+    --conversation-right-bg: rgba(255, 255, 255, 0.1);
+  }
+</style>
