@@ -1,0 +1,158 @@
+---
+import { Image } from 'astro:assets';
+import { glob } from 'astro/loaders';
+
+interface Props {
+  images?: string[];  // Explicit list of image filenames
+  pattern?: string;    // Glob pattern (e.g., "2023-11-06-new-york-*")
+  slug?: string;       // Post slug for auto-discovering images
+  year?: string;       // Year directory
+  columns?: number;    // Number of columns (default: 3)
+}
+
+const { images: imageList, pattern, slug, year, columns = 3 } = Astro.props;
+
+// Build the directory path
+const imagesDir = year ? `src/content/posts/${year}/images` : 'src/content/posts/images';
+
+// Get list of images to display
+let imagePaths: string[] = [];
+
+if (imageList) {
+  // Use explicit list
+  imagePaths = imageList.map(img => `${imagesDir}/${img}`);
+} else if (slug && year) {
+  // Auto-discover images by slug prefix
+  // This will need to be implemented with actual file system access
+  // For now, accept explicit image list
+  imagePaths = [];
+} else if (pattern && year) {
+  // Use glob pattern to find images
+  // This will need to be implemented with actual file system access
+  imagePaths = [];
+}
+
+// Parse .meta files for captions (if they exist)
+// Meta files have format: {imagename}.meta with caption content
+const getCaption = (imagePath: string): string | undefined => {
+  // TODO: Read .meta file if it exists
+  // For now, return undefined
+  return undefined;
+};
+---
+
+<div class="gallery" data-columns={columns}>
+  {imagePaths.length === 0 && (
+    <p class="gallery-empty">
+      No images found. Please provide either:
+      <ul>
+        <li><code>images</code> array with filenames</li>
+        <li><code>pattern</code> and <code>year</code> for glob matching</li>
+        <li><code>slug</code> and <code>year</code> for auto-discovery</li>
+      </ul>
+    </p>
+  )}
+
+  {imagePaths.map((imgPath) => {
+    const caption = getCaption(imgPath);
+    return (
+      <figure class="gallery-item">
+        <a href={imgPath} class="gallery-link" data-pswp-width="1200" data-pswp-height="800">
+          <img
+            src={imgPath}
+            alt={caption || ''}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+        {caption && <figcaption>{caption}</figcaption>}
+      </figure>
+    );
+  })}
+</div>
+
+<style>
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(var(--gallery-columns, 3), 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .gallery[data-columns="2"] {
+    --gallery-columns: 2;
+  }
+
+  .gallery[data-columns="3"] {
+    --gallery-columns: 3;
+  }
+
+  .gallery[data-columns="4"] {
+    --gallery-columns: 4;
+  }
+
+  @media (max-width: 768px) {
+    .gallery {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .gallery-item {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  .gallery-link {
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gallery-link img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-link:hover img {
+    transform: scale(1.05);
+  }
+
+  .gallery-item figcaption {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-muted, #666);
+    font-style: italic;
+  }
+
+  .gallery-empty {
+    padding: 2rem;
+    background: #f5f5f5;
+    border-radius: 4px;
+    color: #666;
+  }
+
+  .gallery-empty code {
+    background: #e0e0e0;
+    padding: 0.125rem 0.25rem;
+    border-radius: 2px;
+    font-size: 0.875em;
+  }
+</style>
+
+<!--
+TODO: PhotoSwipe integration
+To add lightbox functionality, include PhotoSwipe library and initialize:
+1. Add PhotoSwipe CSS/JS to layout
+2. Initialize with gallery-link elements
+3. Use data-pswp-* attributes for dimensions
+-->

@@ -220,7 +220,7 @@ params:
     desktopMode: fixed
     mobileMode: auto
     title:
-      logo: /images/otter-logo.svg
+      logo: /avatar-skitch-sheldon.png
       name: sheldonhull.com
       #pre: '<i class="fas fa-terminal"></i>'  #<i class='fas fa-laptop-code fa-fw'></i>
       pre: ''

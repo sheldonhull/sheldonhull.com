@@ -1,7 +1,7 @@
 ---
 // Liquid glass header using animated SVG filters
 // Applies actual distortion to text via SVG displacement
-// Includes scroll-based quote rotation and otter hat animation
+// Includes scroll-based quote rotation and avatar spin animation
 ---
 
 <!-- SVG filter for liquid glass text distortion -->
@@ -20,24 +20,20 @@
   <div class="container mx-auto px-4 py-4 relative z-10 liquid-text-container">
     <div class="flex items-center justify-between">
       <a href="/" class="flex items-center gap-3 text-xl font-bold transition-all duration-300 hover:scale-105 neon-glow-cyan" style="color: var(--sw-cyan);">
-        <!-- Otter container with fixed width to prevent overlap -->
-        <div class="relative flex-shrink-0" style="width: 2.5rem; height: 2.5rem;">
-          <!-- Otter with hat (default) -->
+        <!-- Avatar container with fixed width to prevent overlap -->
+        <div id="avatar-container" class="relative flex-shrink-0" style="width: 2.5rem; height: 2.5rem;">
+          <!-- Circular avatar -->
           <img
-            id="otter-with-hat"
-            src="/otter-logo.svg"
-            alt="Otter Logo"
-            class="w-10 h-10 otter-image absolute top-0 left-0"
-            style="transition: opacity 500ms ease, transform 600ms ease;"
+            id="avatar-logo"
+            src="/avatar-skitch-sheldon.png"
+            alt="Sheldon Hull Avatar"
+            class="w-10 h-10 rounded-full avatar-image"
+            style="transition: transform 600ms ease;"
           />
-          <!-- Otter without hat (scrolled) -->
-          <img
-            id="otter-no-hat"
-            src="/otter-logo-no-hat.svg"
-            alt="Otter Logo"
-            class="w-10 h-10 otter-image absolute top-0 left-0 opacity-0"
-            style="transition: opacity 500ms ease, transform 600ms ease;"
-          />
+          <!-- Speech bubble -->
+          <div id="speech-bubble" class="speech-bubble">
+            Greetings & Salutations!
+          </div>
         </div>
         <!-- Text container to prevent overlap -->
         <div class="relative flex-shrink-0 min-w-0">
@@ -65,6 +61,8 @@
 
   .header-text {
     transition: opacity 500ms ease;
+    position: relative;
+    z-index: 1;
   }
 
   /* Mobile: hide quote feature */
@@ -72,6 +70,121 @@
     #tech-quote {
       display: none !important;
     }
+  }
+
+  /* Avatar hover peek and wobble animation */
+  @keyframes peekAndWobble {
+    0% {
+      transform: scale(1) rotateZ(0deg) rotateY(0deg);
+    }
+    15% {
+      transform: scale(4) rotateZ(0deg) rotateY(0deg);
+    }
+    25% {
+      transform: scale(4) rotateZ(-8deg) rotateY(-15deg);
+    }
+    35% {
+      transform: scale(4) rotateZ(8deg) rotateY(15deg);
+    }
+    45% {
+      transform: scale(4) rotateZ(-8deg) rotateY(-15deg);
+    }
+    55% {
+      transform: scale(4) rotateZ(8deg) rotateY(15deg);
+    }
+    65% {
+      transform: scale(4) rotateZ(0deg) rotateY(0deg);
+    }
+    100% {
+      transform: scale(4) rotateZ(0deg) rotateY(0deg);
+    }
+  }
+
+  @keyframes speechBubbleFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .avatar-image.peeking {
+    animation: peekAndWobble 1.4s ease-in-out forwards;
+    position: relative;
+    z-index: 10000;
+    transform-origin: top left;
+    transform-style: preserve-3d;
+    backface-visibility: visible;
+  }
+
+  .avatar-image {
+    cursor: pointer;
+    transform-origin: center center;
+    position: relative;
+    transform-style: preserve-3d;
+    z-index: 50;
+  }
+
+  #avatar-container {
+    cursor: pointer;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    position: relative;
+    z-index: 9998;
+    isolation: isolate;
+  }
+
+  .speech-bubble {
+    position: fixed;
+    top: 70px;
+    left: 180px;
+    background: white;
+    color: #2c3e50;
+    padding: 1rem 1.5rem;
+    border-radius: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    opacity: 0;
+    z-index: 9999;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 3px solid #2c3e50;
+  }
+
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    width: 25px;
+    height: 25px;
+    background: white;
+    border: 3px solid #2c3e50;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: 60%;
+    left: -35px;
+    width: 15px;
+    height: 15px;
+    background: white;
+    border: 3px solid #2c3e50;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+  }
+
+  .speech-bubble.show {
+    animation: speechBubbleFadeIn 0.3s ease-out forwards;
   }
 </style>
 
@@ -106,12 +219,11 @@
       return;
     }
 
-    const otterWithHat = document.getElementById('otter-with-hat');
-    const otterNoHat = document.getElementById('otter-no-hat');
+    const avatarLogo = document.getElementById('avatar-logo');
     const siteName = document.getElementById('site-name');
     const techQuote = document.getElementById('tech-quote');
 
-    if (!otterWithHat || !otterNoHat || !siteName || !techQuote) {
+    if (!avatarLogo || !siteName || !techQuote) {
       return;
     }
 
@@ -135,17 +247,14 @@
       const justScrolledDown = wasAtTop && !isAtTop;
 
       if (scrollTop > scrollThreshold && !isScrolled) {
-        // Scrolled down - show quote and hatless otter
+        // Scrolled down - show quote and rotate avatar
         isScrolled = true;
 
         // Pick new quote
         techQuote.textContent = getRandomQuote();
 
-        // Fade and rotate transitions
-        otterWithHat.style.opacity = '0';
-        otterWithHat.style.transform = 'rotate(360deg)';
-        otterNoHat.style.opacity = '1';
-        otterNoHat.style.transform = 'rotate(360deg)';
+        // Rotate avatar and swap text
+        avatarLogo.style.transform = 'rotate(360deg)';
         siteName.style.opacity = '0';
 
         // Delay quote fade-in slightly for smoother effect
@@ -157,10 +266,7 @@
         // Scrolled back to top - restore original state
         isScrolled = false;
 
-        otterWithHat.style.opacity = '1';
-        otterWithHat.style.transform = 'rotate(0deg)';
-        otterNoHat.style.opacity = '0';
-        otterNoHat.style.transform = 'rotate(0deg)';
+        avatarLogo.style.transform = 'rotate(0deg)';
         siteName.style.opacity = '1';
         techQuote.style.opacity = '0';
       }
@@ -189,16 +295,85 @@
     updateHeaderState();
   }
 
+  // Avatar hover peek and wobble effect
+  function initAvatarHoverEffect() {
+    const avatarContainer = document.getElementById('avatar-container');
+    const avatarLogo = document.getElementById('avatar-logo');
+    const speechBubble = document.getElementById('speech-bubble');
+
+    if (!avatarContainer || !avatarLogo || !speechBubble) {
+      return;
+    }
+
+    let hoverTimeout = null;
+    let speechTimeout = null;
+    let hideTimeout = null;
+    let isAnimating = false;
+
+    // Mouseenter: start 1-second timer - listen to container, not image
+    avatarContainer.addEventListener('mouseenter', () => {
+      if (isAnimating) return;
+
+      // Clear any pending hide timeout
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        hideTimeout = null;
+      }
+
+      hoverTimeout = setTimeout(() => {
+        isAnimating = true;
+        avatarLogo.classList.add('peeking');
+
+        // Show speech bubble after avatar grows (0.4s into the animation)
+        speechTimeout = setTimeout(() => {
+          speechBubble.classList.add('show');
+        }, 400);
+
+        // No auto-hide - stays open until mouseleave
+      }, 1000);
+    });
+
+    // Mouseleave: cancel timer and return to normal - listen to container
+    avatarContainer.addEventListener('mouseleave', () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+      if (speechTimeout) {
+        clearTimeout(speechTimeout);
+        speechTimeout = null;
+      }
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        hideTimeout = null;
+      }
+
+      // Remove animation classes and reset
+      avatarLogo.classList.remove('peeking');
+      speechBubble.classList.remove('show');
+      isAnimating = false;
+
+      // Only reset if not currently scrolled (preserve scroll rotation)
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop <= 50) {
+        avatarLogo.style.transform = 'rotate(0deg)';
+      }
+    });
+  }
+
   // Initialize on page load
   document.addEventListener('astro:page-load', () => {
     initHeaderScrollEffect();
+    initAvatarHoverEffect();
   });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initHeaderScrollEffect();
+      initAvatarHoverEffect();
     });
   } else {
     initHeaderScrollEffect();
+    initAvatarHoverEffect();
   }
 </script>
