@@ -18,10 +18,10 @@ date: '2021-09-07T19:57:01+00:00'
 > Notice how we have to use make when creating a channel; rather than say var ch chan struct{}.
 > When you use var the variable will be initialised with the "zero" value of the type.
 > So for string it is "", int it is 0, etc.
-> For channels the zero value is nil and if you try and send to it with <- it will block forever because you cannot send to nil channels [select]
+> For channels the zero value is nil and if you try and send to it with `<-` it will block forever because you cannot send to nil channels [select]
 
 - Used `httptest` to create mock server for faster testing, and included wrapper around a calls to allow configuration for timeout.
-This ensures that testing can handle in milliseconds, but default behavior in a deployment would be 10 seconds or more.
+  This ensures that testing can handle in milliseconds, but default behavior in a deployment would be 10 seconds or more.
 
 ## links
 
@@ -32,4 +32,4 @@ This ensures that testing can handle in milliseconds, but default behavior in a 
 - [refactor(11-select): ♻️ add test case for error on timeout to avoid b… · sheldonhull/learn-go-with-tests-applied@77f01bd · GitHub](https://github.com/sheldonhull/learn-go-with-tests-applied/commit/77f01bd428b335b1ca65e9425b52429a2df56c01)
 - [refactor(11-select): ♻️ refactor to allow configurable racer timeouts · sheldonhull/learn-go-with-tests-applied@65fe79c · GitHub](https://github.com/sheldonhull/learn-go-with-tests-applied/commit/65fe79ca9c02d483ab2c1d2c436377bc54c78129)
 
-[select]: [go-fundamentals/select](https://quii.gitbook.io/learn-go-with-tests/go-fundamentals/select)
+[select]: https://quii.gitbook.io/learn-go-with-tests/go-fundamentals/select

@@ -45,21 +45,23 @@ If we are doing construction to a variable, we use value construction. Avoid poi
 
 Example:
 
-    // clear visible cost of the allocation by value construction and passing of pointer back up the call stack
-    func createSomething() *something {
-      u := something{
-        name: "example",
-      }
-      return &u // <--- This makes clear the cost and allocation back up the callstack.
-    }
-    // cost is obscured by construction being a pointer
-    // and returning a value that is not clear to reader if value or pointer
-    func createSomething()*something {
-      u := &something{
-        name: "example",
-      }
-      return u // <--- Not good. Hides the cost, and require reading function further to find that this is a pointer.
-    }
+```go
+// clear visible cost of the allocation by value construction and passing of pointer back up the call stack
+func createSomething() *something {
+  u := something{
+    name: "example",
+  }
+  return &u // <--- This makes clear the cost and allocation back up the callstack.
+}
+// cost is obscured by construction being a pointer
+// and returning a value that is not clear to reader if value or pointer
+func createSomething()*something {
+  u := &something{
+    name: "example",
+  }
+  return u // <--- Not good. Hides the cost, and require reading function further to find that this is a pointer.
+}
+```
 
 Making cost obvious and visible is a big priority for readable maintainable code with a team.
 

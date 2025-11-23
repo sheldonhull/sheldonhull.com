@@ -77,7 +77,7 @@ This "checklist" of validations is often manually performed, lacking consistency
 
 Consider an alternative approach to helping solve this issue, and expanding your ability to automate the tedious testing and validation of changes made.
 
-```cucumber
+```text
 Scenario
 Given (environment state)
 When (something is done)
@@ -93,7 +93,7 @@ You want to validate the chocolatey package you deploy with correctly parsed the
 
 An example feature file with Gherkin might look like this:
 
-```cucumber
+```text
 @class
 Feature: I can generate configuration files for FancyLoggingVendor collection dynamically
 
