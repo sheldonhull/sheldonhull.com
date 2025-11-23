@@ -226,6 +226,12 @@ hr {
     /* Prevent cutoff on mobile */
     min-height: fit-content;
     padding-top: env(safe-area-inset-top);
+
+    /* Nearly fully transparent glass effect on mobile */
+    background: rgba(1, 22, 39, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(127, 219, 202, 0.1);
   }
 }
 
