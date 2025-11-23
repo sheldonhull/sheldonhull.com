@@ -208,9 +208,9 @@ hr {
   z-index: 1000;
 
   /* Minimal styling - just basic glass backdrop */
-  background: rgba(1, 22, 39, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(1, 22, 39, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 
   border-bottom: 1px solid rgba(127, 219, 202, 0.15);
 }
@@ -339,7 +339,6 @@ pre {
     0 0 24px rgba(127, 219, 202, 0.1),
     inset 0 1px 0 rgba(127, 219, 202, 0.1);
   position: relative;
-  backdrop-filter: blur(8px);
 }
 
 pre::before {
