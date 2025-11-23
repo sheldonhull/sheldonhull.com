@@ -205,7 +205,10 @@ hr {
 .liquid-glass-header {
   position: sticky;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
+  width: 100%;
 
   /* Minimal styling - just basic glass backdrop */
   background: rgba(1, 22, 39, 0.85);
@@ -213,6 +216,17 @@ hr {
   -webkit-backdrop-filter: blur(4px);
 
   border-bottom: 1px solid rgba(127, 219, 202, 0.15);
+}
+
+/* Mobile header adjustments */
+@media (max-width: 767px) {
+  .liquid-glass-header {
+    position: sticky;
+    top: 0;
+    /* Prevent cutoff on mobile */
+    min-height: fit-content;
+    padding-top: env(safe-area-inset-top);
+  }
 }
 
 /* DISABLED FOR TESTING - Glass tint layer */

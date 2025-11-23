@@ -67,15 +67,18 @@ const {
           var(--spotlight-color-3, rgba(255, 88, 116, 0.15)) 50%,
           transparent 75%
         );
-        opacity: 0;
+        opacity: var(--spotlight-opacity, 1);
         transition: opacity 0.3s ease, background-image 0.5s ease;
         mix-blend-mode: screen;
         will-change: opacity;
         transform: translateZ(0);
       }
 
-      body:hover .spotlight-effect {
-        opacity: var(--spotlight-opacity, 1);
+      /* Reduce spotlight effect on mobile for better performance */
+      @media (max-width: 767px) {
+        .spotlight-effect {
+          opacity: calc(var(--spotlight-opacity, 1) * 0.6);
+        }
       }
 
       .ripple-container {
@@ -118,14 +121,35 @@ const {
     </style>
 
     <script>
-      // Mouse tracking
-      document.addEventListener('mousemove', (e) => {
-        const x = (e.clientX / window.innerWidth) * 100;
-        const y = (e.clientY / window.innerHeight) * 100;
+      // Mouse and touch tracking
+      function updateCursorPosition(clientX, clientY) {
+        const x = (clientX / window.innerWidth) * 100;
+        const y = (clientY / window.innerHeight) * 100;
 
         document.documentElement.style.setProperty('--mouse-x', `${x}%`);
         document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+      }
+
+      // Mouse tracking for desktop
+      document.addEventListener('mousemove', (e) => {
+        updateCursorPosition(e.clientX, e.clientY);
       });
+
+      // Touch tracking for mobile
+      document.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+          const touch = e.touches[0];
+          updateCursorPosition(touch.clientX, touch.clientY);
+        }
+      }, { passive: true });
+
+      // Update position on touch start as well
+      document.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) {
+          const touch = e.touches[0];
+          updateCursorPosition(touch.clientX, touch.clientY);
+        }
+      }, { passive: true });
 
       // Click ripple effect with color cycling
       let clickCount = 0;
