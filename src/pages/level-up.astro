@@ -273,6 +273,7 @@ const finalStats = getFinalStats();
   }
 
   let previousStats: { [key: string]: number } = {};
+  let isFirstLoad = true;
 
   function updateStats(index: number) {
     if (index >= yearLevels.length) {
@@ -292,7 +293,9 @@ const finalStats = getFinalStats();
       const value = stats[name];
       const prevValue = previousStats[name] || 0;
       const change = value - prevValue;
-      const changeHtml = change !== 0 ? `
+
+      // Don't show change on first load
+      const changeHtml = !isFirstLoad && change !== 0 ? `
         <span class="stat-change ${change > 0 ? 'positive' : 'negative'}">
           ${change > 0 ? '+' : ''}${change}
         </span>
@@ -313,6 +316,7 @@ const finalStats = getFinalStats();
 
     // Store current stats for next comparison
     previousStats = { ...stats };
+    isFirstLoad = false;
   }
 
   function updateCard(index: number) {
@@ -1114,7 +1118,7 @@ const finalStats = getFinalStats();
   /* Navigation Buttons - Bottom positioned */
   .nav-button {
     position: fixed;
-    bottom: 100px;
+    bottom: 120px;
     width: 60px;
     height: 60px;
     background: rgba(139, 92, 246, 0.3);
@@ -1140,26 +1144,26 @@ const finalStats = getFinalStats();
 
   .nav-prev {
     left: 50%;
-    transform: translateX(-80px);
+    transform: translateX(-90px);
   }
 
   .nav-next {
     left: 50%;
-    transform: translateX(20px);
+    transform: translateX(30px);
   }
 
   .nav-prev:hover {
-    transform: translateX(-80px) scale(1.15);
+    transform: translateX(-90px) scale(1.15);
   }
 
   .nav-next:hover {
-    transform: translateX(20px) scale(1.15);
+    transform: translateX(30px) scale(1.15);
   }
 
   /* Progress Indicator */
   .progress-indicator {
     position: fixed;
-    bottom: 40px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 250;
