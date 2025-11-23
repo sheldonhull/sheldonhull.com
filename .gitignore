@@ -35,8 +35,7 @@ e2e/*.map
 .DS_Store/
 
 ### Hugo ###
-# Generated files by hugo
-/public/
+# Generated files by hugo (REMOVED: /public/ - now used by Astro for source assets)
 /resources/_gen/assets
 
 # Executable may be added to repository
@@ -160,7 +159,6 @@ act/
 
 # Git Time Tracking
 .gtm
-public
 _public
 artifacts
 
@@ -174,7 +172,6 @@ bin
 .envlist
 vendor/
 __*
-public/
 go.tar.gz
 
 
