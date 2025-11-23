@@ -135,7 +135,7 @@ const finalStats = getFinalStats();
           </div>
         ))}
 
-        {/* Final Stats Card */}
+        {/* Final Stats Card - Full Spread */}
         <div
           class="card-wrapper final-card-wrapper"
           data-index={yearLevels.length}
@@ -144,42 +144,72 @@ const finalStats = getFinalStats();
           <div class="card-inner">
             <div class="card-face card-front">
               <div class="card-portrait final-portrait">
-                <div class="final-header">
-                  <h2 class="final-title">Journey Complete</h2>
-                  <p class="final-subtitle">For now...</p>
+                {/* Left Column - Avatar and Summary */}
+                <div class="final-left-column">
+                  <div class="final-avatar-card">
+                    <div class="final-mage-portrait">
+                      <svg viewBox="0 0 32 32" class="final-mage-sprite">
+                        <rect x="10" y="3" width="12" height="2" fill="#6b46c1"/>
+                        <rect x="8" y="5" width="16" height="2" fill="#6b46c1"/>
+                        <rect x="7" y="7" width="18" height="3" fill="#7c3aed"/>
+                        <rect x="12" y="10" width="8" height="6" fill="#d4a574"/>
+                        <rect x="13" y="12" width="2" height="1" fill="#4a2511"/>
+                        <rect x="17" y="12" width="2" height="1" fill="#4a2511"/>
+                        <rect x="14" y="14" width="4" height="1" fill="#c48b5c" opacity="0.6"/>
+                        <rect x="9" y="16" width="14" height="2" fill="#8b5cf6"/>
+                        <rect x="8" y="18" width="16" height="5" fill="#7c3aed"/>
+                        <rect x="7" y="23" width="18" height="4" fill="#6b21a8"/>
+                        <rect x="9" y="27" width="5" height="4" fill="#5b21b6"/>
+                        <rect x="18" y="27" width="5" height="4" fill="#5b21b6"/>
+                        <rect x="26" y="14" width="2" height="15" fill="#92400e"/>
+                        <rect x="25" y="12" width="4" height="4" fill="#fbbf24" opacity="0.8"/>
+                        <circle cx="27" cy="14" r="2.5" fill="#fde047" opacity="0.9"/>
+                        <circle cx="27" cy="14" r="3.5" fill="#fbbf24" opacity="0.3"/>
+                      </svg>
+                    </div>
+                    <h3 class="final-avatar-title">Level {yearLevels.length} Mage</h3>
+                  </div>
+
+                  <div class="final-summary-stats">
+                    <div class="final-summary-item">
+                      <FAIcon style="solid" icon="trophy" />
+                      <span class="summary-value">{yearLevels.length}</span>
+                      <span class="summary-label">Levels</span>
+                    </div>
+                    <div class="final-summary-item">
+                      <FAIcon style="solid" icon="star" />
+                      <span class="summary-value">{totalXP}</span>
+                      <span class="summary-label">Total XP</span>
+                    </div>
+                    <div class="final-summary-item">
+                      <FAIcon style="solid" icon="award" />
+                      <span class="summary-value">{totalAchievements}</span>
+                      <span class="summary-label">Achievements</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="final-stats-grid">
-                  <div class="final-stat">
-                    <FAIcon style="solid" icon="trophy" />
-                    <span class="final-value">{yearLevels.length}</span>
-                    <span class="final-label">Levels</span>
+                {/* Right Column - All Attributes */}
+                <div class="final-right-column">
+                  <div class="final-header">
+                    <h2 class="final-title">Journey Complete</h2>
+                    <p class="final-subtitle">Character Stats & Achievements</p>
                   </div>
-                  <div class="final-stat">
-                    <FAIcon style="solid" icon="star" />
-                    <span class="final-value">{totalXP}</span>
-                    <span class="final-label">Total XP</span>
-                  </div>
-                  <div class="final-stat">
-                    <FAIcon style="solid" icon="award" />
-                    <span class="final-value">{totalAchievements}</span>
-                    <span class="final-label">Achievements</span>
-                  </div>
-                </div>
 
-                <div class="final-attributes">
-                  <h3 class="attrs-title">Final Attributes</h3>
-                  <div class="attrs-final-list">
-                    {Object.entries(finalStats)
-                      .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
-                      .map(([name, value]) => (
-                        <div class="attr-final-item">
-                          <span>{name}</span>
-                          <span class:list={[value < 0 && 'neg']}>
-                            {value > 0 ? '+' : ''}{value}
-                          </span>
-                        </div>
-                      ))}
+                  <div class="final-attributes-full">
+                    <h3 class="attrs-title-final">Final Attributes</h3>
+                    <div class="attrs-full-grid">
+                      {Object.entries(finalStats)
+                        .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+                        .map(([name, value]) => (
+                          <div class="attr-full-item">
+                            <span class="attr-full-name">{name}</span>
+                            <span class="attr-full-value" class:list={[value < 0 && 'neg']}>
+                              {value > 0 ? '+' : ''}{value}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -242,26 +272,47 @@ const finalStats = getFinalStats();
     }, 800);
   }
 
+  let previousStats: { [key: string]: number } = {};
+
   function updateStats(index: number) {
     if (index >= yearLevels.length) {
-      // Final card - show all stats
-      statsList!.innerHTML = '<div class="stat-item final-stats-note">Final Stats →</div>';
+      // Final card - show final stats message
+      statsList!.innerHTML = '<div class="stat-item final-stats-note">See final stats on card →</div>';
       xpDisplay!.textContent = `${calculateTotalXP(yearLevels.length - 1)} XP`;
       return;
     }
 
     const stats = calculateCumulativeStats(index);
     const xp = calculateTotalXP(index);
-    const topStats = getTopStats(stats, 6);
 
-    statsList!.innerHTML = topStats.map(([name, value]) => `
-      <div class="stat-item ${value < 0 ? 'negative' : ''}">
-        <span class="stat-name">${name}</span>
-        <span class="stat-value">${value > 0 ? '+' : ''}${value}</span>
-      </div>
-    `).join('');
+    // Get all unique stat names sorted alphabetically
+    const allStatNames = Object.keys(stats).sort();
+
+    statsList!.innerHTML = allStatNames.map((name) => {
+      const value = stats[name];
+      const prevValue = previousStats[name] || 0;
+      const change = value - prevValue;
+      const changeHtml = change !== 0 ? `
+        <span class="stat-change ${change > 0 ? 'positive' : 'negative'}">
+          ${change > 0 ? '+' : ''}${change}
+        </span>
+      ` : '';
+
+      return `
+        <div class="stat-item ${value < 0 ? 'negative' : ''}">
+          <span class="stat-name">${name}</span>
+          <div class="stat-value-container">
+            <span class="stat-value">${value > 0 ? '+' : ''}${value}</span>
+            ${changeHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
 
     xpDisplay!.textContent = `${xp} XP`;
+
+    // Store current stats for next comparison
+    previousStats = { ...stats };
   }
 
   function updateCard(index: number) {
@@ -338,24 +389,6 @@ const finalStats = getFinalStats();
     }
   });
 
-  // Mouse wheel navigation (desktop only)
-  if (window.innerWidth > 768) {
-    let isScrolling = false;
-    cardStack?.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      if (isScrolling) return;
-
-      isScrolling = true;
-      setTimeout(() => isScrolling = false, 600);
-
-      if (e.deltaY > 0) {
-        updateCard(currentIndex + 1);
-      } else {
-        updateCard(currentIndex - 1);
-      }
-    }, { passive: false });
-  }
-
   // Initialize
   updateCard(0);
 </script>
@@ -378,7 +411,7 @@ const finalStats = getFinalStats();
   .sprite-display {
     position: fixed;
     top: 50%;
-    right: 50px;
+    right: 120px;
     transform: translateY(-50%);
     z-index: 300;
     display: flex;
@@ -484,13 +517,14 @@ const finalStats = getFinalStats();
     position: fixed;
     left: 50%;
     top: 50%;
-    transform: translate(-550px, -50%);
+    transform: translate(-650px, -50%);
     z-index: 200;
-    width: 260px;
+    width: 340px;
+    max-height: 700px;
     background: rgba(16, 21, 38, 0.95);
     border: 3px solid rgba(139, 92, 246, 0.5);
     border-radius: 16px;
-    padding: 20px;
+    padding: 24px;
     backdrop-filter: blur(12px);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   }
@@ -512,8 +546,25 @@ const finalStats = getFinalStats();
   .stats-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     margin-bottom: 16px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .stats-list::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .stats-list::-webkit-scrollbar-track {
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: 3px;
+  }
+
+  .stats-list::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.5);
+    border-radius: 3px;
   }
 
   .stat-item {
@@ -535,17 +586,44 @@ const finalStats = getFinalStats();
   .stat-name {
     color: var(--sw-text-secondary);
     font-weight: 600;
+    flex: 1;
+  }
+
+  .stat-value-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .stat-value {
     color: #10b981;
     font-weight: 800;
     font-family: 'Monaco', monospace;
-    font-size: 15px;
+    font-size: 16px;
+    min-width: 45px;
+    text-align: right;
   }
 
   .stat-item.negative .stat-value {
     color: #f87171;
+  }
+
+  .stat-change {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Monaco', monospace;
+  }
+
+  .stat-change.positive {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.15);
+  }
+
+  .stat-change.negative {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.15);
   }
 
   .stats-footer {
@@ -569,8 +647,9 @@ const finalStats = getFinalStats();
   /* Card Stack Container */
   .card-stack-container {
     position: relative;
-    width: 450px;
-    height: 680px;
+    width: 550px;
+    height: 780px;
+    perspective: 2000px;
   }
 
   .card-stack {
@@ -582,24 +661,25 @@ const finalStats = getFinalStats();
   .card-wrapper {
     position: absolute;
     inset: 0;
-    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.6s ease-out;
+    transform-style: preserve-3d;
   }
 
-  /* Card States - Simple scroll-to-flip animation */
+  /* Card States - Card flip animation */
   .card-wrapper.hidden {
-    transform: scale(0.9) translateY(20px);
+    transform: rotateY(-15deg) translateX(100px) scale(0.85);
     opacity: 0;
     pointer-events: none;
   }
 
   .card-wrapper.active {
-    transform: scale(1) translateY(0);
+    transform: rotateY(0deg) translateX(0) scale(1);
     opacity: 1;
     pointer-events: auto;
   }
 
   .card-wrapper.previous {
-    transform: scale(0.9) translateY(-20px);
+    transform: rotateY(15deg) translateX(-100px) scale(0.85);
     opacity: 0;
     pointer-events: none;
   }
@@ -609,6 +689,7 @@ const finalStats = getFinalStats();
     width: 100%;
     height: 100%;
     position: relative;
+    transform-style: preserve-3d;
   }
 
   .card-face {
@@ -618,36 +699,36 @@ const finalStats = getFinalStats();
     backface-visibility: hidden;
   }
 
-  /* Portrait Card Design */
+  /* Portrait Card Design - Playing Card Style */
   .card-portrait {
     width: 100%;
     height: 100%;
     background:
       linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(16, 21, 38, 0.98) 100%);
-    border: 4px solid;
-    border-image: linear-gradient(135deg, #7c3aed, #6b21a8, #5b21b6) 1;
-    border-radius: 20px;
+    border: 6px solid #7c3aed;
+    border-radius: 24px;
     display: flex;
     flex-direction: column;
     box-shadow:
       0 25px 70px rgba(0, 0, 0, 0.6),
-      0 0 50px rgba(139, 92, 246, 0.3),
-      inset 0 0 40px rgba(139, 92, 246, 0.08);
+      0 0 50px rgba(139, 92, 246, 0.4),
+      inset 0 0 40px rgba(139, 92, 246, 0.08),
+      inset 0 0 0 2px rgba(167, 139, 250, 0.3);
     overflow: hidden;
+    position: relative;
   }
 
   .card-portrait::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg,
-      transparent,
-      rgba(167, 139, 250, 0.9),
-      transparent
-    );
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    border-radius: 16px;
+    pointer-events: none;
+    z-index: 1;
   }
 
   /* Card Header Portrait */
@@ -846,129 +927,201 @@ const finalStats = getFinalStats();
     font-weight: 800;
   }
 
-  /* Final Card Styles */
+  /* Final Card Styles - Full Spread */
   .final-portrait {
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  /* Left Column - Avatar & Summary */
+  .final-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .final-avatar-card {
+    background: rgba(139, 92, 246, 0.15);
+    border: 3px solid rgba(139, 92, 246, 0.4);
+    border-radius: 16px;
+    padding: 20px;
     text-align: center;
   }
 
-  .final-header {
-    padding: 30px;
+  .final-mage-portrait {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 16px;
+    padding: 12px;
+    background: rgba(16, 21, 38, 0.9);
+    border: 3px solid rgba(139, 92, 246, 0.5);
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
   }
 
-  .final-title {
-    font-size: 42px;
-    font-weight: 900;
-    background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 10px;
+  .final-mage-sprite {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.7));
   }
 
-  .final-subtitle {
+  .final-avatar-title {
     font-size: 16px;
-    color: var(--sw-text-muted);
-    font-style: italic;
+    font-weight: 800;
+    color: #a78bfa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
-  .final-stats-grid {
+  .final-summary-stats {
     display: flex;
-    gap: 20px;
-    justify-content: center;
-    padding: 20px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 12px;
   }
 
-  .final-stat {
+  .final-summary-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding: 20px;
+    gap: 6px;
+    padding: 16px;
     background: rgba(139, 92, 246, 0.15);
     border: 2px solid rgba(139, 92, 246, 0.4);
-    border-radius: 14px;
-    min-width: 110px;
+    border-radius: 12px;
   }
 
-  .final-stat :global(svg) {
-    font-size: 32px;
+  .final-summary-item :global(svg) {
+    font-size: 28px;
     color: #7c3aed;
   }
 
-  .final-value {
-    font-size: 36px;
+  .summary-value {
+    font-size: 32px;
     font-weight: 900;
     color: var(--sw-text-primary);
   }
 
-  .final-label {
+  .summary-label {
     font-size: 11px;
     color: var(--sw-text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
   }
 
-  .final-attributes {
-    padding: 0 30px 30px;
-    max-height: 300px;
+  /* Right Column - Stats */
+  .final-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     overflow-y: auto;
+    max-height: 700px;
+    padding-right: 8px;
   }
 
-  .attrs-title {
-    font-size: 16px;
-    font-weight: 700;
+  .final-right-column::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .final-right-column::-webkit-scrollbar-track {
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: 3px;
+  }
+
+  .final-right-column::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.5);
+    border-radius: 3px;
+  }
+
+  .final-header {
+    text-align: center;
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+  }
+
+  .final-title {
+    font-size: 38px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .final-subtitle {
+    font-size: 15px;
+    color: var(--sw-text-muted);
+    font-style: italic;
+  }
+
+  .final-attributes-full {
+    flex: 1;
+  }
+
+  .attrs-title-final {
+    font-size: 18px;
+    font-weight: 800;
     color: #a78bfa;
     margin-bottom: 16px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    text-align: center;
   }
 
-  .attrs-final-list {
+  .attrs-full-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 10px;
   }
 
-  .attr-final-item {
+  .attr-full-item {
     display: flex;
     justify-content: space-between;
-    padding: 8px 12px;
-    background: rgba(139, 92, 246, 0.1);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    border-radius: 8px;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(139, 92, 246, 0.12);
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+  }
+
+  .attr-full-item:hover {
+    border-color: rgba(139, 92, 246, 0.6);
+    background: rgba(139, 92, 246, 0.18);
+    transform: translateY(-1px);
+  }
+
+  .attr-full-name {
+    color: var(--sw-text-secondary);
+    font-weight: 700;
     font-size: 13px;
   }
 
-  .attr-final-item span:first-child {
-    color: var(--sw-text-secondary);
-    font-weight: 600;
-  }
-
-  .attr-final-item span:last-child {
+  .attr-full-value {
     color: #10b981;
-    font-weight: 800;
+    font-weight: 900;
     font-family: 'Monaco', monospace;
+    font-size: 17px;
   }
 
-  .attr-final-item span.neg {
+  .attr-full-value.neg {
     color: #f87171;
   }
 
-  /* Navigation Buttons */
+  /* Navigation Buttons - Bottom positioned */
   .nav-button {
     position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 56px;
-    height: 56px;
-    background: rgba(139, 92, 246, 0.25);
+    bottom: 100px;
+    width: 60px;
+    height: 60px;
+    background: rgba(139, 92, 246, 0.3);
     border: 3px solid rgba(139, 92, 246, 0.6);
     border-radius: 50%;
     color: #a78bfa;
-    font-size: 22px;
+    font-size: 24px;
     cursor: pointer;
     z-index: 250;
     transition: all 0.3s ease;
@@ -979,14 +1132,29 @@ const finalStats = getFinalStats();
   }
 
   .nav-button:hover {
-    background: rgba(139, 92, 246, 0.5);
+    background: rgba(139, 92, 246, 0.6);
     border-color: rgba(139, 92, 246, 1);
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+    transform: scale(1.15);
+    box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
   }
 
-  .nav-prev { left: 30px; }
-  .nav-next { right: 30px; }
+  .nav-prev {
+    left: 50%;
+    transform: translateX(-80px);
+  }
+
+  .nav-next {
+    left: 50%;
+    transform: translateX(20px);
+  }
+
+  .nav-prev:hover {
+    transform: translateX(-80px) scale(1.15);
+  }
+
+  .nav-next:hover {
+    transform: translateX(20px) scale(1.15);
+  }
 
   /* Progress Indicator */
   .progress-indicator {
@@ -1008,16 +1176,32 @@ const finalStats = getFinalStats();
   }
 
   /* Mobile Responsive */
+  @media (max-width: 1400px) {
+    .stats-panel {
+      transform: translate(-500px, -50%);
+      width: 300px;
+      padding: 20px;
+    }
+
+    .sprite-display {
+      right: 80px;
+    }
+  }
+
   @media (max-width: 1200px) {
     .stats-panel {
-      transform: translate(-360px, -50%);
-      width: 220px;
-      padding: 16px;
+      transform: translate(-400px, -50%);
+      width: 260px;
+      padding: 18px;
     }
 
     .card-stack-container {
-      width: 400px;
-      height: 600px;
+      width: 480px;
+      height: 680px;
+    }
+
+    .sprite-display {
+      right: 60px;
     }
   }
 
