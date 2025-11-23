@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SeriesNavigation from '../components/SeriesNavigation.astro';
 import { getCollection } from 'astro:content';
 import { humanizeDate, formatDate } from '../utils/date';
 
@@ -64,6 +65,9 @@ const formattedDate = formatDate(post.data.date);
         </div>
       )}
     </header>
+
+    <!-- Series Navigation -->
+    <SeriesNavigation currentPost={post} />
 
     <!-- Post content -->
     <div class="prose prose-invert max-w-none">
