@@ -134,7 +134,7 @@ With my dotfiles managed by [chezmoi](https://www.chezmoi.io/), my terminal in a
 ## Apps
 
 The ecosystem for nice dev tools feels better.
-I bought [Alfred Microblog Post]({{< relref "2020-06-24t16-03-49-00-00.md" >}} "alfred microblog") and [Dash](https://kapeli.com/dash) and find them really useful.
+I bought [Alfred Microblog Post](2020-06-24t16-03-49-00-00 "alfred microblog") and [Dash](https://kapeli.com/dash) and find them really useful.
 
 ## Verdict
 
