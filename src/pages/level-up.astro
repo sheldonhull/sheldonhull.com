@@ -1,0 +1,291 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FAIcon from '../components/FAIcon.astro';
+
+interface Achievement {
+  name: string;
+  icon: string;
+  iconStyle: 'solid' | 'brands' | 'regular';
+  completed: boolean;
+  xp?: number;
+  subAchievements?: Achievement[];
+}
+
+const languageAchievements: Achievement[] = [
+  { name: 'VBA Apprentice', icon: 'file-code', iconStyle: 'solid', completed: true, xp: 50 },
+  { name: 'SQL Master', icon: 'database', iconStyle: 'solid', completed: true, xp: 100 },
+  { name: 'Batch Scripter', icon: 'terminal', iconStyle: 'solid', completed: true, xp: 50 },
+  { name: 'PowerShell Wizard', icon: 'bolt', iconStyle: 'solid', completed: true, xp: 150 },
+  {
+    name: 'Python Explorer',
+    icon: 'python',
+    iconStyle: 'brands',
+    completed: false,
+    xp: 200,
+    subAchievements: [
+      { name: 'Pandas & Data Science', icon: 'chart-line', iconStyle: 'solid', completed: true, xp: 75 },
+      { name: 'Web Server Builder', icon: 'server', iconStyle: 'solid', completed: false, xp: 50 },
+      { name: 'TUI Developer', icon: 'window-maximize', iconStyle: 'solid', completed: false, xp: 50 }
+    ]
+  },
+  {
+    name: 'Go Engineer',
+    icon: 'golang',
+    iconStyle: 'brands',
+    completed: false,
+    xp: 300,
+    subAchievements: [
+      { name: 'Automation & DevOps', icon: 'gears', iconStyle: 'solid', completed: true, xp: 100 },
+      { name: 'Lambda/Serverless', icon: 'cloud', iconStyle: 'solid', completed: true, xp: 100 },
+      { name: 'Charm TUI', icon: 'wand-magic-sparkles', iconStyle: 'solid', completed: false, xp: 75 },
+      { name: 'CLI Tools Craftsman', icon: 'toolbox', iconStyle: 'solid', completed: false, xp: 50 },
+      { name: 'DDD Master', icon: 'diagram-project', iconStyle: 'solid', completed: false, xp: 100 },
+      { name: 'API Versioning Architect', icon: 'code-branch', iconStyle: 'solid', completed: false, xp: 75 }
+    ]
+  },
+  { name: 'Shell Scripting', icon: 'terminal', iconStyle: 'solid', completed: true, xp: 75 },
+  { name: 'Kubernetes Operator', icon: 'dharmachakra', iconStyle: 'solid', completed: false, xp: 200 },
+  {
+    name: 'TypeScript Developer',
+    icon: 'js',
+    iconStyle: 'brands',
+    completed: false,
+    xp: 150,
+    subAchievements: [
+      { name: 'Raycast Extension', icon: 'puzzle-piece', iconStyle: 'solid', completed: false, xp: 75 },
+      { name: 'VSCode Extension', icon: 'code', iconStyle: 'solid', completed: false, xp: 75 }
+    ]
+  },
+  { name: 'Rust Warrior', icon: 'rust', iconStyle: 'brands', completed: false, xp: 250 },
+  { name: 'Zig Adventurer', icon: 'code', iconStyle: 'solid', completed: false, xp: 200 }
+];
+
+const infraAchievements: Achievement[] = [
+  { name: 'Pulumi Cluster Architect', icon: 'cubes', iconStyle: 'solid', completed: false, xp: 300 },
+  { name: 'Helm to Pulumi Migrator', icon: 'arrows-turn-to-dots', iconStyle: 'solid', completed: false, xp: 200 }
+];
+
+const knowledgeAchievements: Achievement[] = [
+  { name: 'Microservices Scholar', icon: 'network-wired', iconStyle: 'solid', completed: false, xp: 200 },
+  { name: 'DDD Practitioner', icon: 'book', iconStyle: 'solid', completed: false, xp: 150 },
+  { name: 'TDD Advocate', icon: 'vial', iconStyle: 'solid', completed: false, xp: 150 }
+];
+
+const calculateTotalXP = (achievements: Achievement[]): number => {
+  return achievements.reduce((total, ach) => {
+    let xp = ach.completed ? (ach.xp || 0) : 0;
+    if (ach.subAchievements) {
+      xp += calculateTotalXP(ach.subAchievements);
+    }
+    return total + xp;
+  }, 0);
+};
+
+const calculateMaxXP = (achievements: Achievement[]): number => {
+  return achievements.reduce((total, ach) => {
+    let xp = ach.xp || 0;
+    if (ach.subAchievements) {
+      xp += calculateMaxXP(ach.subAchievements);
+    }
+    return total + xp;
+  }, 0);
+};
+
+const totalXP = calculateTotalXP([...languageAchievements, ...infraAchievements, ...knowledgeAchievements]);
+const maxXP = calculateMaxXP([...languageAchievements, ...infraAchievements, ...knowledgeAchievements]);
+const level = Math.floor(totalXP / 100) + 1;
+const nextLevelXP = level * 100;
+const currentLevelProgress = ((totalXP % 100) / 100) * 100;
+---
+
+<BaseLayout title="Level Up - Life RPG | Sheldon Hull" description="Track achievements, skills, and life milestones RPG-style">
+  <div class="max-w-5xl mx-auto">
+    <!-- Hero Section -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold mb-4 synthwave-gradient">
+        <FAIcon style="solid" icon="trophy" class="mr-3" />
+        Life RPG: Achievement Log
+      </h1>
+      <p class="text-lg mb-6" style="color: var(--sw-text-secondary);">
+        Tracking skills, quests, and epic wins from code to life
+      </p>
+
+      <!-- Player Stats -->
+      <div class="inline-block p-6 rounded-lg border" style="background: var(--sw-bg-secondary); border-color: var(--sw-cyan);">
+        <div class="flex items-center gap-8">
+          <div class="text-center">
+            <div class="text-4xl font-bold neon-glow-cyan" style="color: var(--sw-cyan);">
+              <FAIcon style="solid" icon="star" class="mr-2" />
+              Level {level}
+            </div>
+            <div class="text-sm mt-1" style="color: var(--sw-text-muted);">Character Level</div>
+          </div>
+          <div class="flex-1 min-w-[200px]">
+            <div class="flex justify-between text-sm mb-2" style="color: var(--sw-text-secondary);">
+              <span>{totalXP} XP</span>
+              <span>{nextLevelXP} XP</span>
+            </div>
+            <div class="h-6 rounded-full overflow-hidden" style="background: var(--sw-bg-tertiary);">
+              <div
+                class="h-full transition-all duration-500 neon-glow-cyan"
+                style={`width: ${currentLevelProgress}%; background: var(--sw-cyan);`}
+              ></div>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold neon-glow-purple" style="color: var(--sw-purple);">
+              {Math.round((totalXP / maxXP) * 100)}%
+            </div>
+            <div class="text-sm mt-1" style="color: var(--sw-text-muted);">Quest Complete</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Language Mastery -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <FAIcon style="solid" icon="code" class="text-3xl neon-glow-cyan" style="color: var(--sw-cyan);" />
+        <h2 class="text-3xl font-bold neon-glow-cyan" style="color: var(--sw-cyan);">Language Mastery</h2>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        {languageAchievements.map((achievement) => (
+          <div
+            class={`p-5 rounded-lg border transition-all hover:scale-105 ${achievement.completed ? 'neon-border-cyan' : ''}`}
+            style={`background: var(--sw-bg-secondary); border-color: ${achievement.completed ? 'var(--sw-cyan)' : 'var(--sw-bg-tertiary)'};`}
+          >
+            <div class="flex items-start gap-4">
+              <div class={`text-3xl ${achievement.completed ? 'neon-glow-cyan' : ''}`} style={`color: ${achievement.completed ? 'var(--sw-cyan)' : 'var(--sw-text-muted)'};`}>
+                <FAIcon style={achievement.iconStyle} icon={achievement.icon} />
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-lg font-bold" style={`color: ${achievement.completed ? 'var(--sw-cyan)' : 'var(--sw-text-primary)'};`}>
+                    {achievement.name}
+                  </h3>
+                  {achievement.completed && (
+                    <span class="text-sm font-mono px-2 py-1 rounded neon-glow-cyan" style="background: rgba(127, 219, 202, 0.2); color: var(--sw-cyan);">
+                      +{achievement.xp} XP
+                    </span>
+                  )}
+                </div>
+                {achievement.subAchievements && (
+                  <div class="mt-3 space-y-2">
+                    {achievement.subAchievements.map((sub) => (
+                      <div class="flex items-center gap-2 text-sm">
+                        <FAIcon
+                          style={sub.iconStyle}
+                          icon={sub.completed ? 'check-circle' : 'circle'}
+                          class={sub.completed ? 'neon-glow-purple' : ''}
+                          style={`color: ${sub.completed ? 'var(--sw-purple)' : 'var(--sw-text-muted)'};`}
+                        />
+                        <span style={`color: ${sub.completed ? 'var(--sw-text-secondary)' : 'var(--sw-text-muted)'};`}>
+                          {sub.name}
+                        </span>
+                        {sub.completed && (
+                          <span class="text-xs font-mono" style="color: var(--sw-purple);">+{sub.xp}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Infrastructure Architect -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <FAIcon style="solid" icon="server" class="text-3xl neon-glow-purple" style="color: var(--sw-purple);" />
+        <h2 class="text-3xl font-bold neon-glow-purple" style="color: var(--sw-purple);">Infrastructure Architect</h2>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        {infraAchievements.map((achievement) => (
+          <div
+            class={`p-5 rounded-lg border transition-all hover:scale-105 ${achievement.completed ? 'neon-border-purple' : ''}`}
+            style={`background: var(--sw-bg-secondary); border-color: ${achievement.completed ? 'var(--sw-purple)' : 'var(--sw-bg-tertiary)'};`}
+          >
+            <div class="flex items-start gap-4">
+              <div class={`text-3xl ${achievement.completed ? 'neon-glow-purple' : ''}`} style={`color: ${achievement.completed ? 'var(--sw-purple)' : 'var(--sw-text-muted)'};`}>
+                <FAIcon style={achievement.iconStyle} icon={achievement.icon} />
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-lg font-bold" style={`color: ${achievement.completed ? 'var(--sw-purple)' : 'var(--sw-text-primary)'};`}>
+                    {achievement.name}
+                  </h3>
+                  {achievement.completed && (
+                    <span class="text-sm font-mono px-2 py-1 rounded neon-glow-purple" style="background: rgba(199, 146, 234, 0.2); color: var(--sw-purple);">
+                      +{achievement.xp} XP
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Knowledge Roadmap -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <FAIcon style="solid" icon="brain" class="text-3xl neon-glow-pink" style="color: var(--sw-pink);" />
+        <h2 class="text-3xl font-bold neon-glow-pink" style="color: var(--sw-pink);">Knowledge Quests</h2>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        {knowledgeAchievements.map((achievement) => (
+          <div
+            class={`p-5 rounded-lg border transition-all hover:scale-105 ${achievement.completed ? 'neon-border-pink' : ''}`}
+            style={`background: var(--sw-bg-secondary); border-color: ${achievement.completed ? 'var(--sw-pink)' : 'var(--sw-bg-tertiary)'};`}
+          >
+            <div class="flex items-start gap-4">
+              <div class={`text-3xl ${achievement.completed ? 'neon-glow-pink' : ''}`} style={`color: ${achievement.completed ? 'var(--sw-pink)' : 'var(--sw-text-muted)'};`}>
+                <FAIcon style={achievement.iconStyle} icon={achievement.icon} />
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-lg font-bold" style={`color: ${achievement.completed ? 'var(--sw-pink)' : 'var(--sw-text-primary)'};`}>
+                    {achievement.name}
+                  </h3>
+                  {achievement.completed && (
+                    <span class="text-sm font-mono px-2 py-1 rounded neon-glow-pink" style="background: rgba(255, 88, 116, 0.2); color: var(--sw-pink);">
+                      +{achievement.xp} XP
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Footer Note -->
+    <div class="text-center p-6 rounded-lg border" style="background: var(--sw-bg-secondary); border-color: var(--sw-bg-tertiary);">
+      <p class="text-sm" style="color: var(--sw-text-muted);">
+        <FAIcon style="solid" icon="gamepad" class="mr-2" />
+        This achievement log tracks personal growth, learning journeys, and epic wins.
+        <br />
+        Every completed quest adds to the XP bar. The adventure continues...
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .synthwave-gradient {
+    background: linear-gradient(
+      45deg,
+      var(--sw-cyan),
+      var(--sw-purple),
+      var(--sw-pink)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
