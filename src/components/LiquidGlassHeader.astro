@@ -19,8 +19,8 @@ import { headerQuotes } from '../config/site';
 
 <div class="liquid-glass-header" id="liquid-header">
   <div class="container mx-auto px-4 py-4 relative z-10 liquid-text-container">
-    <div class="flex items-center justify-between">
-      <a href="/" class="flex items-center gap-3 text-xl font-bold transition-all duration-300 hover:scale-105 neon-glow-cyan" style="color: var(--sw-cyan);">
+    <div class="flex items-center justify-between header-content">
+      <a href="/" class="flex items-center gap-3 text-xl font-bold transition-all duration-300 hover:scale-105 neon-glow-cyan header-logo-link" style="color: var(--sw-cyan);">
         <!-- Avatar container with fixed width to prevent overlap -->
         <div id="avatar-container" class="relative flex-shrink-0" style="width: 2.5rem; height: 2.5rem;">
           <!-- Circular avatar -->
@@ -37,7 +37,7 @@ import { headerQuotes } from '../config/site';
           </div>
         </div>
         <!-- Text container for overlapping title/quote -->
-        <div class="relative">
+        <div class="relative site-title-container">
           <!-- Site name (default) -->
           <span id="site-name" class="header-text transition-opacity duration-500">sheldonhull.com</span>
           <!-- Tech quote (scrolled) - absolutely positioned to overlay site name exactly -->
@@ -45,12 +45,12 @@ import { headerQuotes } from '../config/site';
           </span>
         </div>
       </a>
-      <div class="flex gap-6">
+      <nav class="nav-links-container">
         <a href="/" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Home</a>
         <a href="/posts" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Posts</a>
         <a href="/tags" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">Tags</a>
         <a href="/about" class="nav-link transition-all duration-300 hover:text-[var(--sw-cyan)] hover:scale-105" style="color: var(--sw-text-secondary);">About</a>
-      </div>
+      </nav>
     </div>
   </div>
 </div>
@@ -67,10 +67,53 @@ import { headerQuotes } from '../config/site';
     z-index: 1;
   }
 
-  /* Mobile: hide quote feature */
+  /* Mobile: hide quote feature and site title text */
   @media (max-width: 767px) {
     #tech-quote {
       display: none !important;
+    }
+
+    /* Hide site title text, keep only icon */
+    .site-title-container {
+      display: none !important;
+    }
+
+    /* Adjust header content for mobile */
+    .header-content {
+      gap: 0.5rem;
+    }
+
+    /* Logo link adjustments */
+    .header-logo-link {
+      gap: 0 !important;
+      flex-shrink: 0;
+    }
+
+    /* Make nav links horizontally scrollable */
+    .nav-links-container {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+      padding: 0.25rem 0;
+      margin-left: 0.5rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .nav-links-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Nav link mobile adjustments */
+    .nav-links-container .nav-link {
+      flex-shrink: 0;
+      white-space: nowrap;
+      font-size: 0.875rem;
     }
   }
 
@@ -290,8 +333,7 @@ import { headerQuotes } from '../config/site';
     let hideTimeout = null;
     let isAnimating = false;
 
-    // Mouseenter: start 1-second timer - listen to container, not image
-    avatarContainer.addEventListener('mouseenter', () => {
+    function startAnimation() {
       if (isAnimating) return;
 
       // Clear any pending hide timeout
@@ -309,12 +351,11 @@ import { headerQuotes } from '../config/site';
           speechBubble.classList.add('show');
         }, 400);
 
-        // No auto-hide - stays open until mouseleave
+        // No auto-hide - stays open until mouseleave/touchend
       }, 1000);
-    });
+    }
 
-    // Mouseleave: cancel timer and return to normal - listen to container
-    avatarContainer.addEventListener('mouseleave', () => {
+    function stopAnimation() {
       if (hoverTimeout) {
         clearTimeout(hoverTimeout);
         hoverTimeout = null;
@@ -338,6 +379,45 @@ import { headerQuotes } from '../config/site';
       if (scrollTop <= 50) {
         avatarLogo.style.transform = 'rotate(0deg)';
       }
+    }
+
+    // Mouse events for desktop
+    avatarContainer.addEventListener('mouseenter', startAnimation);
+    avatarContainer.addEventListener('mouseleave', stopAnimation);
+
+    // Touch events for mobile
+    avatarContainer.addEventListener('touchstart', (e) => {
+      e.preventDefault(); // Prevent mouse events from firing
+      startAnimation();
+    }, { passive: false });
+
+    avatarContainer.addEventListener('touchend', () => {
+      stopAnimation();
+    });
+  }
+
+  // Mobile: click anywhere on header to scroll to top
+  function initMobileScrollToTop() {
+    if (window.innerWidth >= 768) {
+      return; // Desktop only
+    }
+
+    const header = document.getElementById('liquid-header');
+    if (!header) return;
+
+    header.style.cursor = 'pointer';
+
+    header.addEventListener('click', (e) => {
+      // Don't trigger if clicking on a link
+      if (e.target.tagName === 'A' || e.target.closest('a')) {
+        return;
+      }
+
+      // Smooth scroll to top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     });
   }
 
@@ -345,15 +425,18 @@ import { headerQuotes } from '../config/site';
   document.addEventListener('astro:page-load', () => {
     initHeaderScrollEffect();
     initAvatarHoverEffect();
+    initMobileScrollToTop();
   });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initHeaderScrollEffect();
       initAvatarHoverEffect();
+      initMobileScrollToTop();
     });
   } else {
     initHeaderScrollEffect();
     initAvatarHoverEffect();
+    initMobileScrollToTop();
   }
 </script>

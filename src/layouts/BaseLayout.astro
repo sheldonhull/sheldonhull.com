@@ -67,15 +67,18 @@ const {
           var(--spotlight-color-3, rgba(255, 88, 116, 0.15)) 50%,
           transparent 75%
         );
-        opacity: 0;
+        opacity: var(--spotlight-opacity, 1);
         transition: opacity 0.3s ease, background-image 0.5s ease;
         mix-blend-mode: screen;
         will-change: opacity;
         transform: translateZ(0);
       }
 
-      body:hover .spotlight-effect {
-        opacity: var(--spotlight-opacity, 1);
+      /* Disable spotlight effect on mobile */
+      @media (max-width: 767px) {
+        .spotlight-effect {
+          display: none !important;
+        }
       }
 
       .ripple-container {
@@ -118,13 +121,18 @@ const {
     </style>
 
     <script>
-      // Mouse tracking
-      document.addEventListener('mousemove', (e) => {
-        const x = (e.clientX / window.innerWidth) * 100;
-        const y = (e.clientY / window.innerHeight) * 100;
+      // Mouse and touch tracking
+      function updateCursorPosition(clientX, clientY) {
+        const x = (clientX / window.innerWidth) * 100;
+        const y = (clientY / window.innerHeight) * 100;
 
         document.documentElement.style.setProperty('--mouse-x', `${x}%`);
         document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+      }
+
+      // Mouse tracking for desktop only (no touch tracking for mobile)
+      document.addEventListener('mousemove', (e) => {
+        updateCursorPosition(e.clientX, e.clientY);
       });
 
       // Click ripple effect with color cycling
