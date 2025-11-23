@@ -21,60 +21,41 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 ---
 
 <BaseLayout title="Posts - Sheldon Hull" description="Technical writing on software engineering, Go, DevOps, and cloud technologies">
-  <div class="max-w-4xl mx-auto">
-    <div class="mb-12">
-      <h1 class="text-4xl font-bold mb-4 synthwave-gradient">Posts</h1>
-      <p style="color: var(--sw-text-secondary);">
-        Thoughts on software engineering, development practices, and lessons learned.
-      </p>
+  <div class="archive-container">
+    <div class="archive-header">
+      <h1 class="archive-title">Archive</h1>
+      <div class="archive-grid-bg"></div>
     </div>
 
-    <div class="space-y-12">
-      {years.map(year => (
-        <div key={year}>
-          <h2 class="text-2xl font-bold mb-6 border-b pb-2" style="color: var(--sw-cyan); border-color: rgba(255, 88, 116, 0.3);">
-            {year}
-          </h2>
-          <div class="space-y-4">
-            {postsByYear[Number(year)].map(post => {
-              const humanizedDate = humanizeDate(post.data.date);
+    <div class="years-container">
+      {years.map((year, yearIndex) => (
+        <div key={year} class="year-section">
+          <div class="year-header">
+            <span class="year-number">{year}</span>
+            <div class="year-line"></div>
+            <span class="post-count">{postsByYear[Number(year)].length}</span>
+          </div>
+
+          <div class="posts-columns">
+            {postsByYear[Number(year)].map((post, index) => {
+              const monthDay = post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
               const formattedDate = formatDate(post.data.date);
 
               return (
                 <a
                   href={`/${post.data.slug || post.slug}`}
-                  class="block group"
+                  class="post-item"
                 >
-                  <article class="flex items-baseline gap-4 py-3 px-4 -mx-4 rounded-lg transition-colors hover:bg-[var(--sw-bg-secondary)]">
-                    <div class="flex-shrink-0">
-                      <time
-                        datetime={post.data.date.toISOString()}
-                        class="text-sm tabular-nums"
-                        style="color: var(--sw-text-muted);"
-                        title={formattedDate}
-                      >
-                        {humanizedDate}
-                      </time>
-                    </div>
-                    <div class="flex-grow min-w-0">
-                      <h3 class="group-hover:text-[var(--sw-pink)] transition-colors font-medium" style="color: var(--sw-text-primary);">
-                        {post.data.title}
-                      </h3>
-                      {post.data.tags && post.data.tags.length > 0 && (
-                        <div class="flex gap-2 mt-1 flex-wrap">
-                          {post.data.tags.map(tag => (
-                            <span
-                              key={tag}
-                              class="text-xs px-2 py-0.5 rounded"
-                              style="color: var(--sw-cyan); background: var(--sw-bg-tertiary); border: 1px solid rgba(127, 219, 202, 0.3);"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </article>
+                  <time
+                    datetime={post.data.date.toISOString()}
+                    class="post-date"
+                    title={formattedDate}
+                  >
+                    {monthDay}
+                  </time>
+                  <h3 class="post-title">
+                    {post.data.title}
+                  </h3>
                 </a>
               );
             })}
@@ -83,4 +64,188 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
       ))}
     </div>
   </div>
+
+  <style>
+    .archive-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .archive-header {
+      position: relative;
+      margin-bottom: 3rem;
+      overflow: hidden;
+    }
+
+    .archive-title {
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 900;
+      background: linear-gradient(
+        135deg,
+        var(--sw-cyan) 0%,
+        var(--sw-purple) 50%,
+        var(--sw-pink) 100%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      letter-spacing: -0.05em;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 0 30px rgba(127, 219, 202, 0.3));
+    }
+
+    .archive-grid-bg {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 200px;
+      transform: translateY(-50%) perspective(500px) rotateX(60deg);
+      background-image:
+        linear-gradient(rgba(127, 219, 202, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(127, 219, 202, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.3;
+      z-index: 1;
+    }
+
+    .years-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .year-section {
+      position: relative;
+    }
+
+    .year-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      position: sticky;
+      top: 0;
+      background: var(--sw-bg-primary);
+      padding: 0.75rem 0;
+      z-index: 10;
+    }
+
+    .year-number {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--sw-cyan);
+      text-shadow: 0 0 20px rgba(127, 219, 202, 0.5);
+      letter-spacing: -0.05em;
+      flex-shrink: 0;
+      min-width: 80px;
+    }
+
+    .year-line {
+      flex-grow: 1;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 88, 116, 0.5) 0%,
+        rgba(127, 219, 202, 0.2) 100%
+      );
+    }
+
+    .post-count {
+      font-size: 0.875rem;
+      color: var(--sw-text-muted);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+      min-width: 30px;
+      text-align: right;
+    }
+
+    .posts-columns {
+      column-count: 3;
+      column-gap: 2rem;
+      column-fill: balance;
+    }
+
+    @media (max-width: 1024px) {
+      .posts-columns {
+        column-count: 2;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .posts-columns {
+        column-count: 1;
+      }
+    }
+
+    .post-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      align-items: baseline;
+      border-left: 2px solid transparent;
+    }
+
+    .post-item:hover {
+      background: rgba(127, 219, 202, 0.05);
+      border-left-color: var(--sw-pink);
+      padding-left: 0.75rem;
+    }
+
+    .post-date {
+      font-size: 0.75rem;
+      color: var(--sw-text-muted);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+      width: 50px;
+      text-align: right;
+    }
+
+    .post-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--sw-text-primary);
+      line-height: 1.4;
+      margin: 0;
+      transition: color 0.2s ease;
+    }
+
+    .post-item:hover .post-title {
+      color: var(--sw-pink);
+    }
+
+    .post-item:hover .post-date {
+      color: var(--sw-cyan);
+    }
+
+    @media (max-width: 768px) {
+      .archive-container {
+        padding: 1.5rem;
+      }
+
+      .year-number {
+        font-size: 1.5rem;
+        min-width: 60px;
+      }
+
+      .archive-header {
+        margin-bottom: 2rem;
+      }
+
+      .posts-columns {
+        column-gap: 1.5rem;
+      }
+    }
+  </style>
 </BaseLayout>
