@@ -377,8 +377,9 @@ const finalStats = getFinalStats();
   /* Larger Animated Sprite */
   .sprite-display {
     position: fixed;
-    top: 30px;
-    right: 30px;
+    top: 50%;
+    right: 50px;
+    transform: translateY(-50%);
     z-index: 300;
     display: flex;
     flex-direction: column;
@@ -483,7 +484,7 @@ const finalStats = getFinalStats();
     position: fixed;
     left: 50%;
     top: 50%;
-    transform: translate(-420px, -50%);
+    transform: translate(-550px, -50%);
     z-index: 200;
     width: 260px;
     background: rgba(16, 21, 38, 0.95);
@@ -570,7 +571,6 @@ const finalStats = getFinalStats();
     position: relative;
     width: 450px;
     height: 680px;
-    perspective: 1500px;
   }
 
   .card-stack {
@@ -582,26 +582,25 @@ const finalStats = getFinalStats();
   .card-wrapper {
     position: absolute;
     inset: 0;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
-    transform-style: preserve-3d;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
   }
 
-  /* Card States */
+  /* Card States - Simple scroll-to-flip animation */
   .card-wrapper.hidden {
-    transform: translateX(50px) translateZ(-100px) rotateY(-15deg);
+    transform: scale(0.9) translateY(20px);
     opacity: 0;
     pointer-events: none;
   }
 
   .card-wrapper.active {
-    transform: translateX(0) translateZ(0) rotateY(0deg);
+    transform: scale(1) translateY(0);
     opacity: 1;
     pointer-events: auto;
   }
 
   .card-wrapper.previous {
-    transform: translateX(-50px) translateZ(-100px) rotateY(15deg);
-    opacity: 0.3;
+    transform: scale(0.9) translateY(-20px);
+    opacity: 0;
     pointer-events: none;
   }
 
@@ -610,7 +609,6 @@ const finalStats = getFinalStats();
     width: 100%;
     height: 100%;
     position: relative;
-    transform-style: preserve-3d;
   }
 
   .card-face {
