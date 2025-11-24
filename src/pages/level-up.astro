@@ -272,20 +272,22 @@ const finalStats = getFinalStats();
   let previousStats: { [key: string]: number } = {};
 
   function updateStats(index: number) {
+    const statsPanel = document.getElementById('statsPanel');
+    const spriteDisplay = document.querySelector('.sprite-display') as HTMLElement;
+    const progressIndicator = document.querySelector('.progress-indicator') as HTMLElement;
+
     if (index >= yearLevels.length) {
-      // Final card - hide stats panel and sprite
-      const statsPanel = document.getElementById('statsPanel');
-      const spriteDisplay = document.querySelector('.sprite-display') as HTMLElement;
+      // Final card - hide stats panel, sprite, and progress for full-page view
       if (statsPanel) statsPanel.style.display = 'none';
       if (spriteDisplay) spriteDisplay.style.display = 'none';
+      if (progressIndicator) progressIndicator.style.display = 'none';
       return;
     }
 
-    // Show stats panel and sprite for regular cards
-    const statsPanel = document.getElementById('statsPanel');
-    const spriteDisplay = document.querySelector('.sprite-display') as HTMLElement;
+    // Show UI elements for regular cards
     if (statsPanel) statsPanel.style.display = 'block';
     if (spriteDisplay) spriteDisplay.style.display = 'flex';
+    if (progressIndicator) progressIndicator.style.display = 'block';
 
     const stats = calculateCumulativeStats(index);
     const xp = calculateTotalXP(index);
@@ -323,7 +325,12 @@ const finalStats = getFinalStats();
   }
 
   function updateCard(index: number) {
-    if (index < 0 || index >= totalCards) return;
+    // Wrap around navigation
+    if (index < 0) {
+      index = totalCards - 1; // Go to last card (final page)
+    } else if (index >= totalCards) {
+      index = 0; // Go back to first card
+    }
 
     currentIndex = index;
 
@@ -350,25 +357,21 @@ const finalStats = getFinalStats();
       progressText!.textContent = 'Journey Complete';
     }
 
-    // Update navigation buttons
-    if (navPrev) navPrev.style.opacity = currentIndex === 0 ? '0.3' : '1';
-    if (navNext) navNext.style.opacity = currentIndex === totalCards - 1 ? '0.3' : '1';
+    // Update navigation buttons - always enabled with wrap-around
+    if (navPrev) navPrev.style.opacity = '1';
+    if (navNext) navNext.style.opacity = '1';
 
     // Play random sprite animation
     playRandomAnimation();
   }
 
-  // Navigation handlers
+  // Navigation handlers - with wrap-around
   navPrev?.addEventListener('click', () => {
-    if (currentIndex > 0) {
-      updateCard(currentIndex - 1);
-    }
+    updateCard(currentIndex - 1);
   });
 
   navNext?.addEventListener('click', () => {
-    if (currentIndex < totalCards - 1) {
-      updateCard(currentIndex + 1);
-    }
+    updateCard(currentIndex + 1);
   });
 
   // Keyboard navigation
