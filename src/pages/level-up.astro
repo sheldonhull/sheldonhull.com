@@ -107,14 +107,11 @@ const finalStats = getFinalStats();
                           <div class="achievement-stats">
                             <span class="xp-tag">+{achievement.xp} XP</span>
                             <div class="attrs-mini">
-                              {achievement.attributes.slice(0, 3).map((attr) => (
+                              {achievement.attributes.map((attr) => (
                                 <span class="attr-mini" class:list={[attr.value < 0 && 'neg']}>
                                   {attr.name} {attr.value > 0 ? '+' : ''}{attr.value}
                                 </span>
                               ))}
-                              {achievement.attributes.length > 3 && (
-                                <span class="attr-mini more">+{achievement.attributes.length - 3} more</span>
-                              )}
                             </div>
                           </div>
                         </div>
@@ -135,15 +132,15 @@ const finalStats = getFinalStats();
           </div>
         ))}
 
-        {/* Final Stats Card - Full Spread */}
+        {/* Final Stats Card - Full Page Spread */}
         <div
           class="card-wrapper final-card-wrapper"
           data-index={yearLevels.length}
           style={`z-index: 0;`}
         >
-          <div class="card-inner">
-            <div class="card-face card-front">
-              <div class="card-portrait final-portrait">
+          <div class="card-inner final-card-inner">
+            <div class="card-face card-front final-card-front">
+              <div class="final-page-layout">
                 {/* Left Column - Avatar and Summary */}
                 <div class="final-left-column">
                   <div class="final-avatar-card">
@@ -272,13 +269,10 @@ const finalStats = getFinalStats();
     }, 800);
   }
 
-  let previousStats: { [key: string]: number } = {};
-  let isFirstLoad = true;
-
   function updateStats(index: number) {
     if (index >= yearLevels.length) {
       // Final card - show final stats message
-      statsList!.innerHTML = '<div class="stat-item final-stats-note">See final stats on card →</div>';
+      statsList!.innerHTML = '<div class="stat-item final-stats-note">See final stats on page →</div>';
       xpDisplay!.textContent = `${calculateTotalXP(yearLevels.length - 1)} XP`;
       return;
     }
@@ -286,37 +280,21 @@ const finalStats = getFinalStats();
     const stats = calculateCumulativeStats(index);
     const xp = calculateTotalXP(index);
 
-    // Get all unique stat names sorted alphabetically
-    const allStatNames = Object.keys(stats).sort();
+    // Only show stats that have been earned so far (incremental display)
+    const earnedStatNames = Object.keys(stats).sort();
 
-    statsList!.innerHTML = allStatNames.map((name) => {
+    statsList!.innerHTML = earnedStatNames.map((name) => {
       const value = stats[name];
-      const prevValue = previousStats[name] || 0;
-      const change = value - prevValue;
-
-      // Don't show change on first load
-      const changeHtml = !isFirstLoad && change !== 0 ? `
-        <span class="stat-change ${change > 0 ? 'positive' : 'negative'}">
-          ${change > 0 ? '+' : ''}${change}
-        </span>
-      ` : '';
 
       return `
         <div class="stat-item ${value < 0 ? 'negative' : ''}">
           <span class="stat-name">${name}</span>
-          <div class="stat-value-container">
-            <span class="stat-value">${value > 0 ? '+' : ''}${value}</span>
-            ${changeHtml}
-          </div>
+          <span class="stat-value">${value > 0 ? '+' : ''}${value}</span>
         </div>
       `;
     }).join('');
 
     xpDisplay!.textContent = `${xp} XP`;
-
-    // Store current stats for next comparison
-    previousStats = { ...stats };
-    isFirstLoad = false;
   }
 
   function updateCard(index: number) {
@@ -612,24 +590,6 @@ const finalStats = getFinalStats();
     color: #f87171;
   }
 
-  .stat-change {
-    font-size: 12px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Monaco', monospace;
-  }
-
-  .stat-change.positive {
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.15);
-  }
-
-  .stat-change.negative {
-    color: #f87171;
-    background: rgba(248, 113, 113, 0.15);
-  }
-
   .stats-footer {
     padding-top: 12px;
     border-top: 2px solid rgba(139, 92, 246, 0.4);
@@ -903,12 +863,6 @@ const finalStats = getFinalStats();
     color: #f87171;
   }
 
-  .attr-mini.more {
-    background: rgba(139, 92, 246, 0.15);
-    border-color: rgba(139, 92, 246, 0.4);
-    color: #a78bfa;
-  }
-
   /* Card Footer Portrait */
   .card-footer-portrait {
     padding: 18px 24px;
@@ -931,12 +885,37 @@ const finalStats = getFinalStats();
     font-weight: 800;
   }
 
-  /* Final Card Styles - Full Spread */
-  .final-portrait {
+  /* Final Card Styles - Full Page Spread */
+  .final-card-wrapper.active {
+    /* Override card constraints to use full viewport */
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    transform: none !important;
+    z-index: 1000 !important;
+  }
+
+  .final-card-inner {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .final-card-front {
+    background: linear-gradient(135deg, rgba(16, 21, 38, 0.98) 0%, rgba(30, 27, 75, 0.98) 100%);
+    border: none;
+    border-radius: 0;
+    overflow-y: auto;
+  }
+
+  .final-page-layout {
     display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 24px;
-    padding: 24px;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+    padding: 60px 80px;
+    min-height: 100vh;
+    max-width: 1400px;
+    margin: 0 auto;
   }
 
   /* Left Column - Avatar & Summary */
@@ -1020,23 +999,6 @@ const finalStats = getFinalStats();
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow-y: auto;
-    max-height: 700px;
-    padding-right: 8px;
-  }
-
-  .final-right-column::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .final-right-column::-webkit-scrollbar-track {
-    background: rgba(139, 92, 246, 0.1);
-    border-radius: 3px;
-  }
-
-  .final-right-column::-webkit-scrollbar-thumb {
-    background: rgba(139, 92, 246, 0.5);
-    border-radius: 3px;
   }
 
   .final-header {
