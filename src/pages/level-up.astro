@@ -280,12 +280,11 @@ const finalStats = getFinalStats();
     const stats = calculateCumulativeStats(index);
     const xp = calculateTotalXP(index);
 
-    // Only show stats that have been earned so far (incremental display)
-    const earnedStatNames = Object.keys(stats).sort();
+    // Sort stats by absolute value (highest to lowest)
+    const sortedStats = Object.entries(stats)
+      .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
 
-    statsList!.innerHTML = earnedStatNames.map((name) => {
-      const value = stats[name];
-
+    statsList!.innerHTML = sortedStats.map(([name, value]) => {
       return `
         <div class="stat-item ${value < 0 ? 'negative' : ''}">
           <span class="stat-name">${name}</span>
