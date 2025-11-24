@@ -935,19 +935,29 @@ const finalStats = getFinalStats();
   .final-card-wrapper.active {
     /* Override card constraints to use full viewport */
     position: fixed !important;
-    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
     transform: none !important;
     z-index: 1000 !important;
+    margin: 0 !important;
   }
 
   .final-card-inner {
     width: 100% !important;
     height: 100% !important;
+    position: relative !important;
   }
 
   .final-card-front {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
     background: linear-gradient(135deg, rgba(16, 21, 38, 0.98) 0%, rgba(30, 27, 75, 0.98) 100%);
     border: none;
     border-radius: 0;
@@ -961,7 +971,9 @@ const finalStats = getFinalStats();
     padding: 60px 80px;
     min-height: 100vh;
     max-width: 1400px;
+    width: 100%;
     margin: 0 auto;
+    box-sizing: border-box;
   }
 
   /* Left Column - Avatar & Summary */
