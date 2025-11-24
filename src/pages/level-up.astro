@@ -269,13 +269,23 @@ const finalStats = getFinalStats();
     }, 800);
   }
 
+  let previousStats: { [key: string]: number } = {};
+
   function updateStats(index: number) {
     if (index >= yearLevels.length) {
-      // Final card - show final stats message
-      statsList!.innerHTML = '<div class="stat-item final-stats-note">See final stats on page →</div>';
-      xpDisplay!.textContent = `${calculateTotalXP(yearLevels.length - 1)} XP`;
+      // Final card - hide stats panel and sprite
+      const statsPanel = document.getElementById('statsPanel');
+      const spriteDisplay = document.querySelector('.sprite-display') as HTMLElement;
+      if (statsPanel) statsPanel.style.display = 'none';
+      if (spriteDisplay) spriteDisplay.style.display = 'none';
       return;
     }
+
+    // Show stats panel and sprite for regular cards
+    const statsPanel = document.getElementById('statsPanel');
+    const spriteDisplay = document.querySelector('.sprite-display') as HTMLElement;
+    if (statsPanel) statsPanel.style.display = 'block';
+    if (spriteDisplay) spriteDisplay.style.display = 'flex';
 
     const stats = calculateCumulativeStats(index);
     const xp = calculateTotalXP(index);
@@ -285,15 +295,31 @@ const finalStats = getFinalStats();
       .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
 
     statsList!.innerHTML = sortedStats.map(([name, value]) => {
+      const prevValue = previousStats[name] || 0;
+      const change = value - prevValue;
+
+      // Show colored change indicator
+      const changeHtml = change !== 0 ? `
+        <span class="stat-change ${change > 0 ? 'positive' : 'negative'}">
+          ${change > 0 ? '+' : ''}${change}
+        </span>
+      ` : '';
+
       return `
         <div class="stat-item ${value < 0 ? 'negative' : ''}">
           <span class="stat-name">${name}</span>
-          <span class="stat-value">${value > 0 ? '+' : ''}${value}</span>
+          <div class="stat-value-container">
+            <span class="stat-value">${value > 0 ? '+' : ''}${value}</span>
+            ${changeHtml}
+          </div>
         </div>
       `;
     }).join('');
 
     xpDisplay!.textContent = `${xp} XP`;
+
+    // Store current stats for next comparison
+    previousStats = { ...stats };
   }
 
   function updateCard(index: number) {
@@ -587,6 +613,24 @@ const finalStats = getFinalStats();
 
   .stat-item.negative .stat-value {
     color: #f87171;
+  }
+
+  .stat-change {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Monaco', monospace;
+  }
+
+  .stat-change.positive {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.15);
+  }
+
+  .stat-change.negative {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.15);
   }
 
   .stats-footer {
