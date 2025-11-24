@@ -131,85 +131,77 @@ const finalStats = getFinalStats();
             </div>
           </div>
         ))}
+      </div>
+    </div>
 
-        {/* Final Stats Card - Full Page Spread */}
-        <div
-          class="card-wrapper final-card-wrapper"
-          data-index={yearLevels.length}
-          style={`z-index: 0;`}
-        >
-          <div class="card-inner final-card-inner">
-            <div class="card-face card-front final-card-front">
-              <div class="final-page-layout">
-                {/* Left Column - Avatar and Summary */}
-                <div class="final-left-column">
-                  <div class="final-avatar-card">
-                    <div class="final-mage-portrait">
-                      <svg viewBox="0 0 32 32" class="final-mage-sprite">
-                        <rect x="10" y="3" width="12" height="2" fill="#6b46c1"/>
-                        <rect x="8" y="5" width="16" height="2" fill="#6b46c1"/>
-                        <rect x="7" y="7" width="18" height="3" fill="#7c3aed"/>
-                        <rect x="12" y="10" width="8" height="6" fill="#d4a574"/>
-                        <rect x="13" y="12" width="2" height="1" fill="#4a2511"/>
-                        <rect x="17" y="12" width="2" height="1" fill="#4a2511"/>
-                        <rect x="14" y="14" width="4" height="1" fill="#c48b5c" opacity="0.6"/>
-                        <rect x="9" y="16" width="14" height="2" fill="#8b5cf6"/>
-                        <rect x="8" y="18" width="16" height="5" fill="#7c3aed"/>
-                        <rect x="7" y="23" width="18" height="4" fill="#6b21a8"/>
-                        <rect x="9" y="27" width="5" height="4" fill="#5b21b6"/>
-                        <rect x="18" y="27" width="5" height="4" fill="#5b21b6"/>
-                        <rect x="26" y="14" width="2" height="15" fill="#92400e"/>
-                        <rect x="25" y="12" width="4" height="4" fill="#fbbf24" opacity="0.8"/>
-                        <circle cx="27" cy="14" r="2.5" fill="#fde047" opacity="0.9"/>
-                        <circle cx="27" cy="14" r="3.5" fill="#fbbf24" opacity="0.3"/>
-                      </svg>
-                    </div>
-                    <h3 class="final-avatar-title">Level {yearLevels.length} Mage</h3>
-                  </div>
+    {/* Separate Final Stats Section - Outside Card Navigation */}
+    <div class="final-stats-section" id="finalStatsSection">
+      <div class="final-page-layout">
+        {/* Left Column - Avatar and Summary */}
+        <div class="final-left-column">
+          <div class="final-avatar-card">
+            <div class="final-mage-portrait">
+              <svg viewBox="0 0 32 32" class="final-mage-sprite">
+                <rect x="10" y="3" width="12" height="2" fill="#6b46c1"/>
+                <rect x="8" y="5" width="16" height="2" fill="#6b46c1"/>
+                <rect x="7" y="7" width="18" height="3" fill="#7c3aed"/>
+                <rect x="12" y="10" width="8" height="6" fill="#d4a574"/>
+                <rect x="13" y="12" width="2" height="1" fill="#4a2511"/>
+                <rect x="17" y="12" width="2" height="1" fill="#4a2511"/>
+                <rect x="14" y="14" width="4" height="1" fill="#c48b5c" opacity="0.6"/>
+                <rect x="9" y="16" width="14" height="2" fill="#8b5cf6"/>
+                <rect x="8" y="18" width="16" height="5" fill="#7c3aed"/>
+                <rect x="7" y="23" width="18" height="4" fill="#6b21a8"/>
+                <rect x="9" y="27" width="5" height="4" fill="#5b21b6"/>
+                <rect x="18" y="27" width="5" height="4" fill="#5b21b6"/>
+                <rect x="26" y="14" width="2" height="15" fill="#92400e"/>
+                <rect x="25" y="12" width="4" height="4" fill="#fbbf24" opacity="0.8"/>
+                <circle cx="27" cy="14" r="2.5" fill="#fde047" opacity="0.9"/>
+                <circle cx="27" cy="14" r="3.5" fill="#fbbf24" opacity="0.3"/>
+              </svg>
+            </div>
+            <h3 class="final-avatar-title">Level {yearLevels.length} Mage</h3>
+          </div>
 
-                  <div class="final-summary-stats">
-                    <div class="final-summary-item">
-                      <FAIcon style="solid" icon="trophy" />
-                      <span class="summary-value">{yearLevels.length}</span>
-                      <span class="summary-label">Levels</span>
-                    </div>
-                    <div class="final-summary-item">
-                      <FAIcon style="solid" icon="star" />
-                      <span class="summary-value">{totalXP}</span>
-                      <span class="summary-label">Total XP</span>
-                    </div>
-                    <div class="final-summary-item">
-                      <FAIcon style="solid" icon="award" />
-                      <span class="summary-value">{totalAchievements}</span>
-                      <span class="summary-label">Achievements</span>
-                    </div>
-                  </div>
-                </div>
+          <div class="final-summary-stats">
+            <div class="final-summary-item">
+              <FAIcon style="solid" icon="trophy" />
+              <span class="summary-value">{yearLevels.length}</span>
+              <span class="summary-label">Levels</span>
+            </div>
+            <div class="final-summary-item">
+              <FAIcon style="solid" icon="star" />
+              <span class="summary-value">{totalXP}</span>
+              <span class="summary-label">Total XP</span>
+            </div>
+            <div class="final-summary-item">
+              <FAIcon style="solid" icon="award" />
+              <span class="summary-value">{totalAchievements}</span>
+              <span class="summary-label">Achievements</span>
+            </div>
+          </div>
+        </div>
 
-                {/* Right Column - All Attributes */}
-                <div class="final-right-column">
-                  <div class="final-header">
-                    <h2 class="final-title">Journey Complete</h2>
-                    <p class="final-subtitle">Character Stats & Achievements</p>
-                  </div>
+        {/* Right Column - All Attributes */}
+        <div class="final-right-column">
+          <div class="final-header">
+            <h2 class="final-title">Journey Complete</h2>
+            <p class="final-subtitle">Character Stats & Achievements</p>
+          </div>
 
-                  <div class="final-attributes-full">
-                    <h3 class="attrs-title-final">Final Attributes</h3>
-                    <div class="attrs-full-grid">
-                      {Object.entries(finalStats)
-                        .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
-                        .map(([name, value]) => (
-                          <div class="attr-full-item">
-                            <span class="attr-full-name">{name}</span>
-                            <span class="attr-full-value" class:list={[value < 0 && 'neg']}>
-                              {value > 0 ? '+' : ''}{value}
-                            </span>
-                          </div>
-                        ))}
-                    </div>
+          <div class="final-attributes-full">
+            <h3 class="attrs-title-final">Final Attributes</h3>
+            <div class="attrs-full-grid">
+              {Object.entries(finalStats)
+                .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+                .map(([name, value]) => (
+                  <div class="attr-full-item">
+                    <span class="attr-full-name">{name}</span>
+                    <span class="attr-full-value" class:list={[value < 0 && 'neg']}>
+                      {value > 0 ? '+' : ''}{value}
+                    </span>
                   </div>
-                </div>
-              </div>
+                ))}
             </div>
           </div>
         </div>
@@ -235,10 +227,11 @@ const finalStats = getFinalStats();
   import { yearLevels, calculateCumulativeStats, calculateTotalXP, getTopStats } from '../data/levelUpData';
 
   let currentIndex = 0;
-  const totalCards = yearLevels.length + 1; // +1 for final card
+  let showingFinalStats = false;
 
   const cardStack = document.getElementById('cardStack');
-  const cards = document.querySelectorAll('.card-wrapper');
+  const cardStackContainer = document.querySelector('.card-stack-container');
+  const cards = document.querySelectorAll('.card-wrapper:not(.final-card-wrapper)');
   const navPrev = document.getElementById('navPrev');
   const navNext = document.getElementById('navNext');
   const statsPanel = document.getElementById('statsPanel');
@@ -246,6 +239,9 @@ const finalStats = getFinalStats();
   const xpDisplay = document.getElementById('xpDisplay');
   const progressText = document.getElementById('progressText');
   const mageSprite = document.getElementById('mageSprite');
+  const finalStatsSection = document.getElementById('finalStatsSection');
+  const spriteDisplay = document.querySelector('.sprite-display') as HTMLElement;
+  const progressIndicator = document.querySelector('.progress-indicator') as HTMLElement;
 
   // Sprite animation variants
   const spriteAnimations = ['walk', 'scratch', 'shift', 'twirl'];
@@ -272,23 +268,6 @@ const finalStats = getFinalStats();
   let previousStats: { [key: string]: number } = {};
 
   function updateStats(index: number) {
-    const statsPanel = document.getElementById('statsPanel');
-    const spriteDisplay = document.querySelector('.sprite-display') as HTMLElement;
-    const progressIndicator = document.querySelector('.progress-indicator') as HTMLElement;
-
-    if (index >= yearLevels.length) {
-      // Final card - hide stats panel, sprite, and progress for full-page view
-      if (statsPanel) statsPanel.style.display = 'none';
-      if (spriteDisplay) spriteDisplay.style.display = 'none';
-      if (progressIndicator) progressIndicator.style.display = 'none';
-      return;
-    }
-
-    // Show UI elements for regular cards
-    if (statsPanel) statsPanel.style.display = 'block';
-    if (spriteDisplay) spriteDisplay.style.display = 'flex';
-    if (progressIndicator) progressIndicator.style.display = 'block';
-
     const stats = calculateCumulativeStats(index);
     const xp = calculateTotalXP(index);
 
@@ -324,15 +303,59 @@ const finalStats = getFinalStats();
     previousStats = { ...stats };
   }
 
+  function showFinalStats() {
+    showingFinalStats = true;
+
+    // Hide card navigation elements
+    if (cardStackContainer) cardStackContainer.style.display = 'none';
+    if (statsPanel) statsPanel.style.display = 'none';
+    if (spriteDisplay) spriteDisplay.style.display = 'none';
+    if (progressIndicator) progressIndicator.style.display = 'none';
+
+    // Show final stats section
+    if (finalStatsSection) finalStatsSection.style.display = 'block';
+
+    // Update progress text
+    if (progressText) progressText.textContent = 'Journey Complete';
+  }
+
+  function showCards() {
+    showingFinalStats = false;
+
+    // Show card navigation elements
+    if (cardStackContainer) cardStackContainer.style.display = 'block';
+    if (statsPanel) statsPanel.style.display = 'block';
+    if (spriteDisplay) spriteDisplay.style.display = 'flex';
+    if (progressIndicator) progressIndicator.style.display = 'block';
+
+    // Hide final stats section
+    if (finalStatsSection) finalStatsSection.style.display = 'none';
+  }
+
   function updateCard(index: number) {
-    // Wrap around navigation
-    if (index < 0) {
-      index = totalCards - 1; // Go to last card (final page)
-    } else if (index >= totalCards) {
-      index = 0; // Go back to first card
+    // Handle navigation past last card - show final stats
+    if (index >= yearLevels.length) {
+      showFinalStats();
+      return;
     }
 
-    currentIndex = index;
+    // Handle navigation before first card - go back from final stats
+    if (index < 0) {
+      if (showingFinalStats) {
+        // Coming back from final stats, show last card
+        currentIndex = yearLevels.length - 1;
+        showCards();
+      } else {
+        // Wrap to final stats
+        showFinalStats();
+        return;
+      }
+    } else {
+      currentIndex = index;
+      if (showingFinalStats) {
+        showCards();
+      }
+    }
 
     // Update card positions and flips
     cards.forEach((card, i) => {
@@ -351,15 +374,7 @@ const finalStats = getFinalStats();
     updateStats(currentIndex);
 
     // Update progress
-    if (currentIndex < yearLevels.length) {
-      progressText!.textContent = `Level ${currentIndex + 1} / ${yearLevels.length}`;
-    } else {
-      progressText!.textContent = 'Journey Complete';
-    }
-
-    // Update navigation buttons - always enabled with wrap-around
-    if (navPrev) navPrev.style.opacity = '1';
-    if (navNext) navNext.style.opacity = '1';
+    progressText!.textContent = `Level ${currentIndex + 1} / ${yearLevels.length}`;
 
     // Play random sprite animation
     playRandomAnimation();
@@ -931,40 +946,15 @@ const finalStats = getFinalStats();
     font-weight: 800;
   }
 
-  /* Final Card Styles - Full Page Spread */
-  .final-card-wrapper.active {
-    /* Override card constraints to use full viewport */
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    transform: none !important;
-    z-index: 1000 !important;
-    margin: 0 !important;
-  }
-
-  .final-card-inner {
-    width: 100% !important;
-    height: 100% !important;
-    position: relative !important;
-  }
-
-  .final-card-front {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
+  /* Final Stats Section - Separate from Card Navigation */
+  .final-stats-section {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
     background: linear-gradient(135deg, rgba(16, 21, 38, 0.98) 0%, rgba(30, 27, 75, 0.98) 100%);
-    border: none;
-    border-radius: 0;
     overflow-y: auto;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    overflow-x: hidden;
   }
 
   .final-page-layout {
