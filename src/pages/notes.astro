@@ -1,12 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { removeExtension } from '../utils/content';
 
 // Get all notes and organize by directory structure
 const allNotes = await getCollection('notes');
-
-// Helper to remove file extension
-const removeExtension = (id: string) => id.replace(/\.(md|mdx)$/, '');
 
 // Group notes by top-level category (development, etc.)
 const notesByCategory = allNotes.reduce((acc, note) => {
@@ -55,7 +53,7 @@ const categories = Object.keys(notesByCategory).sort();
 
           <div class="notes-grid">
             {notesByCategory[category].map((note) => {
-              const displayTitle = note.data.title || note.id.split('/').pop()?.replace(/\.(md|mdx)$/, '');
+              const displayTitle = note.data.title || removeExtension(note.id.split('/').pop() || '');
               
               return (
                 <a

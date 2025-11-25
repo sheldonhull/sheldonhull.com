@@ -1,12 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { removeExtension } from '../../utils/content';
 
 export async function getStaticPaths() {
   const notes = await getCollection('notes');
   return notes.map(note => {
-    // Remove .md or .mdx extension from the id
-    const slug = note.id.replace(/\.(md|mdx)$/, '');
+    const slug = removeExtension(note.id);
     return {
       params: { slug },
       props: { note },
@@ -18,7 +18,7 @@ const { note } = Astro.props;
 const { Content } = await note.render();
 
 // Extract breadcrumb from the note's path
-const pathParts = note.id.replace(/\.(md|mdx)$/, '').split('/');
+const pathParts = removeExtension(note.id).split('/');
 const breadcrumbs = pathParts.slice(0, -1); // All parts except the filename
 ---
 
