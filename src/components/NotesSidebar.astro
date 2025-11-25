@@ -4,91 +4,161 @@ import { getCollection } from 'astro:content';
 // Get all notes for the sidebar
 const allNotes = await getCollection('notes');
 
-// Build a flat list for simple rendering
-interface NoteItem {
-  title: string;
-  path: string;
-  level: number;
-  hasChildren: boolean;
+// Build hierarchical structure reflecting folder organization
+interface SidebarGroup {
+  label: string;
+  items: SidebarItem[];
+  collapsed?: boolean;
 }
 
-function buildNotesList(notes: typeof allNotes): NoteItem[] {
-  const itemsMap = new Map<string, NoteItem>();
-  const pathsWithChildren = new Set<string>();
-
-  notes.forEach(note => {
-    const parts = note.id.replace(/\.(md|mdx)$/, '').split('/').filter(p => p !== '_index');
-    
-    if (parts.length === 0) return;
-
-    // Add parent paths
-    for (let i = 0; i < parts.length; i++) {
-      const currentPath = `/notes/${parts.slice(0, i + 1).join('/')}`;
-      const isLast = i === parts.length - 1;
-      
-      if (!itemsMap.has(currentPath)) {
-        itemsMap.set(currentPath, {
-          title: isLast ? (note.data.title || parts[i]) : parts[i],
-          path: currentPath,
-          level: i,
-          hasChildren: false
-        });
-      }
-      
-      if (i > 0) {
-        const parentPath = `/notes/${parts.slice(0, i).join('/')}`;
-        pathsWithChildren.add(parentPath);
-      }
-    }
-  });
-
-  // Update hasChildren flags
-  pathsWithChildren.forEach(path => {
-    const item = itemsMap.get(path);
-    if (item) {
-      item.hasChildren = true;
-    }
-  });
-
-  // Convert to array and sort
-  const items = Array.from(itemsMap.values()).sort((a, b) => {
-    if (a.level !== b.level) return a.level - b.level;
-    return a.path.localeCompare(b.path);
-  });
-
-  return items;
+interface SidebarItem {
+  label: string;
+  href: string;
+  isActive: boolean;
 }
-
-const notesList = buildNotesList(allNotes);
 
 // Get current path for highlighting
 const currentPath = Astro.url.pathname;
+
+// Build folder structure
+const structure = new Map<string, Map<string, typeof allNotes>>();
+
+allNotes.forEach(note => {
+  const parts = note.id.replace(/\.(md|mdx)$/, '').split('/');
+  
+  // Skip index files - they're not needed in Astro (mkdocs convention)
+  const fileName = parts[parts.length - 1];
+  if (fileName === '_index' || fileName === 'index') return;
+  
+  if (parts.length === 2) {
+    // Top level: development/filename
+    const category = parts[0];
+    if (!structure.has(category)) {
+      structure.set(category, new Map());
+    }
+    const categoryMap = structure.get(category)!;
+    if (!categoryMap.has('_root')) {
+      categoryMap.set('_root', []);
+    }
+    categoryMap.get('_root')!.push(note);
+  } else if (parts.length === 3) {
+    // Second level: development/go/filename
+    const category = parts[0];
+    const subcategory = parts[1];
+    if (!structure.has(category)) {
+      structure.set(category, new Map());
+    }
+    const categoryMap = structure.get(category)!;
+    if (!categoryMap.has(subcategory)) {
+      categoryMap.set(subcategory, []);
+    }
+    categoryMap.get(subcategory)!.push(note);
+  }
+});
+
+// Convert to sidebar groups
+const sidebarGroups: SidebarGroup[] = [];
+
+Array.from(structure.entries())
+  .sort(([a], [b]) => a.localeCompare(b))
+  .forEach(([category, subcategories]) => {
+    const group: SidebarGroup = {
+      label: category.charAt(0).toUpperCase() + category.slice(1),
+      items: [],
+      collapsed: false,
+    };
+
+    // Add subcategories as nested structure
+    Array.from(subcategories.entries())
+      .sort(([a], [b]) => {
+        // Put _root items first
+        if (a === '_root') return -1;
+        if (b === '_root') return 1;
+        return a.localeCompare(b);
+      })
+      .forEach(([subcategory, notes]) => {
+        if (subcategory === '_root') {
+          // Add root-level items directly
+          notes
+            .sort((a, b) => (a.data.title || a.id).localeCompare(b.data.title || b.id))
+            .forEach(note => {
+              const notePath = `/notes/${note.id.replace(/\.(md|mdx)$/, '')}`;
+              group.items.push({
+                label: note.data.title || note.id.split('/').pop()!.replace(/\.(md|mdx)$/, ''),
+                href: notePath,
+                isActive: currentPath === notePath,
+              });
+            });
+        } else {
+          // Add subcategory header (not clickable, just a label)
+          group.items.push({
+            label: `${subcategory.charAt(0).toUpperCase() + subcategory.slice(1)}`,
+                href: '',
+                isActive: false,
+              });
+          
+          // Add items under subcategory (indented)
+          notes
+            .sort((a, b) => (a.data.title || a.id).localeCompare(b.data.title || b.id))
+            .forEach(note => {
+              const notePath = `/notes/${note.id.replace(/\.(md|mdx)$/, '')}`;
+              group.items.push({
+                label: `  ${note.data.title || note.id.split('/').pop()!.replace(/\.(md|mdx)$/, '')}`,
+                href: notePath,
+                isActive: currentPath === notePath,
+              });
+            });
+        }
+      });
+
+    sidebarGroups.push(group);
+  });
 ---
 
 <aside class="notes-sidebar" id="notes-sidebar">
   <div class="sidebar-header">
-    <h3>Notes</h3>
+    <a href="/notes" class="sidebar-title">
+      <h3>Notes</h3>
+    </a>
     <button id="sidebar-close" class="sidebar-close" aria-label="Close sidebar">
       ✕
     </button>
   </div>
+  
   <nav class="sidebar-nav">
-    <ul class="sidebar-menu">
-      {notesList.map(item => {
-        const isActive = currentPath === item.path || currentPath.startsWith(item.path + '/');
-        const itemClass = `sidebar-item level-${item.level}`;
-        const linkClass = `sidebar-link ${isActive ? 'active' : ''} ${item.hasChildren ? 'has-children' : ''}`;
-        
-        return (
-          <li class={itemClass}>
-            <a href={item.path} class={linkClass}>
-              {item.hasChildren && <span class="expand-icon">▸</span>}
-              {item.title}
-            </a>
-          </li>
-        );
-      })}
-    </ul>
+    {sidebarGroups.map((group) => (
+      <div class="sidebar-group">
+        <div class="group-label">{group.label}</div>
+        <ul class="group-items">
+          {group.items.map((item) => {
+            const isSubheader = !item.href;
+            const isIndented = item.label.startsWith('  ');
+            
+            return (
+              <li class:list={[
+                'sidebar-item',
+                { 'sidebar-subheader': isSubheader },
+                { 'sidebar-indented': isIndented },
+              ]}>
+                {isSubheader ? (
+                  <span class="sidebar-subheader-text">{item.label}</span>
+                ) : (
+                  <a
+                    href={item.href}
+                    class:list={[
+                      'sidebar-link',
+                      { 'active': item.isActive },
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))}
   </nav>
 </aside>
 
@@ -133,6 +203,11 @@ const currentPath = Astro.url.pathname;
     border-bottom: 1px solid rgba(127, 219, 202, 0.1);
   }
 
+  .sidebar-title {
+    text-decoration: none;
+    color: inherit;
+  }
+
   .sidebar-header h3 {
     margin: 0;
     color: var(--sw-cyan);
@@ -161,7 +236,20 @@ const currentPath = Astro.url.pathname;
     padding: 1rem 0;
   }
 
-  .sidebar-menu {
+  .sidebar-group {
+    margin-bottom: 2rem;
+  }
+
+  .group-label {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sw-purple);
+  }
+
+  .group-items {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -171,15 +259,31 @@ const currentPath = Astro.url.pathname;
     margin: 0;
   }
 
+  .sidebar-subheader {
+    margin-top: 1rem;
+  }
+
+  .sidebar-subheader-text {
+    display: block;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--sw-text-primary);
+  }
+
   .sidebar-link {
-    display: flex;
-    align-items: center;
+    display: block;
     padding: 0.5rem 1.5rem;
     color: var(--sw-text-secondary);
     text-decoration: none;
     transition: all 0.2s ease;
     font-size: 0.9rem;
     position: relative;
+  }
+
+  .sidebar-indented .sidebar-link {
+    padding-left: 2.5rem;
+    font-size: 0.85rem;
   }
 
   .sidebar-link:hover {
@@ -192,31 +296,11 @@ const currentPath = Astro.url.pathname;
     background: rgba(255, 88, 116, 0.1);
     border-left: 3px solid var(--sw-pink);
     padding-left: calc(1.5rem - 3px);
+    font-weight: 600;
   }
 
-  .expand-icon {
-    margin-right: 0.5rem;
-    font-size: 0.75rem;
-    transition: transform 0.2s ease;
-  }
-
-  .sidebar-item:has(.sidebar-submenu) .expand-icon {
-    transform: rotate(90deg);
-  }
-
-  .sidebar-submenu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .sidebar-submenu .sidebar-link {
-    padding-left: 2.5rem;
-    font-size: 0.85rem;
-  }
-
-  .level-1 .sidebar-submenu .sidebar-link {
-    padding-left: 3.5rem;
+  .sidebar-indented .sidebar-link.active {
+    padding-left: calc(2.5rem - 3px);
   }
 
   .sidebar-toggle {

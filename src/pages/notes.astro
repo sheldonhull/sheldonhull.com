@@ -1,101 +1,53 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-import { removeExtension } from '../utils/content';
+import NotesSidebar from '../components/NotesSidebar.astro';
 
-// Get all notes and organize by directory structure
-const allNotes = await getCollection('notes');
-
-// Group notes by top-level category (development, etc.)
-const notesByCategory = allNotes.reduce((acc, note) => {
-  const pathParts = note.id.split('/');
-  
-  // Skip _index files at the root
-  if (pathParts.length === 1) {
-    return acc;
-  }
-  
-  const category = pathParts[0]; // e.g., "development"
-  
-  if (!acc[category]) {
-    acc[category] = [];
-  }
-  
-  // Don't include _index files in the list
-  if (!note.id.endsWith('_index.md') && !note.id.endsWith('_index.mdx')) {
-    acc[category].push(note);
-  }
-  
-  return acc;
-}, {} as Record<string, typeof allNotes>);
-
-const categories = Object.keys(notesByCategory).sort();
 ---
 
 <BaseLayout title="Notes - Sheldon Hull" description="Technical notes and documentation on various development topics">
-  <div class="notes-container">
-    <div class="notes-header">
-      <h1 class="notes-title">Notes</h1>
-      <p class="notes-description">
-        A digital garden of technical notes, documentation, and references.
-      </p>
-      <div class="notes-grid-bg"></div>
-    </div>
+  <div class="notes-layout">
+    <NotesSidebar />
+    
+    <main class="notes-main">
+      <div class="notes-header">
+        <h1 class="notes-title">Notes</h1>
+        <p class="notes-description">
+          A digital garden of technical notes, documentation, and references.
+        </p>
+      </div>
 
-    <div class="categories-container">
-      {categories.map((category) => (
-        <div key={category} class="category-section">
-          <div class="category-header">
-            <h2 class="category-name">{category}</h2>
-            <div class="category-line"></div>
-            <span class="note-count">{notesByCategory[category].length}</span>
-          </div>
-
-          <div class="notes-grid">
-            {notesByCategory[category].map((note) => {
-              const displayTitle = note.data.title || removeExtension(note.id.split('/').pop() || '');
-              
-              return (
-                <a
-                  href={`/notes/${removeExtension(note.id)}`}
-                  class="note-card"
-                >
-                  <h3 class="note-title">
-                    {displayTitle}
-                  </h3>
-                  {note.data.tags && note.data.tags.length > 0 && (
-                    <div class="note-tags">
-                      {note.data.tags.slice(0, 3).map(tag => (
-                        <span key={tag} class="note-tag">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-    </div>
+      <div class="notes-content">
+        <p>Select a topic from the sidebar to view notes.</p>
+      </div>
+    </main>
   </div>
 
   <style>
-    .notes-container {
-      max-width: 1600px;
-      margin: 0 auto;
+    .notes-layout {
+      display: flex;
+      min-height: calc(100vh - 200px);
+    }
+
+    .notes-main {
+      flex: 1;
       padding: 2rem;
+      margin-left: 280px;
+      max-width: 1200px;
+    }
+
+    @media (max-width: 1024px) {
+      .notes-main {
+        margin-left: 0;
+        padding: 1.5rem;
+      }
     }
 
     .notes-header {
-      position: relative;
-      margin-bottom: 3rem;
-      overflow: visible;
+      margin-bottom: 2rem;
     }
 
     .notes-title {
-      font-size: clamp(3rem, 8vw, 5rem);
+      font-size: clamp(2.5rem, 6vw, 4rem);
       font-weight: 900;
       background: linear-gradient(
         135deg,
@@ -106,183 +58,23 @@ const categories = Object.keys(notesByCategory).sort();
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin: 0;
-      letter-spacing: -0.05em;
-      position: relative;
-      z-index: 2;
-      filter: drop-shadow(0 0 30px rgba(199, 146, 234, 0.3));
+      margin: 0 0 1rem 0;
+      letter-spacing: -0.03em;
     }
 
     .notes-description {
       color: var(--sw-text-secondary);
       font-size: 1.125rem;
-      margin-top: 1rem;
       max-width: 600px;
+      line-height: 1.6;
     }
 
-    .notes-grid-bg {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 200px;
-      transform: translateY(-50%) perspective(500px) rotateX(60deg);
-      background-image:
-        linear-gradient(rgba(199, 146, 234, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(199, 146, 234, 0.1) 1px, transparent 1px);
-      background-size: 50px 50px;
-      opacity: 0.3;
-      z-index: 1;
-    }
-
-    .categories-container {
-      display: flex;
-      flex-direction: column;
-      gap: 4rem;
-    }
-
-    .category-section {
-      position: relative;
-    }
-
-    .category-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .category-name {
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: var(--sw-purple);
-      text-shadow: 0 0 20px rgba(199, 146, 234, 0.4);
-      letter-spacing: -0.03em;
-      text-transform: capitalize;
-      flex-shrink: 0;
-    }
-
-    .category-line {
-      flex-grow: 1;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        rgba(199, 146, 234, 0.5) 0%,
-        rgba(127, 219, 202, 0.2) 100%
-      );
-    }
-
-    .note-count {
-      font-size: 0.875rem;
-      color: var(--sw-text-muted);
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      flex-shrink: 0;
-      min-width: 30px;
-      text-align: right;
-    }
-
-    .notes-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 768px) {
-      .notes-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .note-card {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      padding: 1.5rem;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: all 0.3s ease;
+    .notes-content {
+      color: var(--sw-text-secondary);
+      padding: 2rem;
       background: var(--sw-bg-secondary);
+      border-radius: 8px;
       border: 1px solid rgba(127, 219, 202, 0.1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .note-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(
-        90deg,
-        var(--sw-purple),
-        var(--sw-cyan),
-        var(--sw-pink)
-      );
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-    }
-
-    .note-card:hover::before {
-      transform: translateX(0);
-    }
-
-    .note-card:hover {
-      background: rgba(127, 219, 202, 0.05);
-      border-color: var(--sw-cyan);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    }
-
-    .note-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: var(--sw-text-primary);
-      line-height: 1.4;
-      margin: 0;
-      transition: color 0.2s ease;
-    }
-
-    .note-card:hover .note-title {
-      color: var(--sw-cyan);
-    }
-
-    .note-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .note-tag {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      background: var(--sw-bg-tertiary);
-      color: var(--sw-text-muted);
-      border: 1px solid rgba(127, 219, 202, 0.2);
-      transition: all 0.2s ease;
-    }
-
-    .note-card:hover .note-tag {
-      background: rgba(127, 219, 202, 0.1);
-      color: var(--sw-cyan);
-      border-color: var(--sw-cyan);
-    }
-
-    @media (max-width: 768px) {
-      .notes-container {
-        padding: 1.5rem;
-      }
-
-      .category-name {
-        font-size: 1.5rem;
-      }
-
-      .notes-header {
-        margin-bottom: 2rem;
-      }
     }
   </style>
 </BaseLayout>
