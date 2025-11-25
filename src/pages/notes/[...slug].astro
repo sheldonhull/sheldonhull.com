@@ -92,20 +92,21 @@ const customCrumbs = pathParts.map((part, index) => {
   <style>
     .notes-layout {
       display: flex;
+      gap: 0;
       min-height: calc(100vh - 200px);
     }
 
     .notes-content {
       flex: 1;
-      padding: 2rem;
-      margin-left: 280px;
+      padding: 2rem 3rem;
       max-width: 1200px;
+      min-width: 0;
     }
 
     @media (max-width: 1024px) {
       .notes-content {
-        margin-left: 0;
         padding: 1.5rem;
+        width: 100%;
       }
     }
 
