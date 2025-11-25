@@ -23,17 +23,27 @@ const { Content } = await note.render();
 // Extract breadcrumb from the note's path
 const pathParts = removeExtension(note.id).split('/');
 
-// Build custom breadcrumb items
-const customCrumbs = pathParts.map((part, index) => {
-  const href = '/notes/' + pathParts.slice(0, index + 1).join('/');
-  const isLast = index === pathParts.length - 1;
-  
-  return {
-    text: isLast ? note.data.title : part.charAt(0).toUpperCase() + part.slice(1),
-    href: href,
-    "aria-current": isLast ? "page" : undefined,
-  };
-});
+// Build custom breadcrumb items with proper structure
+const customCrumbs = [
+  {
+    text: 'Notes',
+    href: '/notes',
+    "aria-current": undefined,
+  },
+  ...pathParts.slice(0, -1).map((part, index) => {
+    const href = '/notes/' + pathParts.slice(0, index + 1).join('/');
+    return {
+      text: part.charAt(0).toUpperCase() + part.slice(1),
+      href: href,
+      "aria-current": undefined,
+    };
+  }),
+  {
+    text: note.data.title,
+    href: '/notes/' + pathParts.join('/'),
+    "aria-current": "page",
+  }
+];
 ---
 
 <BaseLayout title={`${note.data.title} - Notes - Sheldon Hull`} description={note.data.title}>
@@ -45,7 +55,6 @@ const customCrumbs = pathParts.map((part, index) => {
       <div class="breadcrumbs-wrapper">
         <Breadcrumbs 
           crumbs={customCrumbs}
-          indexText="Notes"
         />
       </div>
 
@@ -98,7 +107,7 @@ const customCrumbs = pathParts.map((part, index) => {
 
     .notes-content {
       flex: 1;
-      padding: 2rem 3rem;
+      padding: 2rem;
       max-width: 1200px;
       min-width: 0;
     }
@@ -111,18 +120,29 @@ const customCrumbs = pathParts.map((part, index) => {
     }
 
     .breadcrumbs-wrapper {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .breadcrumbs-wrapper :global(.breadcrumbs) {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       color: var(--sw-text-muted);
       font-size: 0.875rem;
+      padding: 0;
+      margin: 0;
+    }
+
+    .breadcrumbs-wrapper :global(.breadcrumb-item) {
+      display: inline-flex;
+      align-items: center;
     }
 
     .breadcrumbs-wrapper :global(.breadcrumb-item a) {
       color: var(--sw-cyan);
       text-decoration: none;
       transition: color 0.2s ease;
+      padding: 0;
     }
 
     .breadcrumbs-wrapper :global(.breadcrumb-item a:hover) {
@@ -131,7 +151,12 @@ const customCrumbs = pathParts.map((part, index) => {
 
     .breadcrumbs-wrapper :global(.breadcrumb-separator) {
       color: var(--sw-purple);
-      margin: 0 0.5rem;
+      margin: 0 0.25rem;
+      opacity: 0.5;
+    }
+
+    .breadcrumbs-wrapper :global(.breadcrumb-item:last-child) {
+      color: var(--sw-text-secondary);
     }
 
     .note-header {
