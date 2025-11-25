@@ -1,0 +1,230 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map(note => {
+    // Remove .md or .mdx extension from the id
+    const slug = note.id.replace(/\.(md|mdx)$/, '');
+    return {
+      params: { slug },
+      props: { note },
+    };
+  });
+}
+
+const { note } = Astro.props;
+const { Content } = await note.render();
+
+// Extract breadcrumb from the note's path
+const pathParts = note.id.replace(/\.(md|mdx)$/, '').split('/');
+const breadcrumbs = pathParts.slice(0, -1); // All parts except the filename
+---
+
+<BaseLayout title={`${note.data.title} - Notes - Sheldon Hull`} description={note.data.title}>
+  <article class="max-w-4xl mx-auto">
+    <!-- Back link and breadcrumbs -->
+    <div class="mb-8">
+      <a
+        href="/notes"
+        class="inline-flex items-center gap-2 transition-colors hover:text-[var(--sw-cyan)] text-sm mb-2"
+        style="color: var(--sw-text-secondary);"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to notes
+      </a>
+      
+      {breadcrumbs.length > 0 && (
+        <div class="flex items-center gap-2 text-sm" style="color: var(--sw-text-muted);">
+          <span>notes</span>
+          {breadcrumbs.map((crumb, index) => (
+            <>
+              <span style="color: var(--sw-purple);">/</span>
+              <span class="capitalize">{crumb}</span>
+            </>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <!-- Note header -->
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4 synthwave-gradient">
+        {note.data.title}
+      </h1>
+      
+      <div class="flex items-center gap-4 text-sm flex-wrap" style="color: var(--sw-text-muted);">
+        {note.data.date && (
+          <time datetime={note.data.date.toISOString()}>
+            Updated: {note.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+          </time>
+        )}
+        {note.data.lastmod && (
+          <>
+            <span style="color: var(--sw-purple);">•</span>
+            <time datetime={note.data.lastmod.toISOString()}>
+              Last modified: {note.data.lastmod.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+            </time>
+          </>
+        )}
+      </div>
+      
+      {note.data.tags && note.data.tags.length > 0 && (
+        <div class="flex gap-2 mt-4 flex-wrap">
+          {note.data.tags.map(tag => (
+            <span
+              key={tag}
+              class="text-xs px-3 py-1 rounded-full"
+              style="color: var(--sw-purple); background: var(--sw-bg-tertiary); border: 1px solid rgba(199, 146, 234, 0.3);"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <!-- Note content -->
+    <div class="prose prose-invert max-w-none">
+      <style>
+        .prose {
+          --tw-prose-body: var(--sw-text-secondary);
+          --tw-prose-headings: var(--sw-text-primary);
+          --tw-prose-links: var(--sw-cyan);
+          --tw-prose-bold: var(--sw-text-primary);
+          --tw-prose-code: var(--sw-pink);
+          --tw-prose-pre-bg: var(--sw-bg-tertiary);
+          --tw-prose-quotes: var(--sw-purple);
+        }
+
+        .prose :global(h2),
+        .prose :global(h3),
+        .prose :global(h4) {
+          color: var(--sw-text-primary);
+          font-weight: 700;
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+        }
+
+        .prose :global(h2) {
+          font-size: 1.875rem;
+          border-bottom: 2px solid rgba(199, 146, 234, 0.2);
+          padding-bottom: 0.5rem;
+        }
+
+        .prose :global(h3) {
+          font-size: 1.5rem;
+        }
+
+        .prose :global(h4) {
+          font-size: 1.25rem;
+        }
+
+        .prose :global(a) {
+          color: var(--sw-cyan);
+          text-decoration: none;
+          border-bottom: 1px solid rgba(127, 219, 202, 0.3);
+          transition: all 0.2s ease;
+        }
+
+        .prose :global(a:hover) {
+          color: var(--sw-pink);
+          border-bottom-color: var(--sw-pink);
+        }
+
+        .prose :global(code) {
+          color: var(--sw-pink);
+          background: var(--sw-bg-tertiary);
+          padding: 0.2em 0.4em;
+          border-radius: 4px;
+          font-size: 0.9em;
+        }
+
+        .prose :global(pre) {
+          background: var(--sw-bg-tertiary) !important;
+          border: 1px solid rgba(127, 219, 202, 0.1);
+          border-radius: 8px;
+          padding: 1.5rem !important;
+          overflow-x: auto;
+        }
+
+        .prose :global(pre code) {
+          background: transparent;
+          padding: 0;
+          color: var(--sw-text-primary);
+        }
+
+        .prose :global(blockquote) {
+          border-left: 4px solid var(--sw-purple);
+          padding-left: 1.5rem;
+          color: var(--sw-text-secondary);
+          font-style: italic;
+          background: rgba(199, 146, 234, 0.05);
+          padding: 1rem 1.5rem;
+          border-radius: 4px;
+        }
+
+        .prose :global(ul),
+        .prose :global(ol) {
+          color: var(--sw-text-secondary);
+        }
+
+        .prose :global(li) {
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .prose :global(table) {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 2rem 0;
+        }
+
+        .prose :global(th),
+        .prose :global(td) {
+          padding: 0.75rem;
+          border: 1px solid rgba(127, 219, 202, 0.2);
+        }
+
+        .prose :global(th) {
+          background: rgba(199, 146, 234, 0.1);
+          color: var(--sw-text-primary);
+          font-weight: 600;
+        }
+
+        .prose :global(img) {
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .prose :global(hr) {
+          border: none;
+          height: 1px;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(127, 219, 202, 0.3),
+            transparent
+          );
+          margin: 3rem 0;
+        }
+
+        .synthwave-gradient {
+          background: linear-gradient(
+            135deg,
+            var(--sw-purple) 0%,
+            var(--sw-cyan) 50%,
+            var(--sw-pink) 100%
+          );
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+      </style>
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
