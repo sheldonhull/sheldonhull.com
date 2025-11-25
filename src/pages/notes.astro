@@ -5,6 +5,9 @@ import { getCollection } from 'astro:content';
 // Get all notes and organize by directory structure
 const allNotes = await getCollection('notes');
 
+// Helper to remove file extension
+const removeExtension = (id: string) => id.replace(/\.(md|mdx)$/, '');
+
 // Group notes by top-level category (development, etc.)
 const notesByCategory = allNotes.reduce((acc, note) => {
   const pathParts = note.id.split('/');
@@ -56,7 +59,7 @@ const categories = Object.keys(notesByCategory).sort();
               
               return (
                 <a
-                  href={`/notes/${note.id.replace(/\.(md|mdx)$/, '')}`}
+                  href={`/notes/${removeExtension(note.id)}`}
                   class="note-card"
                 >
                   <h3 class="note-title">

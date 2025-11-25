@@ -41,10 +41,10 @@ const breadcrumbs = pathParts.slice(0, -1); // All parts except the filename
         <div class="flex items-center gap-2 text-sm" style="color: var(--sw-text-muted);">
           <span>notes</span>
           {breadcrumbs.map((crumb, index) => (
-            <>
+            <span key={crumb}>
               <span style="color: var(--sw-purple);">/</span>
               <span class="capitalize">{crumb}</span>
-            </>
+            </span>
           ))}
         </div>
       )}
