@@ -44,7 +44,7 @@ pwsh -NoLogo -Command "go install github.com/aquaproj/aqua/v2/cmd/aqua@latest"
 ### "macOS/Linux"
 
 ```shell
-export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+export PATH="&#36;&#123;AQUA_ROOT_DIR:-&#36;&#123;XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
 ```
 
 The options below are one for max flexibility in honoring the XDG_Directory standard; the other just assumes `.local`.
@@ -78,9 +78,9 @@ Run `aqua policy allow "${XDG_CONFIG_HOME:-$HOME/.config}/aqua/aqua-policy.yaml"
 ### "linux/darwin"
 
 ```shell
-export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-export AQUA_GLOBAL_CONFIG=${XDG_CONFIG_HOME:-$HOME/.config}/aqua/aqua.yaml
-# export AQUA_POLICY_CONFIG=${XDG_CONFIG_HOME:-$HOME/.config}/aqua/aqua-policy.yaml
+export PATH="&#36;&#123;AQUA_ROOT_DIR:-&#36;&#123;XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+export AQUA_GLOBAL_CONFIG=&#36;&#123;XDG_CONFIG_HOME:-$HOME/.config}/aqua/aqua.yaml
+# export AQUA_POLICY_CONFIG=&#36;&#123;XDG_CONFIG_HOME:-$HOME/.config}/aqua/aqua-policy.yaml
 ```
 
 ### "windows"
@@ -197,8 +197,8 @@ This still uses `pwsh` on the ubuntu agent to avoid me having to rework logic fo
 
 ```yaml
 - bash: |
-    echo "##vso[task.prependpath]${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin"
-    export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+    echo "##vso[task.prependpath]&#36;&#123;AQUA_ROOT_DIR:-&#36;&#123;XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin"
+    export PATH="&#36;&#123;AQUA_ROOT_DIR:-&#36;&#123;XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
     curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v3.1.2/aqua-installer | bash -s
   displayName: install-aqua
 ```

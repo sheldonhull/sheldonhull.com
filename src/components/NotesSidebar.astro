@@ -1,0 +1,290 @@
+---
+import { getCollection } from 'astro:content';
+
+// Get all notes for the sidebar
+const allNotes = await getCollection('notes');
+
+// Build a flat list for simple rendering
+interface NoteItem {
+  title: string;
+  path: string;
+  level: number;
+  hasChildren: boolean;
+}
+
+function buildNotesList(notes: typeof allNotes): NoteItem[] {
+  const itemsMap = new Map<string, NoteItem>();
+  const pathsWithChildren = new Set<string>();
+
+  notes.forEach(note => {
+    const parts = note.id.replace(/\.(md|mdx)$/, '').split('/').filter(p => p !== '_index');
+    
+    if (parts.length === 0) return;
+
+    // Add parent paths
+    for (let i = 0; i < parts.length; i++) {
+      const currentPath = `/notes/${parts.slice(0, i + 1).join('/')}`;
+      const isLast = i === parts.length - 1;
+      
+      if (!itemsMap.has(currentPath)) {
+        itemsMap.set(currentPath, {
+          title: isLast ? (note.data.title || parts[i]) : parts[i],
+          path: currentPath,
+          level: i,
+          hasChildren: false
+        });
+      }
+      
+      if (i > 0) {
+        const parentPath = `/notes/${parts.slice(0, i).join('/')}`;
+        pathsWithChildren.add(parentPath);
+      }
+    }
+  });
+
+  // Update hasChildren flags
+  pathsWithChildren.forEach(path => {
+    const item = itemsMap.get(path);
+    if (item) {
+      item.hasChildren = true;
+    }
+  });
+
+  // Convert to array and sort
+  const items = Array.from(itemsMap.values()).sort((a, b) => {
+    if (a.level !== b.level) return a.level - b.level;
+    return a.path.localeCompare(b.path);
+  });
+
+  return items;
+}
+
+const notesList = buildNotesList(allNotes);
+
+// Get current path for highlighting
+const currentPath = Astro.url.pathname;
+---
+
+<aside class="notes-sidebar" id="notes-sidebar">
+  <div class="sidebar-header">
+    <h3>Notes</h3>
+    <button id="sidebar-close" class="sidebar-close" aria-label="Close sidebar">
+      ✕
+    </button>
+  </div>
+  <nav class="sidebar-nav">
+    <ul class="sidebar-menu">
+      {notesList.map(item => {
+        const isActive = currentPath === item.path || currentPath.startsWith(item.path + '/');
+        const itemClass = `sidebar-item level-${item.level}`;
+        const linkClass = `sidebar-link ${isActive ? 'active' : ''} ${item.hasChildren ? 'has-children' : ''}`;
+        
+        return (
+          <li class={itemClass}>
+            <a href={item.path} class={linkClass}>
+              {item.hasChildren && <span class="expand-icon">▸</span>}
+              {item.title}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+</aside>
+
+<button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</button>
+
+<style>
+  .notes-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    background: var(--sw-bg-secondary);
+    border-right: 1px solid rgba(127, 219, 202, 0.1);
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    padding-top: 80px;
+  }
+
+  @media (max-width: 1024px) {
+    .notes-sidebar {
+      transform: translateX(-100%);
+    }
+
+    .notes-sidebar.open {
+      transform: translateX(0);
+    }
+  }
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(127, 219, 202, 0.1);
+  }
+
+  .sidebar-header h3 {
+    margin: 0;
+    color: var(--sw-cyan);
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .sidebar-close {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--sw-text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+  }
+
+  @media (max-width: 1024px) {
+    .sidebar-close {
+      display: block;
+    }
+  }
+
+  .sidebar-nav {
+    padding: 1rem 0;
+  }
+
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-item {
+    margin: 0;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1.5rem;
+    color: var(--sw-text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    position: relative;
+  }
+
+  .sidebar-link:hover {
+    background: rgba(127, 219, 202, 0.05);
+    color: var(--sw-cyan);
+  }
+
+  .sidebar-link.active {
+    color: var(--sw-pink);
+    background: rgba(255, 88, 116, 0.1);
+    border-left: 3px solid var(--sw-pink);
+    padding-left: calc(1.5rem - 3px);
+  }
+
+  .expand-icon {
+    margin-right: 0.5rem;
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+  }
+
+  .sidebar-item:has(.sidebar-submenu) .expand-icon {
+    transform: rotate(90deg);
+  }
+
+  .sidebar-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-submenu .sidebar-link {
+    padding-left: 2.5rem;
+    font-size: 0.85rem;
+  }
+
+  .level-1 .sidebar-submenu .sidebar-link {
+    padding-left: 3.5rem;
+  }
+
+  .sidebar-toggle {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    z-index: 999;
+    background: var(--sw-bg-secondary);
+    border: 1px solid rgba(127, 219, 202, 0.2);
+    border-radius: 8px;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--sw-cyan);
+    display: none;
+    transition: all 0.2s ease;
+  }
+
+  .sidebar-toggle:hover {
+    background: rgba(127, 219, 202, 0.1);
+    border-color: var(--sw-cyan);
+  }
+
+  @media (max-width: 1024px) {
+    .sidebar-toggle {
+      display: block;
+    }
+  }
+
+  /* Scrollbar styling */
+  .notes-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .notes-sidebar::-webkit-scrollbar-track {
+    background: var(--sw-bg-primary);
+  }
+
+  .notes-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(127, 219, 202, 0.3);
+    border-radius: 3px;
+  }
+
+  .notes-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(127, 219, 202, 0.5);
+  }
+</style>
+
+<script>
+  // Toggle sidebar on mobile
+  const toggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('notes-sidebar');
+  const close = document.getElementById('sidebar-close');
+
+  toggle?.addEventListener('click', () => {
+    sidebar?.classList.toggle('open');
+  });
+
+  close?.addEventListener('click', () => {
+    sidebar?.classList.remove('open');
+  });
+
+  // Close sidebar when clicking outside on mobile
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 1024) {
+      const target = e.target as HTMLElement;
+      if (!sidebar?.contains(target) && !toggle?.contains(target)) {
+        sidebar?.classList.remove('open');
+      }
+    }
+  });
+</script>

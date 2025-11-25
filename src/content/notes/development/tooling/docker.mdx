@@ -73,20 +73,23 @@ This is a general-purpose dev container for dev tooling such as Python3, Go, Pow
 
 The end goal is to provide mounting of AWS local credentials into the container, use volumes for high IO package/artifact directories, and improve the drive performance by marking the container as the primary and the host directory as mounted. The version should be okay to lag a bit.
 
-      "workspaceMount": "source=${localWorkspaceFolder},target=/home/codespace/workspace,type=bind,consistency=delegated",
-      "mounts": [
-        "source=vscodeextensions,target=/root/.vscode-server/extensions,type=volume",
-        "source=artifacts,target=${containerWorkspaceFolder}/artifacts,type=volume",
-        "source=packages,target=${containerWorkspaceFolder}/packages,type=volume",
-        "source=tools,target=${containerWorkspaceFolder}/tools,type=volume",
-        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.aws/credentials,target=/home/codespace/.aws/credentials,type=bind,consistency=delegated",
-      ],
-      "postCreateCommand": [
-        "uname -a",
-        "pre-commit install"
-      ],
-    // Set *default* container specific settings.json values on container create.
-      "settings": {
-...
+```json
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/codespace/workspace,type=bind,consistency=delegated",
+  "mounts": [
+  "source=vscodeextensions,target=/root/.vscode-server/extensions,type=volume",
+  "source=artifacts,target=${containerWorkspaceFolder}/artifacts,type=volume",
+  "source=packages,target=${containerWorkspaceFolder}/packages,type=volume",
+  "source=tools,target=${containerWorkspaceFolder}/tools,type=volume",
+  "source=${localEnv:HOME}${localEnv:USERPROFILE}/.aws/credentials,target=/home/codespace/.aws/credentials,type=bind,consistency=delegated",
+  ],
+  "postCreateCommand": [
+  "uname -a",
+  "pre-commit install"
+  ],
+  // Set *default* container specific settings.json values on container create.
+  "settings": {
+      ...
+```
+
 
 

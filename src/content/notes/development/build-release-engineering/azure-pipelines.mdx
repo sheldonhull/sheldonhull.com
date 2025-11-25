@@ -9,7 +9,7 @@ title: Azure Pipelines
 Create a link to a pipeline for your chatops.
 
 ```powershell
-$button = "${ENV:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${ENV:SYSTEM_TEAMPROJECT}/_build/results?buildId=$($ENV:BUILD_BUILDID)&view=logs"
+$button = "&#36;&#123;ENV:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}&#36;&#123;ENV:SYSTEM_TEAMPROJECT}/_build/results?buildId=$($ENV:BUILD_BUILDID)&view=logs"
 ```
 
 ### Helper Function for Reporting Progress on Task

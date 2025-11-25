@@ -18,7 +18,7 @@ lastmod: 2023-03-24T14:52:00
 ```shell title=".envrc"
 source_env "$HOME"
 export DIRENV_WARN_TIMEOUT='10s'
-# OPTIONAL: export PATH="${PATH}:${GOPATH}/bin"
+# OPTIONAL: export PATH="&#36;&#123;PATH}:&#36;&#123;GOPATH}/bin"
 export MAGEFILE_ENABLE_COLOR=1
 
 INFO_COLOR="\033[1;30;40m"
@@ -33,11 +33,11 @@ BACKGROUND_BLUE="\033[44;30m"
 BACKGROUND_LIGHT_YELLOW="\033[1;103;30m"
 
 if command -v aqua >/dev/null 2>&1; then
-  printf "${INFO_COLOR}✔️ aqua detected${RESET_COLOR}\n"
+  printf "&#36;&#123;INFO_COLOR}✔️ aqua detected&#36;&#123;RESET_COLOR}\n"
 else
-  printf "❌ ${WARNING_COLOR}aqua command not recognized${RESET_COLOR}\n"
-  printf "\t${WORKING_COLOR}👉 Please install aqua to automatically set up all dev tools for the project:${RESET_COLOR}${BACKGROUND_GREEN}https://aquaproj.github.io/docs/tutorial${RESET_COLOR}\n"
+  printf "❌ &#36;&#123;WARNING_COLOR}aqua command not recognized&#36;&#123;RESET_COLOR}\n"
+  printf "\t&#36;&#123;WORKING_COLOR}👉 Please install aqua to automatically set up all dev tools for the project:&#36;&#123;RESET_COLOR}&#36;&#123;BACKGROUND_GREEN}https://aquaproj.github.io/docs/tutorial&#36;&#123;RESET_COLOR}\n"
   printf "\tYou'll need to make sure the following statement is in your profile (.zshrc, .bashrc, .profile, etc)\n"
-  printf "\t${INFO_COLOR}${BACKGROUND_LIGHT_YELLOW}export PATH=\"\${AQUA_ROOT_DIR:-\${XDG_DATA_HOME:-\$HOME/.local/share}/aquaproj-aqua}/bin:\$PATH\"${RESET_COLOR}\n"
+  printf "\t&#36;&#123;INFO_COLOR}&#36;&#123;BACKGROUND_LIGHT_YELLOW}export PATH=\"\&#36;&#123;AQUA_ROOT_DIR:-\&#36;&#123;XDG_DATA_HOME:-\$HOME/.local/share}/aquaproj-aqua}/bin:\$PATH\"&#36;&#123;RESET_COLOR}\n"
 fi
 ```

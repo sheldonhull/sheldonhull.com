@@ -3206,6 +3206,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"astro-breadcrumbs@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "astro-breadcrumbs@npm:3.3.1"
+  peerDependencies:
+    astro: ^2.0.0-beta.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
+  checksum: 10c0/a22025fcea57162401294064d7fa002a638ca9c3bd46b47ac5ac82917dc9aee26ec9a2df6383d8bbac711f44b8254d4f6971beee5a50b49d32068309fbb64604
+  languageName: node
+  linkType: hard
+
 "astro-icon@npm:^1.1.5":
   version: 1.1.5
   resolution: "astro-icon@npm:1.1.5"
@@ -3229,6 +3238,7 @@ __metadata:
     "@iconify-json/fa6-solid": "npm:^1.2.4"
     "@tailwindcss/vite": "npm:^4.1.17"
     astro: "npm:^5.16.0"
+    astro-breadcrumbs: "npm:^3.3.1"
     astro-icon: "npm:^1.1.5"
     mermaid: "npm:^11.12.1"
     shadcn-ui: "npm:^0.9.5"
