@@ -1,0 +1,436 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NotesSidebar from '../../components/NotesSidebar.astro';
+import { getCollection } from 'astro:content';
+import { removeExtension } from '../../utils/content';
+import { Breadcrumbs } from 'astro-breadcrumbs';
+import 'astro-breadcrumbs/breadcrumbs.css';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map(note => {
+    const slug = removeExtension(note.id);
+    return {
+      params: { slug },
+      props: { note },
+    };
+  });
+}
+
+const { note } = Astro.props;
+const { Content } = await note.render();
+
+// Extract breadcrumb from the note's path
+const pathParts = removeExtension(note.id).split('/');
+
+// Build custom breadcrumb items with proper structure
+const customCrumbs = [
+  {
+    text: 'Notes',
+    href: '/notes',
+    "aria-current": undefined,
+  },
+  ...pathParts.slice(0, -1).map((part, index) => {
+    const href = '/notes/' + pathParts.slice(0, index + 1).join('/');
+    return {
+      text: part.charAt(0).toUpperCase() + part.slice(1),
+      href: href,
+      "aria-current": undefined,
+    };
+  }),
+  {
+    text: note.data.title,
+    href: '/notes/' + pathParts.join('/'),
+    "aria-current": "page",
+  }
+];
+---
+
+<BaseLayout title={`${note.data.title} - Notes - Sheldon Hull`} description={note.data.title}>
+  <div class="notes-layout">
+    <NotesSidebar />
+    
+    <article class="notes-content">
+      <!-- Breadcrumbs -->
+      <div class="breadcrumbs-wrapper">
+        <Breadcrumbs 
+          crumbs={customCrumbs}
+        />
+      </div>
+
+      <!-- Note header -->
+      <header class="note-header">
+        <h1 class="note-title synthwave-gradient">
+          {note.data.title}
+        </h1>
+        
+        <div class="note-meta">
+          {note.data.date && (
+            <time datetime={note.data.date.toISOString()}>
+              Updated: {note.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+            </time>
+          )}
+          {note.data.lastmod && (
+            <>
+              <span class="meta-separator">•</span>
+              <time datetime={note.data.lastmod.toISOString()}>
+                Last modified: {note.data.lastmod.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+            </>
+          )}
+        </div>
+        
+        {note.data.tags && note.data.tags.length > 0 && (
+          <div class="note-tags">
+            {note.data.tags.map(tag => (
+              <span key={tag} class="note-tag">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <!-- Note content -->
+      <div class="prose prose-invert max-w-none">
+        <Content />
+      </div>
+    </article>
+  </div>
+
+  <style>
+    .notes-layout {
+      display: flex;
+      gap: 0;
+      min-height: calc(100vh - 200px);
+    }
+
+    .notes-content {
+      flex: 1;
+      padding: 1.5rem 2rem;
+      max-width: 1200px;
+      min-width: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .notes-content {
+        padding: 1.5rem;
+        width: 100%;
+      }
+    }
+
+    .breadcrumbs-wrapper {
+      margin-bottom: 1.5rem;
+    }
+
+    .breadcrumbs-wrapper :global(.breadcrumbs) {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--sw-text-muted);
+      font-size: 0.875rem;
+      padding: 0;
+      margin: 0;
+    }
+
+    .breadcrumbs-wrapper :global(.breadcrumb-item) {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .breadcrumbs-wrapper :global(.breadcrumb-item a) {
+      color: var(--sw-cyan);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      padding: 0;
+    }
+
+    .breadcrumbs-wrapper :global(.breadcrumb-item a:hover) {
+      color: var(--sw-pink);
+    }
+
+    .breadcrumbs-wrapper :global(.breadcrumb-separator) {
+      color: var(--sw-purple);
+      margin: 0 0.25rem;
+      opacity: 0.5;
+    }
+
+    .breadcrumbs-wrapper :global(.breadcrumb-item:last-child) {
+      color: var(--sw-text-secondary);
+    }
+
+    .note-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .note-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      margin: 0 0 1rem 0;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .synthwave-gradient {
+      background: linear-gradient(
+        135deg,
+        var(--sw-purple) 0%,
+        var(--sw-cyan) 50%,
+        var(--sw-pink) 100%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .note-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+      color: var(--sw-text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .meta-separator {
+      color: var(--sw-purple);
+    }
+
+    .note-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .note-tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      background: var(--sw-bg-tertiary);
+      color: var(--sw-purple);
+      border: 1px solid rgba(199, 146, 234, 0.3);
+    }
+
+    .prose {
+      --tw-prose-body: var(--sw-text-secondary);
+      --tw-prose-headings: var(--sw-text-primary);
+      --tw-prose-links: var(--sw-cyan);
+      --tw-prose-bold: var(--sw-text-primary);
+      --tw-prose-code: var(--sw-pink);
+      --tw-prose-pre-bg: var(--sw-bg-tertiary);
+      --tw-prose-quotes: var(--sw-purple);
+    }
+
+    .prose :global(h2),
+    .prose :global(h3),
+    .prose :global(h4) {
+      color: var(--sw-text-primary);
+      font-weight: 700;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .prose :global(h2) {
+      font-size: 1.875rem;
+      border-bottom: 2px solid rgba(199, 146, 234, 0.2);
+      padding-bottom: 0.5rem;
+    }
+
+    .prose :global(h3) {
+      font-size: 1.5rem;
+    }
+
+    .prose :global(h4) {
+      font-size: 1.25rem;
+    }
+
+    .prose :global(a) {
+      color: var(--sw-cyan);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(127, 219, 202, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .prose :global(a:hover) {
+      color: var(--sw-pink);
+      border-bottom-color: var(--sw-pink);
+    }
+
+    .prose :global(code) {
+      color: var(--sw-pink);
+      background: var(--sw-bg-tertiary);
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    .prose :global(pre) {
+      background: var(--sw-bg-tertiary) !important;
+      border: 1px solid rgba(127, 219, 202, 0.1);
+      border-radius: 8px;
+      padding: 1.5rem !important;
+      overflow-x: auto;
+      position: relative;
+    }
+    
+    .prose :global(pre:hover .copy-code-button) {
+      opacity: 1;
+    }
+    
+    .prose :global(.copy-code-button) {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(127, 219, 202, 0.1);
+      border: 1px solid rgba(127, 219, 202, 0.3);
+      border-radius: 4px;
+      padding: 0.4rem 0.75rem;
+      color: var(--sw-cyan);
+      font-size: 0.75rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.2s ease;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .prose :global(.copy-code-button:hover) {
+      background: rgba(127, 219, 202, 0.2);
+      border-color: var(--sw-cyan);
+    }
+    
+    .prose :global(.copy-code-button.copied) {
+      background: rgba(255, 88, 116, 0.2);
+      border-color: var(--sw-pink);
+      color: var(--sw-pink);
+    }
+
+    .prose :global(pre code) {
+      background: transparent;
+      padding: 0;
+      color: var(--sw-text-primary);
+    }
+
+    .prose :global(blockquote) {
+      border-left: 4px solid var(--sw-purple);
+      padding-left: 1.5rem;
+      color: var(--sw-text-secondary);
+      font-style: italic;
+      background: rgba(199, 146, 234, 0.05);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+    }
+
+    .prose :global(ul),
+    .prose :global(ol) {
+      color: var(--sw-text-secondary);
+    }
+
+    .prose :global(li) {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .prose :global(table) {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+    }
+
+    .prose :global(th),
+    .prose :global(td) {
+      padding: 0.75rem;
+      border: 1px solid rgba(127, 219, 202, 0.2);
+    }
+
+    .prose :global(th) {
+      background: rgba(199, 146, 234, 0.1);
+      color: var(--sw-text-primary);
+      font-weight: 600;
+    }
+
+    .prose :global(img) {
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .prose :global(hr) {
+      border: none;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(127, 219, 202, 0.3),
+        transparent
+      );
+      margin: 3rem 0;
+    }
+  </style>
+  
+  <script>
+    // Add copy buttons to code blocks
+    function addCopyButtons() {
+      // Use more compatible selector
+      const codeBlocks = document.querySelectorAll('pre code');
+      
+      codeBlocks.forEach((code) => {
+        const pre = code.parentElement;
+        if (!pre || pre.tagName !== 'PRE') return;
+        
+        // Skip if already has copy button
+        if (pre.querySelector('.copy-code-button')) return;
+        
+        const button = document.createElement('button');
+        button.className = 'copy-code-button';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        
+        button.addEventListener('click', async () => {
+          const text = code.textContent || '';
+          
+          try {
+            // Check if Clipboard API is available
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(text);
+            } else {
+              // Fallback for older browsers or non-HTTPS contexts
+              const textArea = document.createElement('textarea');
+              textArea.value = text;
+              textArea.style.position = 'fixed';
+              textArea.style.left = '-999999px';
+              textArea.style.top = '-999999px';
+              document.body.appendChild(textArea);
+              textArea.focus();
+              textArea.select();
+              document.execCommand('copy');
+              textArea.remove();
+            }
+            
+            button.textContent = 'Copied!';
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+              button.textContent = 'Copy';
+              button.classList.remove('copied');
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy:', err);
+            button.textContent = 'Error';
+            
+            setTimeout(() => {
+              button.textContent = 'Copy';
+            }, 2000);
+          }
+        });
+        
+        pre.appendChild(button);
+      });
+    }
+    
+    // Run on page load
+    addCopyButtons();
+    
+    // Run after page transitions (for SPAs)
+    document.addEventListener('astro:after-swap', addCopyButtons);
+  </script>
+</BaseLayout>

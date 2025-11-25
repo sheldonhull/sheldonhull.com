@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NotesSidebar from '../components/NotesSidebar.astro';
+
+---
+
+<BaseLayout title="Notes - Sheldon Hull" description="Technical notes and documentation on various development topics">
+  <div class="notes-layout">
+    <NotesSidebar />
+    
+    <main class="notes-main">
+      <div class="notes-header">
+        <h1 class="notes-title">Notes</h1>
+        <p class="notes-description">
+          A digital garden of technical notes, documentation, and references.
+        </p>
+      </div>
+
+      <div class="notes-content">
+        <p>Select a topic from the sidebar to view notes.</p>
+      </div>
+    </main>
+  </div>
+
+  <style>
+    .notes-layout {
+      display: flex;
+      gap: 0;
+      min-height: calc(100vh - 200px);
+    }
+
+    .notes-main {
+      flex: 1;
+      padding: 1.5rem 2rem;
+      max-width: 1200px;
+      min-width: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .notes-main {
+        padding: 1.5rem;
+        width: 100%;
+      }
+    }
+
+    .notes-header {
+      margin-bottom: 2rem;
+    }
+
+    .notes-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      background: linear-gradient(
+        135deg,
+        var(--sw-purple) 0%,
+        var(--sw-cyan) 50%,
+        var(--sw-pink) 100%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0 0 1rem 0;
+      letter-spacing: -0.03em;
+    }
+
+    .notes-description {
+      color: var(--sw-text-secondary);
+      font-size: 1.125rem;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .notes-content {
+      color: var(--sw-text-secondary);
+      padding: 2rem;
+      background: var(--sw-bg-secondary);
+      border-radius: 8px;
+      border: 1px solid rgba(127, 219, 202, 0.1);
+    }
+  </style>
+</BaseLayout>

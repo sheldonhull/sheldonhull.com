@@ -1,0 +1,396 @@
+---
+import { getCollection } from 'astro:content';
+
+// Get all notes for the sidebar
+const allNotes = await getCollection('notes');
+
+// Build hierarchical structure reflecting folder organization
+interface SidebarGroup {
+  label: string;
+  items: SidebarItem[];
+  collapsed?: boolean;
+}
+
+interface SidebarItem {
+  label: string;
+  href: string;
+  isActive: boolean;
+}
+
+// Get current path for highlighting
+const currentPath = Astro.url.pathname;
+
+// Build folder structure
+const structure = new Map<string, Map<string, typeof allNotes>>();
+
+allNotes.forEach(note => {
+  const parts = note.id.replace(/\.(md|mdx)$/, '').split('/');
+  
+  // Skip index files - they're not needed in Astro (mkdocs convention)
+  const fileName = parts[parts.length - 1];
+  if (fileName === '_index' || fileName === 'index') return;
+  
+  if (parts.length === 2) {
+    // Top level: development/filename
+    const category = parts[0];
+    if (!structure.has(category)) {
+      structure.set(category, new Map());
+    }
+    const categoryMap = structure.get(category)!;
+    if (!categoryMap.has('_root')) {
+      categoryMap.set('_root', []);
+    }
+    categoryMap.get('_root')!.push(note);
+  } else if (parts.length === 3) {
+    // Second level: development/go/filename
+    const category = parts[0];
+    const subcategory = parts[1];
+    if (!structure.has(category)) {
+      structure.set(category, new Map());
+    }
+    const categoryMap = structure.get(category)!;
+    if (!categoryMap.has(subcategory)) {
+      categoryMap.set(subcategory, []);
+    }
+    categoryMap.get(subcategory)!.push(note);
+  }
+});
+
+// Convert to sidebar groups
+const sidebarGroups: SidebarGroup[] = [];
+
+Array.from(structure.entries())
+  .sort(([a], [b]) => a.localeCompare(b))
+  .forEach(([category, subcategories]) => {
+    const group: SidebarGroup = {
+      label: category.charAt(0).toUpperCase() + category.slice(1),
+      items: [],
+      collapsed: false,
+    };
+
+    // Add subcategories as nested structure
+    Array.from(subcategories.entries())
+      .sort(([a], [b]) => {
+        // Put _root items first
+        if (a === '_root') return -1;
+        if (b === '_root') return 1;
+        return a.localeCompare(b);
+      })
+      .forEach(([subcategory, notes]) => {
+        if (subcategory === '_root') {
+          // Add root-level items directly
+          notes
+            .sort((a, b) => (a.data.title || a.id).localeCompare(b.data.title || b.id))
+            .forEach(note => {
+              const notePath = `/notes/${note.id.replace(/\.(md|mdx)$/, '')}`;
+              group.items.push({
+                label: note.data.title || note.id.split('/').pop()!.replace(/\.(md|mdx)$/, ''),
+                href: notePath,
+                isActive: currentPath === notePath,
+              });
+            });
+        } else {
+          // Add subcategory header (not clickable, just a label)
+          group.items.push({
+            label: `${subcategory.charAt(0).toUpperCase() + subcategory.slice(1)}`,
+                href: '',
+                isActive: false,
+              });
+          
+          // Add items under subcategory (indented)
+          notes
+            .sort((a, b) => (a.data.title || a.id).localeCompare(b.data.title || b.id))
+            .forEach(note => {
+              const notePath = `/notes/${note.id.replace(/\.(md|mdx)$/, '')}`;
+              group.items.push({
+                label: `  ${note.data.title || note.id.split('/').pop()!.replace(/\.(md|mdx)$/, '')}`,
+                href: notePath,
+                isActive: currentPath === notePath,
+              });
+            });
+        }
+      });
+
+    sidebarGroups.push(group);
+  });
+---
+
+<aside class="notes-sidebar" id="notes-sidebar">
+  <div class="sidebar-header">
+    <a href="/notes" class="sidebar-title">
+      <h3>Notes</h3>
+    </a>
+    <button id="sidebar-close" class="sidebar-close" aria-label="Close sidebar">
+      ✕
+    </button>
+  </div>
+  
+  <nav class="sidebar-nav">
+    {sidebarGroups.map((group) => (
+      <div class="sidebar-group">
+        <div class="group-label">{group.label}</div>
+        <ul class="group-items">
+          {group.items.map((item) => {
+            const isSubheader = !item.href;
+            const isIndented = item.label.startsWith('  ');
+            
+            return (
+              <li class:list={[
+                'sidebar-item',
+                { 'sidebar-subheader': isSubheader },
+                { 'sidebar-indented': isIndented },
+              ]}>
+                {isSubheader ? (
+                  <span class="sidebar-subheader-text">{item.label}</span>
+                ) : (
+                  <a
+                    href={item.href}
+                    class:list={[
+                      'sidebar-link',
+                      { 'active': item.isActive },
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))}
+  </nav>
+</aside>
+
+<button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</button>
+
+<style>
+  .notes-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--sw-bg-secondary);
+    border-right: 1px solid rgba(127, 219, 202, 0.1);
+    overflow-y: auto;
+    height: calc(100vh - 80px);
+    position: sticky;
+    top: 80px;
+    left: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .notes-sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      height: 100vh;
+      z-index: 1000;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .notes-sidebar.open {
+      transform: translateX(0);
+    }
+  }
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 2px solid rgba(127, 219, 202, 0.2);
+    background: linear-gradient(
+      135deg,
+      rgba(127, 219, 202, 0.05) 0%,
+      rgba(199, 146, 234, 0.05) 100%
+    );
+  }
+
+  .sidebar-title {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .sidebar-header h3 {
+    margin: 0;
+    color: var(--sw-cyan);
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 20px rgba(127, 219, 202, 0.3);
+  }
+
+  .sidebar-close {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--sw-text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+  }
+
+  @media (max-width: 1024px) {
+    .sidebar-close {
+      display: block;
+    }
+
+    .sidebar-header {
+      padding-top: 2rem;
+    }
+  }
+
+  .sidebar-nav {
+    padding: 1.5rem 0;
+  }
+
+  .sidebar-group {
+    margin-bottom: 2.5rem;
+  }
+
+  .group-label {
+    padding: 0.75rem 1.5rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sw-purple);
+    border-left: 3px solid var(--sw-purple);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(
+      90deg,
+      rgba(199, 146, 234, 0.1) 0%,
+      transparent 100%
+    );
+  }
+
+  .group-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-item {
+    margin: 0;
+  }
+
+  .sidebar-subheader {
+    margin-top: 1rem;
+  }
+
+  .sidebar-subheader-text {
+    display: block;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--sw-text-primary);
+  }
+
+  .sidebar-link {
+    display: block;
+    padding: 0.5rem 1.5rem;
+    color: var(--sw-text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    position: relative;
+  }
+
+  .sidebar-indented .sidebar-link {
+    padding-left: 2.5rem;
+    font-size: 0.85rem;
+  }
+
+  .sidebar-link:hover {
+    background: rgba(127, 219, 202, 0.05);
+    color: var(--sw-cyan);
+  }
+
+  .sidebar-link.active {
+    color: var(--sw-pink);
+    background: rgba(255, 88, 116, 0.1);
+    border-left: 3px solid var(--sw-pink);
+    padding-left: calc(1.5rem - 3px);
+    font-weight: 600;
+  }
+
+  .sidebar-indented .sidebar-link.active {
+    padding-left: calc(2.5rem - 3px);
+  }
+
+  .sidebar-toggle {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    z-index: 999;
+    background: var(--sw-bg-secondary);
+    border: 1px solid rgba(127, 219, 202, 0.2);
+    border-radius: 8px;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--sw-cyan);
+    display: none;
+    transition: all 0.2s ease;
+  }
+
+  .sidebar-toggle:hover {
+    background: rgba(127, 219, 202, 0.1);
+    border-color: var(--sw-cyan);
+  }
+
+  @media (max-width: 1024px) {
+    .sidebar-toggle {
+      display: block;
+    }
+  }
+
+  /* Scrollbar styling */
+  .notes-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .notes-sidebar::-webkit-scrollbar-track {
+    background: var(--sw-bg-primary);
+  }
+
+  .notes-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(127, 219, 202, 0.3);
+    border-radius: 3px;
+  }
+
+  .notes-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(127, 219, 202, 0.5);
+  }
+</style>
+
+<script>
+  // Toggle sidebar on mobile
+  const toggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('notes-sidebar');
+  const close = document.getElementById('sidebar-close');
+
+  toggle?.addEventListener('click', () => {
+    sidebar?.classList.toggle('open');
+  });
+
+  close?.addEventListener('click', () => {
+    sidebar?.classList.remove('open');
+  });
+
+  // Close sidebar when clicking outside on mobile
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 1024) {
+      const target = e.target as HTMLElement;
+      if (!sidebar?.contains(target) && !toggle?.contains(target)) {
+        sidebar?.classList.remove('open');
+      }
+    }
+  });
+</script>

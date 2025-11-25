@@ -1,0 +1,138 @@
+---
+title: Azure CLI
+date: 2024-03-11T16:45:00
+tags:
+  - azure
+lastmod: 2024-03-11T16:45:00
+---
+
+import Aside from '../../../../components/Aside.astro';
+
+
+<Aside type="info" title="Requirements">
+
+
+- Azure CLI
+- [gum](https://github.com/charmbracelet/gum)
+
+
+</Aside>
+
+## Azure CLI
+
+I prefer the PowerShell module, but the azure CLI is pretty solid for those times when something with .NET just won't cooperate...
+
+## Storage for State Files
+
+I found the need to create storage buckets pretty important if running pulumi or terraform.
+Makes sense to do this via the CLI for basic usage as it's a chicken or the egg problem.
+
+Start with `az login`.
+
+### Inputs
+
+This assumes you'll place the storage account in an existing resource group.
+
+```shell
+AZURE_SUBSCRIPTION_ID="$(gum input --header 'Subscription ID')"
+az account set --subscription="$&#123;AZURE_SUBSCRIPTION_ID&#125;"
+RESOURCE_GROUP_NAME="$(gum input --header 'Resource Group name')"
+STORAGE_ACCOUNT_NAME="$(gum input --header 'Storage Account Name (will have random suffix added)')$&#123;RANDOM&#125;"
+CONTAINER_NAME="$(gum input --header 'Container name in the storage account')"
+CONTINUE=1
+```
+
+### Create the storage account
+
+```shell
+az storage account create \
+    --resource-group "$RESOURCE_GROUP_NAME" \
+    --name "$STORAGE_ACCOUNT_NAME" \
+    --sku Standard_LRS \
+    --encryption-services blob \
+    --min-tls-version "TLS1_2"'
+az storage container create --name "$&#123;CONTAINER_NAME&#125;" --account-name "$&#123;STORAGE_ACCOUNT_NAME&#125;"
+```
+
+### Assign permissions
+
+This is assuming the email is the principal lookup value.
+
+```shell
+PRINCIPAL_EMAIL="$(gum input --header 'Enter the principal email you want to give access')"
+PRINCIPAL_ID="$(az ad user list --query "[?mail=='$&#123;PRINCIPAL_EMAIL&#125;'].id" -o tsv)"
+
+if [[ -z "$&#123;PRINCIPAL_ID&#125;" ]]; then
+    echo "No user found with email: '$&#123;PRINCIPAL_EMAIL&#125;'"
+    gum confirm 'continue?' || CONTINUE=0
+else
+    CONTINUE=1
+    echo "👍 found user with email: '$&#123;PRINCIPAL_EMAIL&#125;' and id: $&#123;PRINCIPAL_ID&#125;"
+fi
+
+if [[ "$CONTINUE" -ne 1 ]]; then
+    echo "❌ can't continue"
+else
+    STORAGE_ACCOUNT_ID=$(az storage account show --name "$&#123;STORAGE_ACCOUNT_NAME&#125;" --resource-group "$&#123;RESOURCE_GROUP_NAME&#125;" --query id --output tsv)
+    echo "The storage account id is $&#123;STORAGE_ACCOUNT_ID&#125;"
+    az role assignment create --assignee "$&#123;PRINCIPAL_ID&#125;" --role "Storage Blob Data Contributor" --scope "$&#123;STORAGE_ACCOUNT_ID&#125;"
+fi
+```
+
+### Copy Terraform State File Up
+
+If you need to migrate terraform storage from Terraform Cloud to azure storage, then you can jump start by grabbing the keys here:
+
+```shell
+AZURE_ACCOUNT_ID="$(az account show --subscription "$&#123;AZURE_SUBSCRIPTION_ID&#125;" --query 'id' --output tsv)"
+gum format "AZURE_ACCOUNT_ID='$&#123;AZURE_ACCOUNT_ID&#125;'"
+gum format '## azure storage keys, use to migrate backend if required'
+gum format '> export ARM_ACCESS_KEY='
+az storage account keys list --resource-group "$&#123;RESOURCE_GROUP_NAME&#125;" --account-name "$&#123;STORAGE_ACCOUNT_NAME&#125;" | gum format --type code --language 'json'
+
+gum format '### If you need to migrate your state from Terraform Cloud, try this approach'
+gum format --language 'shell' --type code <<EOF
+mkdir -p terraform.tfstate.d
+terraform state pull > terraform.tfstate.d/terraform.tfstate
+mv .terraform/terraform.tfstate .terraform/terraform.tfstate.old
+az storage blob upload \\
+    --account-name "$&#123;STORAGE_ACCOUNT_NAME&#125;" \\
+    --container-name "$&#123;CONTAINER_NAME&#125;" \\
+    --name terraform.tfstate --type block \\
+    --file terraform.tfstate.d/terraform.tfstate
+terraform init
+EOF
+```
+
+### Add Terraform Version & Provider Files
+
+Finally, update your terraform files with some pre-built snippets nicely formatted in your terminal.
+
+```shell
+
+gum format '`## backend.tf`'
+gum format --type code --language="HCL2" <<EOF
+terraform &#123;
+  backend "azurerm" &#123;
+    resource_group_name  = "$&#123;RESOURCE_GROUP_NAME&#125;"
+    storage_account_name = "$&#123;STORAGE_ACCOUNT_NAME&#125;"
+    container_name       = "$&#123;CONTAINER_NAME&#125;"
+    key                  = "terraform.tfstate"
+  &#125;
+&#125;
+EOF
+
+gum format '`## versions.tf`'
+gum format '`# include the provider in versions.tf`'
+gum format --type code --language="HCL2" <<EOF
+terraform &#123;
+  required_providers &#123;
+    azurerm = &#123;
+      source  = "hashicorp/azurerm"
+      version = "3.88.0"
+    &#125;
+  &#125;
+&#125;
+EOF
+
+```
