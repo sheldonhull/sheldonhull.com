@@ -407,6 +407,7 @@ chezmoi age-keygen --output=$HOME/.config/chezmoi/key.txt
 encryption = "age"
 [age]
     identity = "~/.config/chezmoi/key.txt"
+    # Replace with your actual age public key from `age-keygen`
     recipient = "age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p"
 ```
 
