@@ -279,15 +279,16 @@ const finalStats = getFinalStats();
       const prevValue = previousStats[name] || 0;
       const change = value - prevValue;
 
-      // Show colored change indicator
+      // Show colored change indicator with icon
       const changeHtml = change !== 0 ? `
         <span class="stat-change ${change > 0 ? 'positive' : 'negative'}">
-          ${change > 0 ? '+' : ''}${change}
+          <span class="change-icon">${change > 0 ? '▲' : '▼'}</span>
+          <span class="change-value">${change > 0 ? '+' : ''}${change}</span>
         </span>
       ` : '';
 
       return `
-        <div class="stat-item ${value < 0 ? 'negative' : ''}">
+        <div class="stat-item ${value < 0 ? 'negative' : ''} ${change !== 0 ? 'changed' : ''}">
           <span class="stat-name">${name}</span>
           <div class="stat-value-container">
             <span class="stat-value">${value > 0 ? '+' : ''}${value}</span>
@@ -634,21 +635,56 @@ const finalStats = getFinalStats();
   }
 
   .stat-change {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     font-size: 12px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 4px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
     font-family: 'Monaco', monospace;
+    animation: statPulse 0.5s ease-out;
+  }
+
+  @keyframes statPulse {
+    0% { transform: scale(1.2); opacity: 0.5; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
   }
 
   .stat-change.positive {
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.15);
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid rgba(34, 197, 94, 0.5);
+    text-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
   }
 
   .stat-change.negative {
-    color: #f87171;
-    background: rgba(248, 113, 113, 0.15);
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+  }
+
+  .change-icon {
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  .change-value {
+    font-weight: 900;
+  }
+
+  .stat-item.changed {
+    animation: itemHighlight 0.5s ease-out;
+  }
+
+  @keyframes itemHighlight {
+    0% { transform: translateX(-5px); }
+    50% { transform: translateX(3px); }
+    100% { transform: translateX(0); }
   }
 
   .stats-footer {
@@ -1128,17 +1164,17 @@ const finalStats = getFinalStats();
     color: #f87171;
   }
 
-  /* Navigation Buttons - Bottom positioned */
+  /* Navigation Buttons - Bottom positioned with better spacing */
   .nav-button {
     position: fixed;
-    bottom: 120px;
-    width: 60px;
-    height: 60px;
+    bottom: 100px;
+    width: 56px;
+    height: 56px;
     background: rgba(139, 92, 246, 0.3);
     border: 3px solid rgba(139, 92, 246, 0.6);
     border-radius: 50%;
     color: #a78bfa;
-    font-size: 24px;
+    font-size: 22px;
     cursor: pointer;
     z-index: 250;
     transition: all 0.3s ease;
@@ -1157,35 +1193,35 @@ const finalStats = getFinalStats();
 
   .nav-prev {
     left: 50%;
-    transform: translateX(-90px);
+    transform: translateX(-110px);
   }
 
   .nav-next {
     left: 50%;
-    transform: translateX(30px);
+    transform: translateX(54px);
   }
 
   .nav-prev:hover {
-    transform: translateX(-90px) scale(1.15);
+    transform: translateX(-110px) scale(1.15);
   }
 
   .nav-next:hover {
-    transform: translateX(30px) scale(1.15);
+    transform: translateX(54px) scale(1.15);
   }
 
-  /* Progress Indicator */
+  /* Progress Indicator - positioned between nav buttons */
   .progress-indicator {
     position: fixed;
-    bottom: 30px;
+    bottom: 105px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 250;
-    padding: 10px 24px;
+    padding: 8px 20px;
     background: rgba(16, 21, 38, 0.95);
     border: 2px solid rgba(139, 92, 246, 0.5);
     border-radius: 12px;
     backdrop-filter: blur(10px);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: #a78bfa;
     text-transform: uppercase;
@@ -1288,10 +1324,32 @@ const finalStats = getFinalStats();
       width: 48px;
       height: 48px;
       font-size: 18px;
+      bottom: 25px;
     }
 
-    .nav-prev { left: 15px; }
-    .nav-next { right: 15px; }
+    .nav-prev {
+      left: 15px;
+      transform: none;
+    }
+    .nav-next {
+      right: 15px;
+      left: auto;
+      transform: none;
+    }
+
+    .nav-prev:hover {
+      transform: scale(1.1);
+    }
+
+    .nav-next:hover {
+      transform: scale(1.1);
+    }
+
+    .progress-indicator {
+      bottom: 80px;
+      font-size: 11px;
+      padding: 6px 14px;
+    }
 
     /* Final card mobile layout - stack vertically */
     .final-page-layout {
