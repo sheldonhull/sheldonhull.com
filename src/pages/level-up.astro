@@ -117,7 +117,7 @@ const sortedFinalStats = Object.entries(finalStats)
             <div class="achievements-grid">
               {level.achievements.map((achievement) => (
                 <div class="achievement-card">
-                  <div class="achievement-icon">
+                  <div class="achievement-icon-glow">
                     <FAIcon style={achievement.iconStyle} icon={achievement.icon} />
                   </div>
                   <div class="achievement-content">
@@ -127,7 +127,10 @@ const sortedFinalStats = Object.entries(finalStats)
                     </div>
                     <p class="achievement-desc">{achievement.description}</p>
                     <div class="achievement-attrs">
-                      {achievement.attributes.map((attr) => (
+                      {achievement.attributes
+                        .slice()
+                        .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+                        .map((attr) => (
                         <span class={`attr-tag ${attr.value < 0 ? 'negative' : 'positive'}`}>
                           {attr.name} {attr.value > 0 ? '+' : ''}{attr.value}
                         </span>
@@ -519,6 +522,34 @@ const sortedFinalStats = Object.entries(finalStats)
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
 
+  /* Alternate year card backgrounds for visual distinction */
+  .year-card:nth-child(odd) {
+    background: rgba(16, 21, 38, 0.85);
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+
+  .year-card:nth-child(odd) .year-header {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25) 0%, rgba(107, 33, 168, 0.2) 100%);
+  }
+
+  .year-card:nth-child(even) {
+    background: rgba(20, 27, 48, 0.85);
+    border-color: rgba(127, 219, 202, 0.25);
+  }
+
+  .year-card:nth-child(even) .year-header {
+    background: linear-gradient(135deg, rgba(127, 219, 202, 0.15) 0%, rgba(16, 33, 62, 0.2) 100%);
+    border-bottom-color: rgba(127, 219, 202, 0.2);
+  }
+
+  .year-card:nth-child(even) .year-badge {
+    color: #7FDBCA;
+  }
+
+  .year-card:nth-child(even) .year-footer {
+    border-top-color: rgba(127, 219, 202, 0.15);
+  }
+
   .year-card.animate-in {
     opacity: 1;
     transform: translateY(0);
@@ -583,14 +614,15 @@ const sortedFinalStats = Object.entries(finalStats)
 
   .achievement-card {
     display: flex;
-    gap: 14px;
-    padding: 14px;
-    background: rgba(139, 92, 246, 0.06);
-    border: 1px solid rgba(139, 92, 246, 0.15);
+    gap: 16px;
+    padding: 14px 14px 14px 0;
+    background: rgba(139, 92, 246, 0.04);
+    border: none;
     border-radius: 12px;
     transition: all 0.2s ease;
     opacity: 0;
     transform: translateX(-10px);
+    position: relative;
   }
 
   .achievement-card.animate-in {
@@ -599,22 +631,47 @@ const sortedFinalStats = Object.entries(finalStats)
   }
 
   .achievement-card:hover {
-    border-color: rgba(139, 92, 246, 0.4);
-    background: rgba(139, 92, 246, 0.1);
+    background: rgba(139, 92, 246, 0.08);
   }
 
-  .achievement-icon {
+  .achievement-card:hover .achievement-icon-glow {
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.9), 0 0 40px rgba(139, 92, 246, 0.6);
+  }
+
+  .achievement-card:hover .achievement-icon-glow::before {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 40px rgba(139, 92, 246, 0.5);
+  }
+
+  /* Left border icon style with neon glow */
+  .achievement-icon-glow {
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #7c3aed, #6b21a8);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 18px;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    color: #a78bfa;
+    font-size: 22px;
+    position: relative;
+    text-shadow: 0 0 12px rgba(139, 92, 246, 0.7), 0 0 24px rgba(139, 92, 246, 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .achievement-icon-glow::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: linear-gradient(180deg, #7c3aed, #a78bfa);
+    border-radius: 2px;
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.6), 0 0 24px rgba(139, 92, 246, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .achievement-icon-glow :global(svg) {
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
   }
 
   .achievement-content {
@@ -953,14 +1010,18 @@ const sortedFinalStats = Object.entries(finalStats)
     }
 
     .achievement-card {
-      padding: 12px;
-      gap: 10px;
+      padding: 12px 12px 12px 0;
+      gap: 12px;
     }
 
-    .achievement-icon {
-      width: 36px;
-      height: 36px;
-      font-size: 16px;
+    .achievement-icon-glow {
+      width: 40px;
+      font-size: 18px;
+    }
+
+    .achievement-icon-glow::before {
+      width: 3px;
+      height: 60%;
     }
 
     .achievement-title {
