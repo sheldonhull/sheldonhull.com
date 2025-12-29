@@ -3,1080 +3,864 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import FAIcon from '../components/FAIcon.astro';
 import {
   yearLevels,
-  calculateCumulativeStats,
   getTotalXP,
   getTotalAchievements,
   getFinalStats,
-  getTopStats,
   type Stats
 } from '../data/levelUpData';
 
 const totalXP = getTotalXP();
 const totalAchievements = getTotalAchievements();
 const finalStats = getFinalStats();
+
+// Sort stats by value (highest to lowest: +14, +13, ... +1, 0, -1, -2, etc.)
+const sortedFinalStats = Object.entries(finalStats)
+  .sort((a, b) => b[1] - a[1]);
 ---
 
-<BaseLayout title="RPG Life Stats | Sheldon Hull" description="Life as an RPG adventure">
-  <div class="rpg-container">
-    <!-- Larger Animated Pixel Mage Sprite -->
-    <div class="sprite-display">
-      <div class="pixel-mage-large">
-        <svg viewBox="0 0 32 32" class="mage-sprite" id="mageSprite">
-          <!-- Hood -->
-          <rect x="10" y="3" width="12" height="2" fill="#6b46c1"/>
-          <rect x="8" y="5" width="16" height="2" fill="#6b46c1"/>
-          <rect x="7" y="7" width="18" height="3" fill="#7c3aed"/>
+<BaseLayout title="Life RPG | Sheldon Hull" description="Life as an RPG adventure - achievements, stats, and the journey so far">
+  <div class="rpg-page">
+    <!-- Sticky Hero Header -->
+    <header class="hero-header">
+      <div class="hero-content">
+        <!-- Compact Mage Avatar -->
+        <div class="hero-avatar">
+          <div class="mage-frame">
+            <svg viewBox="0 0 32 32" class="mage-svg">
+              <rect x="10" y="3" width="12" height="2" fill="#6b46c1"/>
+              <rect x="8" y="5" width="16" height="2" fill="#6b46c1"/>
+              <rect x="7" y="7" width="18" height="3" fill="#7c3aed"/>
+              <rect x="12" y="10" width="8" height="6" fill="#d4a574"/>
+              <rect x="13" y="12" width="2" height="1" fill="#4a2511"/>
+              <rect x="17" y="12" width="2" height="1" fill="#4a2511"/>
+              <rect x="14" y="14" width="4" height="1" fill="#c48b5c" opacity="0.6"/>
+              <rect x="9" y="16" width="14" height="2" fill="#8b5cf6"/>
+              <rect x="8" y="18" width="16" height="5" fill="#7c3aed"/>
+              <rect x="7" y="23" width="18" height="4" fill="#6b21a8"/>
+              <rect x="9" y="27" width="5" height="4" fill="#5b21b6"/>
+              <rect x="18" y="27" width="5" height="4" fill="#5b21b6"/>
+              <rect x="26" y="14" width="2" height="15" fill="#92400e"/>
+              <rect x="25" y="12" width="4" height="4" fill="#fbbf24" opacity="0.8"/>
+              <circle cx="27" cy="14" r="2.5" fill="#fde047" opacity="0.9" class="orb"/>
+              <circle cx="27" cy="14" r="3.5" fill="#fbbf24" opacity="0.3" class="glow"/>
+            </svg>
+          </div>
+          <span class="level-tag">LVL {yearLevels.length}</span>
+        </div>
 
-          <!-- Face -->
-          <rect x="12" y="10" width="8" height="6" fill="#d4a574"/>
-          <rect x="13" y="12" width="2" height="1" fill="#4a2511" class="left-eye"/>
-          <rect x="17" y="12" width="2" height="1" fill="#4a2511" class="right-eye"/>
-          <rect x="14" y="14" width="4" height="1" fill="#c48b5c" opacity="0.6"/>
-
-          <!-- Body/Robe -->
-          <rect x="9" y="16" width="14" height="2" fill="#8b5cf6"/>
-          <rect x="8" y="18" width="16" height="5" fill="#7c3aed"/>
-          <rect x="7" y="23" width="18" height="4" fill="#6b21a8"/>
-
-          <!-- Feet (for walking animation) -->
-          <rect x="9" y="27" width="5" height="4" fill="#5b21b6" class="left-foot"/>
-          <rect x="18" y="27" width="5" height="4" fill="#5b21b6" class="right-foot"/>
-
-          <!-- Staff -->
-          <rect x="26" y="14" width="2" height="15" fill="#92400e" class="staff"/>
-          <rect x="25" y="12" width="4" height="4" fill="#fbbf24" opacity="0.8"/>
-          <circle cx="27" cy="14" r="2.5" fill="#fde047" opacity="0.9" class="orb"/>
-
-          <!-- Magic glow -->
-          <circle cx="27" cy="14" r="3.5" fill="#fbbf24" opacity="0.3" class="glow"/>
-        </svg>
+        <!-- Summary Stats Row -->
+        <div class="hero-stats">
+          <div class="stat-pill">
+            <FAIcon style="solid" icon="star" />
+            <span class="stat-number">{totalXP.toLocaleString()}</span>
+            <span class="stat-label">XP</span>
+          </div>
+          <div class="stat-pill">
+            <FAIcon style="solid" icon="trophy" />
+            <span class="stat-number">{totalAchievements}</span>
+            <span class="stat-label">Achievements</span>
+          </div>
+          <div class="stat-pill">
+            <FAIcon style="solid" icon="calendar" />
+            <span class="stat-number">{yearLevels[yearLevels.length - 1].year - yearLevels[0].year + 1}</span>
+            <span class="stat-label">Years</span>
+          </div>
+        </div>
       </div>
-      <div class="sprite-label">Level {yearLevels.length} Mage</div>
-    </div>
+    </header>
 
-    <!-- Stats Panel (Left Side, Near Card) -->
-    <div class="stats-panel" id="statsPanel">
-      <div class="stats-header">
-        <FAIcon style="solid" icon="chart-line" />
-        <span>Stats</span>
-      </div>
-      <div class="stats-list" id="statsList">
-        <!-- Will be populated by JS -->
-      </div>
-      <div class="stats-footer">
-        <span class="xp-display" id="xpDisplay">0 XP</span>
-      </div>
-    </div>
+    <!-- Main Timeline Content -->
+    <main class="timeline-container">
+      <!-- Top Stats Summary -->
+      <section class="top-stats-section">
+        <h2 class="section-title">
+          <FAIcon style="solid" icon="chart-line" />
+          <span>Character Attributes</span>
+        </h2>
+        <div class="stats-badge-row">
+          {sortedFinalStats.slice(0, 8).map(([name, value]) => (
+            <span class={`stat-badge ${value < 0 ? 'negative' : 'positive'}`}>
+              <span class="badge-name">{name}</span>
+              <span class="badge-value">{value > 0 ? '+' : ''}{value}</span>
+            </span>
+          ))}
+        </div>
+        <button class="show-all-stats-btn" id="showAllStatsBtn">
+          Show all {sortedFinalStats.length} stats
+          <FAIcon style="solid" icon="chevron-down" />
+        </button>
+        <div class="all-stats-panel hidden" id="allStatsPanel">
+          <div class="stats-badge-row expanded">
+            {sortedFinalStats.map(([name, value]) => (
+              <span class={`stat-badge ${value < 0 ? 'negative' : 'positive'}`}>
+                <span class="badge-name">{name}</span>
+                <span class="badge-value">{value > 0 ? '+' : ''}{value}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
 
-    <!-- Card Stack Container -->
-    <div class="card-stack-container">
-      <div class="card-stack" id="cardStack">
-        {yearLevels.map((level, index) => (
-          <div
-            class="card-wrapper"
-            data-index={index}
-            data-level={level.level}
-            style={`z-index: ${yearLevels.length - index};`}
-          >
-            <div class="card-inner">
-              {/* Front of card */}
-              <div class="card-face card-front">
-                <div class="card-portrait">
-                  {/* Card Header */}
-                  <div class="card-header-portrait">
-                    <div class="card-level-badge">LVL {level.level}</div>
-                    <div class="card-year-badge">{level.year}</div>
+      <!-- Timeline of Levels -->
+      <section class="timeline">
+        {yearLevels.slice().reverse().map((level) => (
+          <article class="year-card">
+            <div class="year-header">
+              <div class="year-badge">{level.year}</div>
+              <div class="year-info">
+                <h2 class="year-title">{level.title}</h2>
+                <p class="year-subtitle">{level.subtitle}</p>
+              </div>
+              <div class="level-badge">LVL {level.level}</div>
+            </div>
+
+            <div class="achievements-grid">
+              {level.achievements.map((achievement) => (
+                <div class="achievement-card">
+                  <div class="achievement-icon-glow">
+                    <FAIcon style={achievement.iconStyle} icon={achievement.icon} />
                   </div>
-
-                  {/* Title Block */}
-                  <div class="card-title-portrait">
-                    <h2 class="portrait-title">{level.title}</h2>
-                    <p class="portrait-subtitle">{level.subtitle}</p>
-                  </div>
-
-                  {/* Achievements in Portrait Layout */}
-                  <div class="achievements-portrait">
-                    {level.achievements.map((achievement) => (
-                      <div class="achievement-entry">
-                        <div class="achievement-icon-small">
-                          <FAIcon style={achievement.iconStyle} icon={achievement.icon} />
-                        </div>
-                        <div class="achievement-details">
-                          <h3 class="achievement-name">{achievement.title}</h3>
-                          <p class="achievement-flavor">{achievement.description}</p>
-                          <div class="achievement-stats">
-                            <span class="xp-tag">+{achievement.xp} XP</span>
-                            <div class="attrs-mini">
-                              {achievement.attributes.map((attr) => (
-                                <span class="attr-mini" class:list={[attr.value < 0 && 'neg']}>
-                                  {attr.name} {attr.value > 0 ? '+' : ''}{attr.value}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Card Footer */}
-                  <div class="card-footer-portrait">
-                    <div class="total-xp-badge">
-                      <FAIcon style="solid" icon="star" />
-                      {level.achievements.reduce((sum, a) => sum + a.xp, 0)} XP
+                  <div class="achievement-content">
+                    <div class="achievement-header">
+                      <h3 class="achievement-title">{achievement.title}</h3>
+                      <span class="xp-badge">+{achievement.xp} XP</span>
+                    </div>
+                    <p class="achievement-desc">{achievement.description}</p>
+                    <div class="achievement-attrs">
+                      {achievement.attributes
+                        .slice()
+                        .sort((a, b) => b.value - a.value)
+                        .map((attr) => (
+                        <span class={`attr-tag ${attr.value < 0 ? 'negative' : 'positive'}`}>
+                          {attr.name} {attr.value > 0 ? '+' : ''}{attr.value}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
-          </div>
+
+            <div class="year-footer">
+              <span class="year-xp">
+                <FAIcon style="solid" icon="star" />
+                {level.achievements.reduce((sum, a) => sum + a.xp, 0)} XP this year
+              </span>
+              <span class="achievement-count">
+                <FAIcon style="solid" icon="award" />
+                {level.achievements.length} {level.achievements.length === 1 ? 'achievement' : 'achievements'}
+              </span>
+            </div>
+          </article>
         ))}
-      </div>
-    </div>
+      </section>
 
-    {/* Separate Final Stats Section - Outside Card Navigation */}
-    <div class="final-stats-section" id="finalStatsSection">
-      <div class="final-page-layout">
-        {/* Left Column - Avatar and Summary */}
-        <div class="final-left-column">
-          <div class="final-avatar-card">
-            <div class="final-mage-portrait">
-              <svg viewBox="0 0 32 32" class="final-mage-sprite">
-                <rect x="10" y="3" width="12" height="2" fill="#6b46c1"/>
-                <rect x="8" y="5" width="16" height="2" fill="#6b46c1"/>
-                <rect x="7" y="7" width="18" height="3" fill="#7c3aed"/>
-                <rect x="12" y="10" width="8" height="6" fill="#d4a574"/>
-                <rect x="13" y="12" width="2" height="1" fill="#4a2511"/>
-                <rect x="17" y="12" width="2" height="1" fill="#4a2511"/>
-                <rect x="14" y="14" width="4" height="1" fill="#c48b5c" opacity="0.6"/>
-                <rect x="9" y="16" width="14" height="2" fill="#8b5cf6"/>
-                <rect x="8" y="18" width="16" height="5" fill="#7c3aed"/>
-                <rect x="7" y="23" width="18" height="4" fill="#6b21a8"/>
-                <rect x="9" y="27" width="5" height="4" fill="#5b21b6"/>
-                <rect x="18" y="27" width="5" height="4" fill="#5b21b6"/>
-                <rect x="26" y="14" width="2" height="15" fill="#92400e"/>
-                <rect x="25" y="12" width="4" height="4" fill="#fbbf24" opacity="0.8"/>
-                <circle cx="27" cy="14" r="2.5" fill="#fde047" opacity="0.9"/>
-                <circle cx="27" cy="14" r="3.5" fill="#fbbf24" opacity="0.3"/>
-              </svg>
-            </div>
-            <h3 class="final-avatar-title">Level {yearLevels.length} Mage</h3>
+      <!-- Journey Complete Footer -->
+      <footer class="journey-complete">
+        <div class="complete-header">
+          <div class="complete-mage">
+            <svg viewBox="0 0 32 32" class="complete-mage-svg">
+              <rect x="10" y="3" width="12" height="2" fill="#6b46c1"/>
+              <rect x="8" y="5" width="16" height="2" fill="#6b46c1"/>
+              <rect x="7" y="7" width="18" height="3" fill="#7c3aed"/>
+              <rect x="12" y="10" width="8" height="6" fill="#d4a574"/>
+              <rect x="13" y="12" width="2" height="1" fill="#4a2511"/>
+              <rect x="17" y="12" width="2" height="1" fill="#4a2511"/>
+              <rect x="14" y="14" width="4" height="1" fill="#c48b5c" opacity="0.6"/>
+              <rect x="9" y="16" width="14" height="2" fill="#8b5cf6"/>
+              <rect x="8" y="18" width="16" height="5" fill="#7c3aed"/>
+              <rect x="7" y="23" width="18" height="4" fill="#6b21a8"/>
+              <rect x="9" y="27" width="5" height="4" fill="#5b21b6"/>
+              <rect x="18" y="27" width="5" height="4" fill="#5b21b6"/>
+              <rect x="26" y="14" width="2" height="15" fill="#92400e"/>
+              <rect x="25" y="12" width="4" height="4" fill="#fbbf24" opacity="0.8"/>
+              <circle cx="27" cy="14" r="2.5" fill="#fde047" opacity="0.9"/>
+              <circle cx="27" cy="14" r="3.5" fill="#fbbf24" opacity="0.3"/>
+            </svg>
           </div>
-
-          <div class="final-summary-stats">
-            <div class="final-summary-item">
-              <FAIcon style="solid" icon="trophy" />
-              <span class="summary-value">{yearLevels.length}</span>
-              <span class="summary-label">Levels</span>
-            </div>
-            <div class="final-summary-item">
-              <FAIcon style="solid" icon="star" />
-              <span class="summary-value">{totalXP}</span>
-              <span class="summary-label">Total XP</span>
-            </div>
-            <div class="final-summary-item">
-              <FAIcon style="solid" icon="award" />
-              <span class="summary-value">{totalAchievements}</span>
-              <span class="summary-label">Achievements</span>
-            </div>
+          <div class="complete-text">
+            <h2 class="complete-title">Journey in Progress</h2>
+            <p class="complete-subtitle">The adventure continues...</p>
           </div>
         </div>
 
-        {/* Right Column - All Attributes */}
-        <div class="final-right-column">
-          <div class="final-header">
-            <h2 class="final-title">Journey Complete</h2>
-            <p class="final-subtitle">Character Stats & Achievements</p>
+        <div class="final-summary">
+          <div class="summary-card">
+            <FAIcon style="solid" icon="trophy" />
+            <span class="summary-value">{yearLevels.length}</span>
+            <span class="summary-label">Levels</span>
           </div>
-
-          <div class="final-attributes-full">
-            <h3 class="attrs-title-final">Final Attributes</h3>
-            <div class="attrs-full-grid">
-              {Object.entries(finalStats)
-                .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
-                .map(([name, value]) => (
-                  <div class="attr-full-item">
-                    <span class="attr-full-name">{name}</span>
-                    <span class="attr-full-value" class:list={[value < 0 && 'neg']}>
-                      {value > 0 ? '+' : ''}{value}
-                    </span>
-                  </div>
-                ))}
-            </div>
+          <div class="summary-card highlight">
+            <FAIcon style="solid" icon="star" />
+            <span class="summary-value">{totalXP.toLocaleString()}</span>
+            <span class="summary-label">Total XP</span>
+          </div>
+          <div class="summary-card">
+            <FAIcon style="solid" icon="award" />
+            <span class="summary-value">{totalAchievements}</span>
+            <span class="summary-label">Achievements</span>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Navigation Controls -->
-    <button class="nav-button nav-prev" id="navPrev" aria-label="Previous card">
-      <FAIcon style="solid" icon="chevron-left" />
-    </button>
-    <button class="nav-button nav-next" id="navNext" aria-label="Next card">
-      <FAIcon style="solid" icon="chevron-right" />
-    </button>
+        <div class="final-all-stats">
+          <h3 class="final-stats-title">All Character Attributes</h3>
+          <div class="final-stats-grid">
+            {sortedFinalStats.map(([name, value]) => (
+              <div class={`final-stat-item ${value < 0 ? 'negative' : ''}`}>
+                <span class="final-stat-name">{name}</span>
+                <span class="final-stat-value">{value > 0 ? '+' : ''}{value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </footer>
+    </main>
 
-    <!-- Progress Indicator -->
-    <div class="progress-indicator">
-      <span id="progressText">Level 1 / {yearLevels.length}</span>
-    </div>
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+      <FAIcon style="solid" icon="chevron-up" />
+    </button>
   </div>
 </BaseLayout>
 
 <script>
-  import { yearLevels, calculateCumulativeStats, calculateTotalXP, getTopStats } from '../data/levelUpData';
+  // Show/hide all stats toggle
+  const showAllStatsBtn = document.getElementById('showAllStatsBtn');
+  const allStatsPanel = document.getElementById('allStatsPanel');
 
-  let currentIndex = 0;
-  let showingFinalStats = false;
-
-  const cardStack = document.getElementById('cardStack');
-  const cardStackContainer = document.querySelector('.card-stack-container');
-  const cards = document.querySelectorAll('.card-wrapper:not(.final-card-wrapper)');
-  const navPrev = document.getElementById('navPrev');
-  const navNext = document.getElementById('navNext');
-  const statsPanel = document.getElementById('statsPanel');
-  const statsList = document.getElementById('statsList');
-  const xpDisplay = document.getElementById('xpDisplay');
-  const progressText = document.getElementById('progressText');
-  const mageSprite = document.getElementById('mageSprite');
-  const finalStatsSection = document.getElementById('finalStatsSection');
-  const spriteDisplay = document.querySelector('.sprite-display') as HTMLElement;
-  const progressIndicator = document.querySelector('.progress-indicator') as HTMLElement;
-
-  // Sprite animation variants
-  const spriteAnimations = ['walk', 'scratch', 'shift', 'twirl'];
-  let currentAnimation = '';
-
-  function playRandomAnimation() {
-    // Remove current animation
-    if (currentAnimation) {
-      mageSprite?.classList.remove(currentAnimation);
-    }
-
-    // Pick random animation
-    const randomAnim = spriteAnimations[Math.floor(Math.random() * spriteAnimations.length)];
-    currentAnimation = randomAnim;
-    mageSprite?.classList.add(randomAnim);
-
-    // Remove after animation completes
-    setTimeout(() => {
-      mageSprite?.classList.remove(randomAnim);
-      currentAnimation = '';
-    }, 800);
-  }
-
-  let previousStats: { [key: string]: number } = {};
-
-  function updateStats(index: number) {
-    const stats = calculateCumulativeStats(index);
-    const xp = calculateTotalXP(index);
-
-    // Sort stats by absolute value (highest to lowest)
-    const sortedStats = Object.entries(stats)
-      .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
-
-    statsList!.innerHTML = sortedStats.map(([name, value]) => {
-      const prevValue = previousStats[name] || 0;
-      const change = value - prevValue;
-
-      // Show colored change indicator with icon
-      const changeHtml = change !== 0 ? `
-        <span class="stat-change ${change > 0 ? 'positive' : 'negative'}">
-          <span class="change-icon">${change > 0 ? '▲' : '▼'}</span>
-          <span class="change-value">${change > 0 ? '+' : ''}${change}</span>
-        </span>
-      ` : '';
-
-      return `
-        <div class="stat-item ${value < 0 ? 'negative' : ''} ${change !== 0 ? 'changed' : ''}">
-          <span class="stat-name">${name}</span>
-          <div class="stat-value-container">
-            <span class="stat-value">${value > 0 ? '+' : ''}${value}</span>
-            ${changeHtml}
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    xpDisplay!.textContent = `${xp} XP`;
-
-    // Store current stats for next comparison
-    previousStats = { ...stats };
-  }
-
-  function showFinalStats() {
-    showingFinalStats = true;
-
-    // Hide card navigation elements
-    if (cardStackContainer) cardStackContainer.style.display = 'none';
-    if (statsPanel) statsPanel.style.display = 'none';
-    if (spriteDisplay) spriteDisplay.style.display = 'none';
-    if (progressIndicator) progressIndicator.style.display = 'none';
-
-    // Show final stats section
-    if (finalStatsSection) finalStatsSection.style.display = 'block';
-
-    // Update progress text
-    if (progressText) progressText.textContent = 'Journey Complete';
-  }
-
-  function showCards() {
-    showingFinalStats = false;
-
-    // Show card navigation elements
-    if (cardStackContainer) cardStackContainer.style.display = 'block';
-    if (statsPanel) statsPanel.style.display = 'block';
-    if (spriteDisplay) spriteDisplay.style.display = 'flex';
-    if (progressIndicator) progressIndicator.style.display = 'block';
-
-    // Hide final stats section
-    if (finalStatsSection) finalStatsSection.style.display = 'none';
-  }
-
-  function updateCard(index: number) {
-    // Handle navigation past last card - show final stats
-    if (index >= yearLevels.length) {
-      showFinalStats();
-      return;
-    }
-
-    // Handle navigation before first card - go back from final stats
-    if (index < 0) {
-      if (showingFinalStats) {
-        // Coming back from final stats, show last card
-        currentIndex = yearLevels.length - 1;
-        showCards();
-      } else {
-        // Wrap to final stats
-        showFinalStats();
-        return;
-      }
-    } else {
-      currentIndex = index;
-      if (showingFinalStats) {
-        showCards();
+  showAllStatsBtn?.addEventListener('click', () => {
+    allStatsPanel?.classList.toggle('hidden');
+    const isHidden = allStatsPanel?.classList.contains('hidden');
+    if (showAllStatsBtn) {
+      const icon = showAllStatsBtn.querySelector('svg');
+      if (icon) {
+        icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
       }
     }
+  });
 
-    // Update card positions and flips
-    cards.forEach((card, i) => {
-      card.classList.remove('active', 'previous', 'hidden');
+  // Back to top button
+  const backToTop = document.getElementById('backToTop');
 
-      if (i === currentIndex) {
-        card.classList.add('active');
-      } else if (i < currentIndex) {
-        card.classList.add('previous');
+  const handleScroll = () => {
+    if (backToTop) {
+      if (window.scrollY > 400) {
+        backToTop.classList.add('visible');
       } else {
-        card.classList.add('hidden');
+        backToTop.classList.remove('visible');
+      }
+    }
+  };
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  backToTop?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Animate elements on scroll
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-in');
       }
     });
+  }, observerOptions);
 
-    // Update stats
-    updateStats(currentIndex);
-
-    // Update progress
-    progressText!.textContent = `Level ${currentIndex + 1} / ${yearLevels.length}`;
-
-    // Play random sprite animation
-    playRandomAnimation();
-  }
-
-  // Navigation handlers - with wrap-around
-  navPrev?.addEventListener('click', () => {
-    updateCard(currentIndex - 1);
+  document.querySelectorAll('.year-card, .achievement-card').forEach(el => {
+    observer.observe(el);
   });
-
-  navNext?.addEventListener('click', () => {
-    updateCard(currentIndex + 1);
-  });
-
-  // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') updateCard(currentIndex - 1);
-    if (e.key === 'ArrowRight') updateCard(currentIndex + 1);
-  });
-
-  // Touch/swipe support
-  let touchStartX = 0;
-  cardStack?.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-  });
-
-  cardStack?.addEventListener('touchend', (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX - touchEndX;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        updateCard(currentIndex + 1);
-      } else {
-        updateCard(currentIndex - 1);
-      }
-    }
-  });
-
-  // Initialize
-  updateCard(0);
 </script>
 
 <style>
-  .rpg-container {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
+  /* ===== Base Layout ===== */
+  .rpg-page {
+    min-height: 100vh;
     background:
-      radial-gradient(ellipse at top, rgba(123, 58, 237, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom, rgba(16, 33, 62, 0.8) 0%, transparent 50%),
+      radial-gradient(ellipse at top, rgba(123, 58, 237, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(16, 33, 62, 0.6) 0%, transparent 50%),
       linear-gradient(180deg, #0a0e27 0%, #1a1b26 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
-  /* Larger Animated Sprite */
-  .sprite-display {
-    position: fixed;
-    top: 50%;
-    right: 120px;
-    transform: translateY(-50%);
-    z-index: 300;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .pixel-mage-large {
-    width: 192px;
-    height: 192px;
-    padding: 16px;
-    background: rgba(16, 21, 38, 0.9);
-    border: 4px solid rgba(139, 92, 246, 0.6);
-    border-radius: 16px;
-    box-shadow:
-      0 0 40px rgba(139, 92, 246, 0.5),
-      inset 0 0 30px rgba(139, 92, 246, 0.1);
+  /* ===== Hero Header ===== */
+  .hero-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 14, 39, 0.95);
     backdrop-filter: blur(12px);
+    border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+    padding: 12px 16px;
   }
 
-  .mage-sprite {
+  .hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .hero-avatar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mage-frame {
+    width: 52px;
+    height: 52px;
+    padding: 6px;
+    background: rgba(139, 92, 246, 0.2);
+    border: 2px solid rgba(139, 92, 246, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+
+  .mage-svg {
     width: 100%;
     height: 100%;
     image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
-    filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.7));
   }
 
-  /* Sprite Animations */
+  .orb {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
   .glow {
     animation: pulse 2s ease-in-out infinite;
   }
 
   @keyframes pulse {
     0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
+    50% { opacity: 0.9; }
   }
 
-  .mage-sprite.walk .left-foot {
-    animation: walkLeft 0.4s ease-in-out;
+  .level-tag {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #7c3aed, #6b21a8);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
-  .mage-sprite.walk .right-foot {
-    animation: walkRight 0.4s ease-in-out;
+  .hero-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: flex-end;
   }
 
-  @keyframes walkLeft {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-2px); }
-  }
-
-  @keyframes walkRight {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(2px); }
-  }
-
-  .mage-sprite.scratch .left-eye,
-  .mage-sprite.scratch .right-eye {
-    animation: blink 0.3s ease-in-out;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  .mage-sprite.shift {
-    animation: shiftWeight 0.6s ease-in-out;
-  }
-
-  @keyframes shiftWeight {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-2px); }
-    75% { transform: translateX(2px); }
-  }
-
-  .mage-sprite.twirl .staff {
-    animation: staffTwirl 0.6s ease-in-out;
-    transform-origin: center;
-  }
-
-  @keyframes staffTwirl {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(15deg); }
-  }
-
-  .sprite-label {
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 20px;
+    color: var(--sw-text-secondary);
     font-size: 13px;
+  }
+
+  .stat-pill :global(svg) {
+    color: #fbbf24;
+    font-size: 14px;
+  }
+
+  .stat-number {
+    font-weight: 800;
+    color: var(--sw-text-primary);
+    font-family: 'Monaco', monospace;
+  }
+
+  .stat-label {
+    color: var(--sw-text-muted);
+    font-size: 11px;
+  }
+
+  /* ===== Main Content ===== */
+  .timeline-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* ===== Top Stats Section ===== */
+  .top-stats-section {
+    margin-bottom: 32px;
+    padding: 20px;
+    background: rgba(139, 92, 246, 0.08);
+    border: 2px solid rgba(139, 92, 246, 0.25);
+    border-radius: 16px;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
     font-weight: 700;
     color: #a78bfa;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    padding: 6px 16px;
-    background: rgba(139, 92, 246, 0.25);
-    border-radius: 10px;
-    border: 2px solid rgba(139, 92, 246, 0.4);
+    margin-bottom: 16px;
   }
 
-  /* Stats Panel - Left Side, Near Card */
-  .stats-panel {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-650px, -50%);
-    z-index: 200;
-    width: 340px;
-    max-height: 700px;
-    background: rgba(16, 21, 38, 0.95);
-    border: 3px solid rgba(139, 92, 246, 0.5);
-    border-radius: 16px;
-    padding: 24px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  }
-
-  .stats-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .section-title :global(svg) {
     font-size: 16px;
-    font-weight: 800;
-    color: #a78bfa;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid rgba(139, 92, 246, 0.4);
   }
 
-  .stats-list {
+  .stats-badge-row {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 16px;
-    max-height: 500px;
-    overflow-y: auto;
-    padding-right: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
   }
 
-  .stats-list::-webkit-scrollbar {
-    width: 5px;
+  .stats-badge-row.expanded {
+    margin-bottom: 0;
   }
 
-  .stats-list::-webkit-scrollbar-track {
-    background: rgba(139, 92, 246, 0.1);
-    border-radius: 3px;
-  }
-
-  .stats-list::-webkit-scrollbar-thumb {
-    background: rgba(139, 92, 246, 0.5);
-    border-radius: 3px;
-  }
-
-  .stat-item {
-    display: flex;
-    justify-content: space-between;
+  .stat-badge {
+    display: inline-flex;
     align-items: center;
-    padding: 10px 14px;
-    background: rgba(139, 92, 246, 0.1);
-    border-radius: 8px;
-    font-size: 14px;
-    border: 1px solid rgba(139, 92, 246, 0.2);
-  }
-
-  .stat-item.negative {
-    background: rgba(248, 113, 113, 0.1);
-    border-color: rgba(248, 113, 113, 0.3);
-  }
-
-  .stat-name {
-    color: var(--sw-text-secondary);
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
     font-weight: 600;
-    flex: 1;
+    transition: transform 0.2s ease;
   }
 
-  .stat-value-container {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
+  .stat-badge:hover {
+    transform: scale(1.05);
   }
 
-  .stat-value {
+  .stat-badge.positive {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.4);
     color: #10b981;
-    font-weight: 800;
-    font-family: 'Monaco', monospace;
-    font-size: 15px;
-    min-width: 40px;
-    text-align: right;
   }
 
-  .stat-item.negative .stat-value {
+  .stat-badge.negative {
+    background: rgba(248, 113, 113, 0.15);
+    border: 1px solid rgba(248, 113, 113, 0.4);
     color: #f87171;
   }
 
-  :global(.stat-change) {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 11px;
-    font-weight: 900;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-family: 'Monaco', monospace;
-    animation: statPulse 0.6s ease-out;
-    margin-left: 6px;
-    white-space: nowrap;
+  .badge-name {
+    color: var(--sw-text-secondary);
   }
 
-  @keyframes statPulse {
-    0% { transform: scale(1.3); opacity: 0; }
-    40% { transform: scale(1.1); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  :global(.stat-change.positive) {
-    color: #4ade80 !important;
-    background: rgba(34, 197, 94, 0.25) !important;
-    border: 2px solid rgba(74, 222, 128, 0.7) !important;
-    text-shadow: 0 0 10px rgba(74, 222, 128, 1), 0 0 20px rgba(74, 222, 128, 0.6);
-    box-shadow: 0 0 15px rgba(74, 222, 128, 0.5), inset 0 0 8px rgba(74, 222, 128, 0.2);
-  }
-
-  :global(.stat-change.negative) {
-    color: #f87171 !important;
-    background: rgba(248, 113, 113, 0.25) !important;
-    border: 2px solid rgba(248, 113, 113, 0.7) !important;
-    text-shadow: 0 0 10px rgba(248, 113, 113, 1), 0 0 20px rgba(248, 113, 113, 0.6);
-    box-shadow: 0 0 15px rgba(248, 113, 113, 0.5), inset 0 0 8px rgba(248, 113, 113, 0.2);
-  }
-
-  :global(.change-icon) {
-    font-size: 9px;
-    line-height: 1;
-  }
-
-  :global(.change-value) {
-    font-weight: 900;
-    letter-spacing: 0.5px;
-  }
-
-  :global(.stat-item.changed) {
-    animation: itemHighlight 0.5s ease-out;
-    border-color: rgba(139, 92, 246, 0.5);
-  }
-
-  @keyframes itemHighlight {
-    0% { transform: translateX(-3px); background: rgba(139, 92, 246, 0.2); }
-    50% { transform: translateX(2px); }
-    100% { transform: translateX(0); }
-  }
-
-  .stats-footer {
-    padding-top: 12px;
-    border-top: 2px solid rgba(139, 92, 246, 0.4);
-    text-align: center;
-  }
-
-  .xp-display {
-    display: inline-block;
-    padding: 8px 16px;
-    background: rgba(251, 191, 36, 0.15);
-    border: 2px solid rgba(251, 191, 36, 0.5);
-    border-radius: 10px;
-    color: #fbbf24;
-    font-size: 16px;
+  .badge-value {
     font-weight: 800;
     font-family: 'Monaco', monospace;
   }
 
-  /* Card Stack Container */
-  .card-stack-container {
-    position: relative;
-    width: 550px;
-    height: 780px;
-    perspective: 2000px;
+  .show-all-stats-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    border-radius: 8px;
+    color: #a78bfa;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
 
-  .card-stack {
-    position: relative;
-    width: 100%;
-    height: 100%;
+  .show-all-stats-btn:hover {
+    background: rgba(139, 92, 246, 0.15);
+    border-color: rgba(139, 92, 246, 0.6);
   }
 
-  .card-wrapper {
-    position: absolute;
-    inset: 0;
-    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.6s ease-out;
-    transform-style: preserve-3d;
+  .show-all-stats-btn :global(svg) {
+    transition: transform 0.3s ease;
+    font-size: 10px;
   }
 
-  /* Card States - Card flip animation */
-  .card-wrapper.hidden {
-    transform: rotateY(-15deg) translateX(100px) scale(0.85);
-    opacity: 0;
-    pointer-events: none;
+  .all-stats-panel {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
   }
 
-  .card-wrapper.active {
-    transform: rotateY(0deg) translateX(0) scale(1);
-    opacity: 1;
-    pointer-events: auto;
+  .all-stats-panel.hidden {
+    display: none;
   }
 
-  .card-wrapper.previous {
-    transform: rotateY(15deg) translateX(-100px) scale(0.85);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  /* Card Inner */
-  .card-inner {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-  }
-
-  .card-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-  }
-
-  /* Portrait Card Design - Playing Card Style */
-  .card-portrait {
-    width: 100%;
-    height: 100%;
-    background:
-      linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(16, 21, 38, 0.98) 100%);
-    border: 6px solid #7c3aed;
-    border-radius: 24px;
+  /* ===== Timeline ===== */
+  .timeline {
     display: flex;
     flex-direction: column;
-    box-shadow:
-      0 25px 70px rgba(0, 0, 0, 0.6),
-      0 0 50px rgba(139, 92, 246, 0.4),
-      inset 0 0 40px rgba(139, 92, 246, 0.08),
-      inset 0 0 0 2px rgba(167, 139, 250, 0.3);
-    overflow: hidden;
-    position: relative;
+    gap: 24px;
   }
 
-  .card-portrait::before {
-    content: '';
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    border: 1px solid rgba(167, 139, 250, 0.3);
+  .year-card {
+    background: rgba(16, 21, 38, 0.8);
+    border: 2px solid rgba(139, 92, 246, 0.25);
     border-radius: 16px;
-    pointer-events: none;
-    z-index: 1;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
   }
 
-  /* Card Header Portrait */
-  .card-header-portrait {
+  /* Alternate year card backgrounds for visual distinction */
+  .year-card:nth-child(odd) {
+    background: rgba(16, 21, 38, 0.85);
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+
+  .year-card:nth-child(odd) .year-header {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25) 0%, rgba(107, 33, 168, 0.2) 100%);
+  }
+
+  .year-card:nth-child(even) {
+    background: rgba(20, 27, 48, 0.85);
+    border-color: rgba(127, 219, 202, 0.25);
+  }
+
+  .year-card:nth-child(even) .year-header {
+    background: linear-gradient(135deg, rgba(127, 219, 202, 0.15) 0%, rgba(16, 33, 62, 0.2) 100%);
+    border-bottom-color: rgba(127, 219, 202, 0.2);
+  }
+
+  .year-card:nth-child(even) .year-badge {
+    color: #7FDBCA;
+  }
+
+  .year-card:nth-child(even) .year-footer {
+    border-top-color: rgba(127, 219, 202, 0.15);
+  }
+
+  .year-card.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .year-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 20px 24px;
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.4) 0%, rgba(107, 33, 168, 0.3) 100%);
-    border-bottom: 3px solid rgba(139, 92, 246, 0.4);
+    gap: 16px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(107, 33, 168, 0.15) 100%);
+    border-bottom: 2px solid rgba(139, 92, 246, 0.2);
+    flex-wrap: wrap;
   }
 
-  .card-level-badge {
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    color: #fbbf24;
-    text-transform: uppercase;
-    padding: 6px 16px;
-    background: rgba(251, 191, 36, 0.15);
-    border: 2px solid rgba(251, 191, 36, 0.4);
-    border-radius: 12px;
-  }
-
-  .card-year-badge {
-    font-size: 26px;
+  .year-badge {
+    font-size: 24px;
     font-weight: 900;
     color: #a78bfa;
     font-family: 'Monaco', monospace;
+    min-width: 60px;
   }
 
-  /* Title Portrait */
-  .card-title-portrait {
-    padding: 24px 24px 20px;
-    text-align: center;
-    border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+  .year-info {
+    flex: 1;
+    min-width: 200px;
   }
 
-  .portrait-title {
-    font-size: 32px;
-    font-weight: 900;
+  .year-title {
+    font-size: 18px;
+    font-weight: 800;
     background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 8px;
-    line-height: 1.2;
+    margin-bottom: 4px;
   }
 
-  .portrait-subtitle {
-    font-size: 15px;
+  .year-subtitle {
+    font-size: 13px;
     color: var(--sw-text-muted);
     font-style: italic;
   }
 
-  /* Achievements Portrait */
-  .achievements-portrait {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    overflow-x: hidden;
+  .level-badge {
+    padding: 6px 14px;
+    background: rgba(251, 191, 36, 0.15);
+    border: 2px solid rgba(251, 191, 36, 0.4);
+    border-radius: 10px;
+    color: #fbbf24;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
   }
 
-  .achievements-portrait::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .achievements-portrait::-webkit-scrollbar-track {
-    background: rgba(139, 92, 246, 0.1);
-    border-radius: 3px;
-  }
-
-  .achievements-portrait::-webkit-scrollbar-thumb {
-    background: rgba(139, 92, 246, 0.5);
-    border-radius: 3px;
-  }
-
-  .achievement-entry {
-    display: flex;
-    gap: 14px;
+  /* ===== Achievement Cards ===== */
+  .achievements-grid {
+    display: grid;
+    gap: 12px;
     padding: 16px;
-    background: rgba(139, 92, 246, 0.06);
-    border: 2px solid rgba(139, 92, 246, 0.2);
+  }
+
+  .achievement-card {
+    display: flex;
+    gap: 16px;
+    padding: 14px 14px 14px 0;
+    background: rgba(139, 92, 246, 0.04);
+    border: none;
     border-radius: 12px;
-    margin-bottom: 14px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: translateX(-10px);
+    position: relative;
   }
 
-  .achievement-entry:hover {
-    border-color: rgba(139, 92, 246, 0.5);
-    background: rgba(139, 92, 246, 0.12);
-    transform: translateY(-2px);
+  .achievement-card.animate-in {
+    opacity: 1;
+    transform: translateX(0);
   }
 
-  .achievement-entry:last-child {
-    margin-bottom: 0;
+  .achievement-card:hover {
+    background: rgba(139, 92, 246, 0.08);
   }
 
-  .achievement-icon-small {
-    width: 42px;
-    height: 42px;
+  .achievement-card:hover .achievement-icon-glow {
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.9), 0 0 40px rgba(139, 92, 246, 0.6);
+  }
+
+  .achievement-card:hover .achievement-icon-glow::before {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 40px rgba(139, 92, 246, 0.5);
+  }
+
+  /* Left border icon style with neon glow */
+  .achievement-icon-glow {
+    flex-shrink: 0;
+    width: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #7c3aed, #6b21a8);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 20px;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+    color: #a78bfa;
+    font-size: 22px;
+    position: relative;
+    text-shadow: 0 0 12px rgba(139, 92, 246, 0.7), 0 0 24px rgba(139, 92, 246, 0.4);
+    transition: all 0.3s ease;
   }
 
-  .achievement-details {
+  .achievement-icon-glow::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: linear-gradient(180deg, #7c3aed, #a78bfa);
+    border-radius: 2px;
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.6), 0 0 24px rgba(139, 92, 246, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .achievement-icon-glow :global(svg) {
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+  }
+
+  .achievement-content {
     flex: 1;
     min-width: 0;
   }
 
-  .achievement-name {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--sw-text-primary);
+  .achievement-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
     margin-bottom: 6px;
+    flex-wrap: wrap;
   }
 
-  .achievement-flavor {
+  .achievement-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--sw-text-primary);
+  }
+
+  .xp-badge {
+    flex-shrink: 0;
+    padding: 3px 10px;
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    border-radius: 12px;
+    color: #fbbf24;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .achievement-desc {
     font-size: 13px;
     line-height: 1.5;
     color: var(--sw-text-secondary);
     margin-bottom: 10px;
   }
 
-  .achievement-stats {
+  .achievement-attrs {
     display: flex;
-    align-items: center;
-    gap: 10px;
     flex-wrap: wrap;
-  }
-
-  .xp-tag {
-    padding: 4px 10px;
-    background: rgba(251, 191, 36, 0.15);
-    border: 1px solid rgba(251, 191, 36, 0.5);
-    border-radius: 6px;
-    color: #fbbf24;
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  .attrs-mini {
-    display: flex;
     gap: 6px;
-    flex-wrap: wrap;
   }
 
-  .attr-mini {
+  .attr-tag {
     padding: 3px 8px;
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.4);
-    border-radius: 5px;
+    border-radius: 6px;
     font-size: 11px;
     font-weight: 600;
+  }
+
+  .attr-tag.positive {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
     color: #10b981;
   }
 
-  .attr-mini.neg {
-    background: rgba(248, 113, 113, 0.15);
-    border-color: rgba(248, 113, 113, 0.4);
+  .attr-tag.negative {
+    background: rgba(248, 113, 113, 0.12);
+    border: 1px solid rgba(248, 113, 113, 0.3);
     color: #f87171;
   }
 
-  /* Card Footer Portrait */
-  .card-footer-portrait {
-    padding: 18px 24px;
-    background: rgba(16, 21, 38, 0.7);
-    border-top: 3px solid rgba(139, 92, 246, 0.4);
+  /* ===== Year Footer ===== */
+  .year-footer {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(16, 21, 38, 0.6);
+    border-top: 1px solid rgba(139, 92, 246, 0.15);
+    font-size: 12px;
+    color: var(--sw-text-muted);
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
-  .total-xp-badge {
+  .year-xp, .achievement-count {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 20px;
-    background: rgba(251, 191, 36, 0.15);
-    border: 2px solid rgba(251, 191, 36, 0.5);
-    border-radius: 12px;
+    gap: 6px;
+  }
+
+  .year-xp :global(svg) {
     color: #fbbf24;
-    font-size: 16px;
-    font-weight: 800;
   }
 
-  /* Final Stats Section - Separate from Card Navigation */
-  .final-stats-section {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background: linear-gradient(135deg, rgba(16, 21, 38, 0.98) 0%, rgba(30, 27, 75, 0.98) 100%);
-    overflow-y: auto;
-    overflow-x: hidden;
+  .achievement-count :global(svg) {
+    color: #a78bfa;
   }
 
-  .final-page-layout {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 40px;
-    padding: 60px 40px;
-    min-height: 100vh;
-    max-width: 1200px;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 0 auto;
+  /* ===== Journey Complete Footer ===== */
+  .journey-complete {
+    margin-top: 48px;
+    padding: 32px 24px;
+    background: rgba(139, 92, 246, 0.1);
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    border-radius: 20px;
   }
 
-  /* Left Column - Avatar & Summary */
-  .final-left-column {
+  .complete-header {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 20px;
-  }
-
-  .final-avatar-card {
-    background: rgba(139, 92, 246, 0.15);
-    border: 3px solid rgba(139, 92, 246, 0.4);
-    border-radius: 16px;
-    padding: 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
     text-align: center;
   }
 
-  .final-mage-portrait {
-    width: 160px;
-    height: 160px;
-    margin: 0 auto 16px;
-    padding: 12px;
+  .complete-mage {
+    width: 80px;
+    height: 80px;
+    padding: 10px;
     background: rgba(16, 21, 38, 0.9);
     border: 3px solid rgba(139, 92, 246, 0.5);
-    border-radius: 12px;
+    border-radius: 16px;
     box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
   }
 
-  .final-mage-sprite {
+  .complete-mage-svg {
     width: 100%;
     height: 100%;
     image-rendering: pixelated;
-    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.7));
+    image-rendering: crisp-edges;
   }
 
-  .final-avatar-title {
-    font-size: 16px;
-    font-weight: 800;
-    color: #a78bfa;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  .complete-text {
+    flex: 1;
+    min-width: 200px;
   }
 
-  .final-summary-stats {
+  .complete-title {
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  .complete-subtitle {
+    font-size: 14px;
+    color: var(--sw-text-muted);
+    font-style: italic;
+  }
+
+  .final-summary {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
   }
 
-  .final-summary-item {
+  .summary-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    padding: 16px;
-    background: rgba(139, 92, 246, 0.15);
-    border: 2px solid rgba(139, 92, 246, 0.4);
-    border-radius: 12px;
+    padding: 16px 24px;
+    background: rgba(16, 21, 38, 0.6);
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    border-radius: 14px;
+    min-width: 100px;
   }
 
-  .final-summary-item :global(svg) {
-    font-size: 28px;
+  .summary-card.highlight {
+    border-color: rgba(251, 191, 36, 0.5);
+    background: rgba(251, 191, 36, 0.08);
+  }
+
+  .summary-card :global(svg) {
+    font-size: 24px;
     color: #7c3aed;
   }
 
+  .summary-card.highlight :global(svg) {
+    color: #fbbf24;
+  }
+
   .summary-value {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 900;
     color: var(--sw-text-primary);
+    font-family: 'Monaco', monospace;
   }
 
   .summary-label {
@@ -1086,320 +870,227 @@ const finalStats = getFinalStats();
     letter-spacing: 1px;
   }
 
-  /* Right Column - Stats */
-  .final-right-column {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  .final-all-stats {
+    padding-top: 24px;
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
   }
 
-  .final-header {
-    text-align: center;
-    padding-bottom: 16px;
-    border-bottom: 2px solid rgba(139, 92, 246, 0.3);
-  }
-
-  .final-title {
-    font-size: 38px;
-    font-weight: 900;
-    background: linear-gradient(135deg, #7FDBCA 0%, #C792EA 50%, #FF5874 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 8px;
-  }
-
-  .final-subtitle {
-    font-size: 15px;
-    color: var(--sw-text-muted);
-    font-style: italic;
-  }
-
-  .final-attributes-full {
-    flex: 1;
-  }
-
-  .attrs-title-final {
-    font-size: 18px;
-    font-weight: 800;
+  .final-stats-title {
+    font-size: 14px;
+    font-weight: 700;
     color: #a78bfa;
-    margin-bottom: 16px;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     text-align: center;
+    margin-bottom: 16px;
   }
 
-  .attrs-full-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .attr-full-item {
+  .final-stats-grid {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background: rgba(139, 92, 246, 0.12);
-    border: 2px solid rgba(139, 92, 246, 0.3);
-    border-radius: 10px;
-    transition: all 0.2s ease;
-  }
-
-  .attr-full-item:hover {
-    border-color: rgba(139, 92, 246, 0.6);
-    background: rgba(139, 92, 246, 0.18);
-    transform: translateY(-1px);
-  }
-
-  .attr-full-name {
-    color: var(--sw-text-secondary);
-    font-weight: 700;
-    font-size: 13px;
-  }
-
-  .attr-full-value {
-    color: #10b981;
-    font-weight: 900;
-    font-family: 'Monaco', monospace;
-    font-size: 17px;
-  }
-
-  .attr-full-value.neg {
-    color: #f87171;
-  }
-
-  /* Navigation Buttons - Bottom positioned with better spacing */
-  .nav-button {
-    position: fixed;
-    bottom: 100px;
-    width: 56px;
-    height: 56px;
-    background: rgba(139, 92, 246, 0.3);
-    border: 3px solid rgba(139, 92, 246, 0.6);
-    border-radius: 50%;
-    color: #a78bfa;
-    font-size: 22px;
-    cursor: pointer;
-    z-index: 250;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
     justify-content: center;
   }
 
-  .nav-button:hover {
-    background: rgba(139, 92, 246, 0.6);
-    border-color: rgba(139, 92, 246, 1);
-    transform: scale(1.15);
-    box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
-  }
-
-  .nav-prev {
-    left: 50%;
-    transform: translateX(-110px);
-  }
-
-  .nav-next {
-    left: 50%;
-    transform: translateX(54px);
-  }
-
-  .nav-prev:hover {
-    transform: translateX(-110px) scale(1.15);
-  }
-
-  .nav-next:hover {
-    transform: translateX(54px) scale(1.15);
-  }
-
-  /* Progress Indicator - positioned between nav buttons */
-  .progress-indicator {
-    position: fixed;
-    bottom: 105px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 250;
-    padding: 8px 20px;
-    background: rgba(16, 21, 38, 0.95);
-    border: 2px solid rgba(139, 92, 246, 0.5);
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
+  .final-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 10px;
     font-size: 13px;
-    font-weight: 700;
-    color: #a78bfa;
-    text-transform: uppercase;
-    letter-spacing: 1px;
   }
 
-  /* Mobile Responsive */
-  @media (max-width: 1400px) {
-    .stats-panel {
-      transform: translate(-500px, -50%);
-      width: 300px;
-      padding: 20px;
-    }
-
-    .sprite-display {
-      right: 80px;
-    }
+  .final-stat-item.negative {
+    background: rgba(248, 113, 113, 0.1);
+    border-color: rgba(248, 113, 113, 0.3);
   }
 
-  @media (max-width: 1200px) {
-    .stats-panel {
-      transform: translate(-400px, -50%);
-      width: 260px;
-      padding: 18px;
-    }
-
-    .card-stack-container {
-      width: 480px;
-      height: 680px;
-    }
-
-    .sprite-display {
-      right: 60px;
-    }
+  .final-stat-name {
+    color: var(--sw-text-secondary);
+    font-weight: 600;
   }
 
-  @media (max-width: 1024px) {
-    /* Final card responsive adjustments for tablets */
-    .final-page-layout {
-      grid-template-columns: 240px 1fr;
-      gap: 30px;
-      padding: 40px 30px;
-    }
-
-    .attrs-full-grid {
-      grid-template-columns: 1fr;
-    }
+  .final-stat-value {
+    color: #10b981;
+    font-weight: 800;
+    font-family: 'Monaco', monospace;
   }
 
+  .final-stat-item.negative .final-stat-value {
+    color: #f87171;
+  }
+
+  /* ===== Back to Top Button ===== */
+  .back-to-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    background: rgba(139, 92, 246, 0.9);
+    border: 2px solid rgba(167, 139, 250, 0.6);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+  }
+
+  .back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .back-to-top:hover {
+    background: rgba(139, 92, 246, 1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+  }
+
+  /* ===== Responsive Breakpoints ===== */
   @media (max-width: 768px) {
-    .sprite-display {
-      top: 15px;
-      right: 15px;
+    .hero-header {
+      padding: 10px 12px;
     }
 
-    .pixel-mage-large {
-      width: 120px;
-      height: 120px;
-      padding: 10px;
+    .hero-content {
+      gap: 12px;
     }
 
-    .stats-panel {
-      position: fixed;
-      left: 15px;
-      top: auto;
-      bottom: 100px;
-      transform: none;
-      width: 200px;
+    .hero-stats {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .stat-pill {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .stat-label {
+      display: none;
+    }
+
+    .timeline-container {
+      padding: 16px 12px 50px;
+    }
+
+    .top-stats-section {
       padding: 14px;
     }
 
-    .stats-header {
-      font-size: 13px;
-      margin-bottom: 12px;
+    .year-header {
+      padding: 14px 16px;
+      gap: 12px;
     }
 
-    .stat-item {
-      padding: 8px 10px;
-      font-size: 12px;
+    .year-badge {
+      font-size: 20px;
     }
 
-    .card-stack-container {
-      width: 340px;
-      height: 520px;
+    .year-title {
+      font-size: 16px;
     }
 
-    .portrait-title {
-      font-size: 26px;
+    .achievements-grid {
+      padding: 12px;
+      gap: 10px;
     }
 
-    .achievement-name {
+    .achievement-card {
+      padding: 12px 12px 12px 0;
+      gap: 12px;
+    }
+
+    .achievement-icon-glow {
+      width: 40px;
+      font-size: 18px;
+    }
+
+    .achievement-icon-glow::before {
+      width: 3px;
+      height: 60%;
+    }
+
+    .achievement-title {
       font-size: 14px;
     }
 
-    .achievement-flavor {
+    .achievement-desc {
       font-size: 12px;
     }
 
-    .nav-button {
-      width: 48px;
-      height: 48px;
-      font-size: 18px;
-      bottom: 25px;
+    .journey-complete {
+      padding: 24px 16px;
     }
 
-    .nav-prev {
-      left: 15px;
-      transform: none;
-    }
-    .nav-next {
-      right: 15px;
-      left: auto;
-      transform: none;
+    .complete-title {
+      font-size: 22px;
     }
 
-    .nav-prev:hover {
-      transform: scale(1.1);
-    }
-
-    .nav-next:hover {
-      transform: scale(1.1);
-    }
-
-    .progress-indicator {
-      bottom: 80px;
-      font-size: 11px;
-      padding: 6px 14px;
-    }
-
-    /* Final card mobile layout - stack vertically */
-    .final-page-layout {
-      grid-template-columns: 1fr;
-      gap: 20px;
-      padding: 30px 20px;
-    }
-
-    .final-left-column {
-      flex-direction: row;
-      gap: 15px;
-    }
-
-    .final-avatar-card {
-      flex: 0 0 auto;
-      padding: 15px;
-    }
-
-    .final-mage-portrait {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 10px;
-    }
-
-    .final-summary-stats {
-      flex: 1;
-      flex-direction: row;
-      justify-content: space-around;
-    }
-
-    .final-summary-item {
-      padding: 12px;
-      flex: 1;
+    .summary-card {
+      padding: 12px 18px;
+      min-width: 85px;
     }
 
     .summary-value {
-      font-size: 24px;
+      font-size: 22px;
     }
 
-    .final-title {
-      font-size: 28px;
+    .back-to-top {
+      bottom: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mage-frame {
+      width: 44px;
+      height: 44px;
+      padding: 5px;
     }
 
-    .attrs-full-grid {
-      grid-template-columns: 1fr;
+    .level-tag {
+      padding: 4px 8px;
+      font-size: 10px;
+    }
+
+    .stat-pill {
+      padding: 5px 8px;
+      font-size: 11px;
+    }
+
+    .stat-badge {
+      padding: 4px 8px;
+      font-size: 10px;
+    }
+
+    .year-info {
+      min-width: 150px;
+    }
+
+    .level-badge {
+      padding: 4px 10px;
+      font-size: 10px;
+    }
+
+    .final-stat-item {
+      padding: 6px 10px;
+      font-size: 11px;
     }
   }
 </style>
