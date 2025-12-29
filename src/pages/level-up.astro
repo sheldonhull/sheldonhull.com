@@ -13,14 +13,9 @@ const totalXP = getTotalXP();
 const totalAchievements = getTotalAchievements();
 const finalStats = getFinalStats();
 
-// Sort stats by absolute value (highest to lowest), positives before negatives at same magnitude
+// Sort stats by value (highest to lowest: +14, +13, ... +1, 0, -1, -2, etc.)
 const sortedFinalStats = Object.entries(finalStats)
-  .sort((a, b) => {
-    const absCompare = Math.abs(b[1]) - Math.abs(a[1]);
-    if (absCompare !== 0) return absCompare;
-    // Same absolute value: positive before negative
-    return b[1] - a[1];
-  });
+  .sort((a, b) => b[1] - a[1]);
 ---
 
 <BaseLayout title="Life RPG | Sheldon Hull" description="Life as an RPG adventure - achievements, stats, and the journey so far">
@@ -134,11 +129,7 @@ const sortedFinalStats = Object.entries(finalStats)
                     <div class="achievement-attrs">
                       {achievement.attributes
                         .slice()
-                        .sort((a, b) => {
-                          const absCompare = Math.abs(b.value) - Math.abs(a.value);
-                          if (absCompare !== 0) return absCompare;
-                          return b.value - a.value;
-                        })
+                        .sort((a, b) => b.value - a.value)
                         .map((attr) => (
                         <span class={`attr-tag ${attr.value < 0 ? 'negative' : 'positive'}`}>
                           {attr.name} {attr.value > 0 ? '+' : ''}{attr.value}
