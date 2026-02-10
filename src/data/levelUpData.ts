@@ -635,6 +635,40 @@ export const yearLevels: YearLevel[] = [
         ]
       }
     ]
+  },
+  {
+    year: 2026,
+    level: 16,
+    title: 'AI Acceleration Era',
+    subtitle: 'Prompt-to-production loops became the norm',
+    achievements: [
+      {
+        title: 'Singularity Adjacent Shipping',
+        description: 'Built end-to-end projects with AI copilots doing most of the keyboard work. The singularity didn\'t arrive, but deployment velocity definitely did.',
+        icon: 'robot',
+        iconStyle: 'solid',
+        xp: 225,
+        attributes: [
+          { name: 'AI', value: 4 },
+          { name: 'Automation', value: 3 },
+          { name: 'Problem Solving', value: 2 },
+          { name: 'Sleep', value: -2 }
+        ]
+      },
+      {
+        title: 'Slack Bot Rebuild',
+        description: 'Rebuilt the notorious team slack bot in short order using Claude with the OpenAI Agents SDK and Anthropic Client SDK, then pushed it back into active duty.',
+        icon: 'terminal',
+        iconStyle: 'solid',
+        xp: 200,
+        attributes: [
+          { name: 'Automation', value: 3 },
+          { name: 'AI', value: 3 },
+          { name: 'Scripting', value: 2 },
+          { name: 'Sleep', value: -1 }
+        ]
+      }
+    ]
   }
 ];
 
