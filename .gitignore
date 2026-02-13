@@ -224,3 +224,6 @@ pnpm-debug.log*
 .serena/
 
 # Astro gitignore merged
+
+# Claude Code agent directory
+.serena/
