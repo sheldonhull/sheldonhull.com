@@ -59,7 +59,21 @@ try {
     // Fetch from GitHub API
     const response = await fetch(apiUrl, { headers });
     if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
+      const errorBody = await response.text();
+      let errorMsg = `GitHub API error: ${response.status}`;
+
+      if (response.status === 403) {
+        errorMsg += '\n';
+        if (!githubToken) {
+          errorMsg += 'No GITHUB_TOKEN found. Set GITHUB_TOKEN environment variable to avoid rate limits.\n';
+          errorMsg += 'Create token at: https://github.com/settings/tokens (no scopes needed)';
+        } else {
+          errorMsg += 'Authentication failed. Check if your GITHUB_TOKEN is valid.';
+        }
+      }
+
+      console.error(errorMsg);
+      throw new Error(errorMsg);
     }
 
     gistData = await response.json();
