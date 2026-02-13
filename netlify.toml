@@ -2,6 +2,9 @@
 # PUBLISH/PUBLIC
 ###############################
 [build]
+# Skip builds for Renovate bot commits and commits with [skip ci] in message
+# Exit code 0 = skip build, Exit code 1 = proceed with build
+ignore = "git log -1 --pretty=%B | grep -qiE '(renovate|\\[skip ci\\])'"
 command = '''
 curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v3.1.2/aqua-installer | bash -s -- -v v2.43.1
 export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:${PATH}"
