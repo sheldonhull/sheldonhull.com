@@ -220,3 +220,6 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 # Astro gitignore merged
+
+# Claude Code agent directory
+.serena/
