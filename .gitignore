@@ -219,6 +219,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Serena MCP tool cache and config
+.serena/
+
 # Astro gitignore merged
 
 # Claude Code agent directory

@@ -1,5 +1,7 @@
 ---
 import { codeToHtml } from 'shiki';
+import fs from 'node:fs';
+import path from 'node:path';
 
 interface Props {
   user: string;
@@ -22,19 +24,65 @@ const {
 // Generate unique ID for SVG filter to avoid conflicts with multiple gists
 const filterId = `glass-distortion-${gistId.substring(0, 8)}`;
 
-// Fetch gist data from GitHub API at build time
+// Setup cache directory - use .netlify/cache for Netlify builds, node_modules/.cache locally
+const cacheDir = process.env.NETLIFY
+  ? path.join(process.cwd(), '.netlify', 'cache', 'gists')
+  : path.join(process.cwd(), 'node_modules', '.cache', 'gists');
+const cacheFile = path.join(cacheDir, `${gistId}.json`);
+
+// Fetch gist data from GitHub API at build time with caching
 const apiUrl = `https://api.github.com/gists/${gistId}`;
 let gistContent = '';
 let detectedLanguage = lang;
 let gistUrl = `https://gist.github.com/${user}/${gistId}`;
 
-try {
-  const response = await fetch(apiUrl);
-  if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.status}`);
-  }
+// Use GitHub token if available for higher rate limits (5000/hr vs 60/hr)
+const headers: HeadersInit = {
+  'Accept': 'application/vnd.github+json',
+  'X-GitHub-Api-Version': '2022-11-28'
+};
 
-  const gistData = await response.json();
+const githubToken = import.meta.env.GITHUB_TOKEN || process.env.GITHUB_TOKEN;
+if (githubToken) {
+  headers['Authorization'] = `Bearer ${githubToken}`;
+}
+
+let gistData: any;
+
+try {
+  // Check if cached version exists
+  if (fs.existsSync(cacheFile)) {
+    const cachedData = fs.readFileSync(cacheFile, 'utf-8');
+    gistData = JSON.parse(cachedData);
+    console.log(`Using cached gist data for ${gistId}`);
+  } else {
+    // Fetch from GitHub API
+    const response = await fetch(apiUrl, { headers });
+    if (!response.ok) {
+      const errorBody = await response.text();
+      let errorMsg = `GitHub API error: ${response.status}`;
+
+      if (response.status === 403) {
+        errorMsg += '\n';
+        if (!githubToken) {
+          errorMsg += 'No GITHUB_TOKEN found. Set GITHUB_TOKEN environment variable to avoid rate limits.\n';
+          errorMsg += 'Create token at: https://github.com/settings/tokens (no scopes needed)';
+        } else {
+          errorMsg += 'Authentication failed. Check if your GITHUB_TOKEN is valid.';
+        }
+      }
+
+      console.error(errorMsg);
+      throw new Error(errorMsg);
+    }
+
+    gistData = await response.json();
+
+    // Cache the response
+    fs.mkdirSync(cacheDir, { recursive: true });
+    fs.writeFileSync(cacheFile, JSON.stringify(gistData, null, 2));
+    console.log(`Cached gist data for ${gistId}`);
+  }
 
   // Get the specific file or first file
   if (filename && gistData.files[filename]) {

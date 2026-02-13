@@ -170,7 +170,11 @@ Then visit: `http://localhost:4321/gist-demo`
 
 1. **Check the gist ID** - Make sure it's the correct hash from the URL
 2. **Check the filename** - If specifying a filename, ensure it matches exactly (case-sensitive)
-3. **API rate limits** - GitHub API has rate limits. During development, builds might fail if you hit the limit
+3. **API rate limits** - GitHub API has rate limits (60/hour unauthenticated, 5000/hour authenticated). Set `GITHUB_TOKEN` environment variable to avoid rate limit errors:
+   - Create a [Personal Access Token](https://github.com/settings/tokens) with no scopes (public access only)
+   - Add to `.env`: `GITHUB_TOKEN=ghp_xxxxxxxxxxxx`
+   - For Netlify: Add to Environment Variables in Site Settings
+4. **Caching** - Gist data is automatically cached in `node_modules/.cache/gists/` to avoid re-fetching on every build. To refresh a gist, delete its cache file or run `rm -rf node_modules/.cache/gists/`
 
 ### Syntax highlighting not working
 
