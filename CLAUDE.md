@@ -61,12 +61,18 @@ Uses **mise** (`mise.toml`) for CLI tool versions. Tools: task, volta, ripgrep, 
 
 Node/Yarn versions pinned via **Volta** in `package.json`.
 
+## Environment Variables
+
+**Required for builds**:
+- `GITHUB_TOKEN` — GitHub Personal Access Token for fetching gists. Without this, builds will fail due to API rate limits (60/hour unauthenticated). With token: 5000/hour. Create at https://github.com/settings/tokens with no scopes needed.
+
 ## Deployment
 
 **Netlify** (`netlify.toml`):
 - Installs mise → installs tools → `task init` → `task build`
 - Output: `.artifacts/public`
 - Redirects handle legacy Jekyll/Hugo URLs and RSS feeds
+- Environment variables: Set `GITHUB_TOKEN` in Site Settings → Environment Variables
 
 ## Gotchas
 
