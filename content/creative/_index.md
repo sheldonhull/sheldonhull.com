@@ -1,4 +1,0 @@
----
-title: "creative"
-slug: "creative"
----

@@ -51,10 +51,6 @@ pre-commit:
               echo "🔨 markdownlint: $file"
               docker run --rm -v ${PWD}:/workdir --entrypoint="markdownlint-cli2-fix" davidanson/markdownlint-cli2:latest "$file"
             done
-          hugo:
-            tags: build
-            name: hugo-build
-            run: MAGEFILE_HASHFAST=1 go tool mage hugo:build
     #yarn run markdownlint-cli2-fix "{files}"
     # markdownlint-cli2  "{files}"
     #"**/*.md" "#node_modules"

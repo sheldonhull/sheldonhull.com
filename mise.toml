@@ -1,0 +1,7 @@
+[tools]
+"aqua:miniscruff/changie" = "1.22.1"
+"aqua:direnv/direnv" = "2.37.1"
+"aqua:charmbracelet/glow" = "2.1.1"
+"aqua:go-task/task" = "3.45.4"
+"aqua:BurntSushi/ripgrep" = "15.1.0"
+"aqua:volta-cli/volta" = "2.0.2"

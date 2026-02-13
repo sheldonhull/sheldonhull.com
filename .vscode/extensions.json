@@ -6,7 +6,7 @@
         "yzhang.markdown-all-in-one",
         "darkriszty.markdown-table-prettify",
         "davidanson.vscode-markdownlint",
-        "budparr.language-hugo-vscode",
+        "astro-build.astro-vscode",
         "esbenp.prettier-vscode",
         "sibiraj-s.vscode-scss-formatter",
         "tomasvergara.vscode-fontawesome-gallery",

@@ -1,3 +1,0 @@
-ARG HUGO_VERSION=0.88
-
-FROM klakegg/hugo:${HUGO_VERSION}.0-ubuntu
