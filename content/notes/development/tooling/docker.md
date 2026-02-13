@@ -42,11 +42,24 @@ Clone the `microsoft/vscode-dev-containers` repo and then copy the `script-libra
 
 ## User Configuration
 
-Using dotfiles with Chezmoi, manually trigger using a command such as:
+Using dotfiles with [Chezmoi](https://www.chezmoi.io/), manually trigger using a command such as:
 
-    curl -sfL https://git.io/chezmoi | sh
-    echo "Enter GitHub username for Chezmoi repo"
-    ./bin/chezmoi init --apply --verbose https://github.com/$(read)/chezmoi.git
+```shell
+# Install chezmoi
+sh -c "$(curl -fsLS get.chezmoi.io)"
+
+# Initialize and apply dotfiles (replace with your GitHub username)
+chezmoi init --apply --verbose https://github.com/$GITHUB_USERNAME/dotfiles.git
+```
+
+For automated Docker/Codespaces setup, you can use environment variables:
+
+```shell
+# One-liner with GITHUB_USERNAME environment variable
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply --verbose "https://github.com/${GITHUB_USERNAME}/dotfiles.git"
+```
+
+See the [chezmoi notes](/notes/chezmoi/) for comprehensive templating best practices.
 
 ## Environment Variables
 
