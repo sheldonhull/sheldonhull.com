@@ -1,6 +1,4 @@
----
 # Astro-based personal site build configuration
-
 version: '3'
 output: prefixed
 silent: true
@@ -35,7 +33,6 @@ vars:
   white: \033[:1;37m
   nocolor: \u001b[0m
   reversed: \u001b[7m
-
 tasks:
   default:
     cmds:
@@ -52,22 +49,18 @@ tasks:
         echo -e "{{.light_gray}}TODAY                {{.nocolor}}: {{ .orange}}{{ .TODAY }} {{ .nocolor }}"
         echo -e "{{.light_gray}}TODAY_UTC            {{.nocolor}}: {{ .orange}}{{ .TODAY_UTC }} {{ .nocolor }}"
         echo -e "{{.light_gray}}GIT_COMMIT           {{.nocolor}}: {{ .orange}}{{ .GIT_COMMIT }} {{ .nocolor }}"
-
   serve:
     desc: Start Astro development server
     cmds:
       - task: astro:serve
-
   build:
     desc: Build Astro site for production
     cmds:
       - task: astro:build
-
   preview:
     desc: Preview Astro production build locally
     cmds:
       - task: astro:preview
-
   echo-debug:
     desc: output variables for debugging netlify or other build tasks
     cmds:
@@ -78,27 +71,32 @@ tasks:
       - echo "GIT_COMMIT_SHA_SHORT = $GIT_COMMIT_SHA_SHORT"
       - echo "NODE_VERSION         = $(node --version)"
       - echo "YARN_VERSION         = $(yarn --version)"
-
   init:
     desc: Initialize project to ensure dependencies and tooling is ready
     cmds:
       - task: astro:install
+      - hk install --mise
+  fmt:
+    desc: Auto-fix formatting and linting issues
+    cmds:
+      - hk run fix
+  check:
+    desc: Run all linters without fixing
+    cmds:
+      - hk run check
   # === Astro Tasks ===
   astro:serve:
     desc: Start Astro development server
     cmds:
       - yarn dev
-
   astro:build:
     desc: Build Astro site for production
     cmds:
       - yarn build
-
   astro:preview:
     desc: Preview Astro production build
     cmds:
       - yarn preview
-
   astro:install:
     desc: Install Astro dependencies (runs yarn install - lockfile will be immutable in CI)
     cmds:

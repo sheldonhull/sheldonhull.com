@@ -7,7 +7,7 @@ import FAIcon from '../components/FAIcon.astro';
   title="Portfolio - Sheldon Hull"
   description="The journey of a developer who loves Go, distributed systems, and tacos"
 >
-  <div class="max-w-5xl mx-auto">
+  <div class="max-w-6xl mx-auto">
 
     <!-- Hero Section -->
     <section class="mb-20 text-center">
@@ -85,12 +85,32 @@ import FAIcon from '../components/FAIcon.astro';
             </p>
             <details class="timeline-details">
               <summary style="color: var(--sw-cyan); cursor: pointer;">View highlights →</summary>
-              <ul class="mt-4 space-y-2" style="color: var(--sw-text-secondary);">
-                <li>⚡ Consolidated scattered docs into cohesive devex site</li>
-                <li>⚡ Improved supply chain security tooling & guidance</li>
-                <li>⚡ Cross-team impact with presentations & knowledge sharing</li>
-                <li>⚡ Promoted for stellar performance & impact</li>
-              </ul>
+              <div class="highlight-grid mt-4">
+                <div class="highlight-group">
+                  <h4 class="highlight-group-title cyan"><FAIcon style="solid" icon="robot" /> AI & Automation</h4>
+                  <ul class="space-y-2" style="color: var(--sw-text-secondary);">
+                    <li><FAIcon style="solid" icon="users" /> Led Claude onboarding across multiple teams (500+ users)</li>
+                    <li><FAIcon style="solid" icon="store" /> Piloted GitHub Marketplace integration with Claude</li>
+                    <li><FAIcon style="solid" icon="shield-halved" /> Built agentic workflows for red team, security & cleanup</li>
+                    <li><FAIcon style="solid" icon="flask" /> Explored Claude, OpenCode, Copilot & Codex in CI and local</li>
+                    <li><FAIcon style="solid" icon="vial" /> Anthropic SDK regression tests against Argo deployments</li>
+                    <li><FAIcon style="solid" icon="comments" /> Built internal Slackbot with OpenAI Agents SDK for morale, web search & support using reasoning models</li>
+                    <li><FAIcon style="solid" icon="plug" /> Piloted first internal MCP server (exploratory)</li>
+                    <li><FAIcon style="solid" icon="chalkboard-user" /> Org-level MCP presentation pre-hackathon to drive adoption</li>
+                  </ul>
+                </div>
+                <div class="highlight-group">
+                  <h4 class="highlight-group-title cyan"><FAIcon style="solid" icon="wand-magic-sparkles" /> DevEx & Leadership</h4>
+                  <ul class="space-y-2" style="color: var(--sw-text-secondary);">
+                    <li><FAIcon style="solid" icon="book" /> Consolidated scattered docs into cohesive devex site</li>
+                    <li><FAIcon style="solid" icon="lock" /> Improved supply chain security tooling & guidance</li>
+                    <li><FAIcon style="solid" icon="bullhorn" /> Cross-team impact with presentations & knowledge sharing</li>
+                    <li><FAIcon style="solid" icon="arrow-up" /> Promoted for stellar performance & impact</li>
+                    <li><FAIcon style="solid" icon="rotate" /> Co-led org-wide Argo Rollouts modernization: rebuilt charts, tests & Go CLI across engineering</li>
+                    <li><FAIcon style="solid" icon="code" /> Built Claude skill for handling complex migration workflows</li>
+                  </ul>
+                </div>
+              </div>
             </details>
           </div>
         </div>
@@ -107,14 +127,24 @@ import FAIcon from '../components/FAIcon.astro';
             </p>
             <details class="timeline-details">
               <summary style="color: var(--sw-purple); cursor: pointer;">View highlights →</summary>
-              <ul class="mt-4 space-y-2" style="color: var(--sw-text-secondary);">
-                <li>🚀 Built Helm + Pulumi stack for K8s with &lt;15min PR-to-prod</li>
-                <li>🔧 Wrote Go task automation for entire dev workflow (one command bootstrap)</li>
-                <li>📦 Led monorepo migration for Angular + Go teams</li>
-                <li>☁️ AWS architecture redesign for ECS Fargate</li>
-                <li>📊 APM integration, structured logging, synthetic monitoring</li>
-                <li>🎯 Trunk-based development & infrastructure-as-code adoption</li>
-              </ul>
+              <div class="highlight-grid mt-4">
+                <div class="highlight-group">
+                  <h4 class="highlight-group-title purple"><FAIcon style="solid" icon="server" /> Infrastructure & Delivery</h4>
+                  <ul class="space-y-2" style="color: var(--sw-text-secondary);">
+                    <li><FAIcon style="solid" icon="rocket" /> Helm + Pulumi stack for K8s with &lt;15min PR-to-prod</li>
+                    <li><FAIcon style="solid" icon="cloud" /> AWS architecture redesign for ECS Fargate</li>
+                    <li><FAIcon style="solid" icon="crosshairs" /> Trunk-based development & infrastructure-as-code</li>
+                  </ul>
+                </div>
+                <div class="highlight-group">
+                  <h4 class="highlight-group-title purple"><FAIcon style="solid" icon="wrench" /> Developer Tooling</h4>
+                  <ul class="space-y-2" style="color: var(--sw-text-secondary);">
+                    <li><FAIcon style="solid" icon="terminal" /> Go task automation for entire dev workflow (one command bootstrap)</li>
+                    <li><FAIcon style="solid" icon="box" /> Led monorepo migration for Angular + Go teams</li>
+                    <li><FAIcon style="solid" icon="chart-line" /> APM integration, structured logging, synthetic monitoring</li>
+                  </ul>
+                </div>
+              </div>
             </details>
           </div>
         </div>
@@ -132,13 +162,13 @@ import FAIcon from '../components/FAIcon.astro';
             <details class="timeline-details">
               <summary style="color: var(--sw-pink); cursor: pointer;">View highlights →</summary>
               <ul class="mt-4 space-y-2" style="color: var(--sw-text-secondary);">
-                <li>☁️ Part of on-premise → AWS cloud transformation</li>
-                <li>🏗️ Designed serverless Lambda solutions for KPI insights</li>
-                <li>📚 Built comprehensive runbook library (GitLab handbook-first inspired)</li>
-                <li>🤖 Built systems management for hundreds of instances</li>
-                <li>🎯 AMI pipelines with Packer, matrix builds, automated tests</li>
-                <li>📊 Championed observability with Datadog, Grafana, InfluxDB</li>
-                <li>🗄️ Database performance tuning & architectural design</li>
+                <li><FAIcon style="solid" icon="cloud" /> Part of on-premise → AWS cloud transformation</li>
+                <li><FAIcon style="solid" icon="bolt" /> Designed serverless Lambda solutions for KPI insights</li>
+                <li><FAIcon style="solid" icon="book-open" /> Built comprehensive runbook library (GitLab handbook-first inspired)</li>
+                <li><FAIcon style="solid" icon="server" /> Built systems management for hundreds of instances</li>
+                <li><FAIcon style="solid" icon="crosshairs" /> AMI pipelines with Packer, matrix builds, automated tests</li>
+                <li><FAIcon style="solid" icon="chart-line" /> Championed observability with Datadog, Grafana, InfluxDB</li>
+                <li><FAIcon style="solid" icon="database" /> Database performance tuning & architectural design</li>
               </ul>
             </details>
           </div>
@@ -182,6 +212,9 @@ import FAIcon from '../components/FAIcon.astro';
             <span class="tech-tag cyan">Datadog</span>
             <span class="tech-tag cyan">Linux</span>
             <span class="tech-tag cyan">PowerShell</span>
+            <span class="tech-tag cyan">Claude</span>
+            <span class="tech-tag cyan">Copilot</span>
+            <span class="tech-tag cyan">Codex</span>
             <span class="tech-tag cyan">Technical Docs</span>
           </div>
         </div>
@@ -200,6 +233,7 @@ import FAIcon from '../components/FAIcon.astro';
             <span class="tech-tag purple">Serverless</span>
             <span class="tech-tag purple">Azure Pipelines</span>
             <span class="tech-tag purple">Dagger</span>
+            <span class="tech-tag purple">OpenCode</span>
           </div>
         </div>
 
@@ -354,19 +388,19 @@ import FAIcon from '../components/FAIcon.astro';
           </h3>
           <ul class="space-y-3" style="color: var(--sw-text-secondary);">
             <li class="flex items-start gap-2">
-              <FAIcon style="solid" icon="comment" class="mt-1 flex-shrink-0" style="color: var(--sw-cyan);" />
+              <span class="mt-1 flex-shrink-0" style="color: var(--sw-cyan);"><FAIcon style="solid" icon="comment" /></span>
               <span>Emotional intelligence & influence-based leadership</span>
             </li>
             <li class="flex items-start gap-2">
-              <FAIcon style="solid" icon="check-circle" class="mt-1 flex-shrink-0" style="color: var(--sw-cyan);" />
+              <span class="mt-1 flex-shrink-0" style="color: var(--sw-cyan);"><FAIcon style="solid" icon="circle-check" /></span>
               <span>"Cradle to grave" ownership mentality</span>
             </li>
             <li class="flex items-start gap-2">
-              <FAIcon style="solid" icon="book" class="mt-1 flex-shrink-0" style="color: var(--sw-cyan);" />
+              <span class="mt-1 flex-shrink-0" style="color: var(--sw-cyan);"><FAIcon style="solid" icon="book" /></span>
               <span>Documentation obsessive (handbook-first approach)</span>
             </li>
             <li class="flex items-start gap-2">
-              <FAIcon style="solid" icon="tachometer-alt" class="mt-1 flex-shrink-0" style="color: var(--sw-cyan);" />
+              <span class="mt-1 flex-shrink-0" style="color: var(--sw-cyan);"><FAIcon style="solid" icon="gauge-high" /></span>
               <span>Balance craft with shipping fast</span>
             </li>
           </ul>
@@ -379,15 +413,15 @@ import FAIcon from '../components/FAIcon.astro';
           </h3>
           <ul class="space-y-3" style="color: var(--sw-text-secondary);">
             <li class="flex items-start gap-2">
-              <FAIcon style="solid" icon="laptop" class="mt-1 flex-shrink-0" style="color: var(--sw-pink);" />
+              <span class="mt-1 flex-shrink-0" style="color: var(--sw-pink);"><FAIcon style="solid" icon="laptop" /></span>
               <span>Remote-first, async communication cultures</span>
             </li>
             <li class="flex items-start gap-2">
-              <FAIcon style="solid" icon="users" class="mt-1 flex-shrink-0" style="color: var(--sw-pink);" />
+              <span class="mt-1 flex-shrink-0" style="color: var(--sw-pink);"><FAIcon style="solid" icon="users" /></span>
               <span>Teams that value generalists with deep expertise</span>
             </li>
             <li class="flex items-start gap-2">
-              <FAIcon style="solid" icon="rocket" class="mt-1 flex-shrink-0" style="color: var(--sw-pink);" />
+              <span class="mt-1 flex-shrink-0" style="color: var(--sw-pink);"><FAIcon style="solid" icon="rocket" /></span>
               <span>Places that ship fast but care about reliability</span>
             </li>
           </ul>
@@ -581,6 +615,51 @@ import FAIcon from '../components/FAIcon.astro';
   .timeline-details summary {
     font-weight: 500;
     transition: color 0.2s ease;
+  }
+
+  /* Highlight Groups */
+  .highlight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .highlight-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .highlight-group {
+    background: rgba(127, 219, 202, 0.1);
+    padding: 1rem 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(127, 219, 202, 0.25);
+  }
+
+  .highlight-group ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 0.875rem;
+  }
+
+  .highlight-group-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .highlight-group-title.cyan {
+    color: var(--sw-cyan);
+  }
+
+  .highlight-group-title.purple {
+    color: var(--sw-purple);
   }
 
   .timeline-details summary:hover {

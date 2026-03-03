@@ -1,0 +1,132 @@
+amends "package://github.com/jdx/hk/releases/download/v1.36.0/hk@1.36.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.36.0/hk@1.36.0#/Builtins.pkl"
+// context7: /jdx/hk
+// proper install is: hk install --mise, to ensure it uses mise to manage all deps.
+
+// ── Shared excludes ─────────────────────────────────────────────────
+local vendored = List("node_modules/**", ".claude/skills/**")
+
+// ── Pre-commit linters ──────────────────────────────────────────────
+local linters = new Mapping<String, Step> {
+    // ── File hygiene ─────────────────────────────────────────────
+    ["trailing-whitespace"] = (Builtins.trailing_whitespace) {
+        exclude = vendored
+    }
+    ["newlines"] = (Builtins.newlines) {
+        exclude = vendored
+    }
+    ["mixed-line-ending"] = (Builtins.mixed_line_ending) {
+        exclude = vendored
+    }
+    ["check-byte-order-marker"] = (Builtins.check_byte_order_marker) {
+        exclude = vendored
+    }
+    ["fix-smart-quotes"] = (Builtins.fix_smart_quotes) {
+        exclude = vendored
+    }
+    // ── Replace em-dash/en-dash with hyphens ─────────────────────
+    ["fix-dashes"] {
+        exclude = vendored + List("hk.pkl")
+        check = #"! rg '[\u2013\u2014]' {{files}}"#
+        fix = #"mise exec -- sd '[\x{2013}\x{2014}]' '-' {{files}}"#
+    }
+
+    // ── Repo safety ──────────────────────────────────────────────
+    ["check-added-large-files"] = Builtins.check_added_large_files
+    ["check-case-conflict"] = Builtins.check_case_conflict
+    ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
+    ["check-merge-conflict"] = Builtins.check_merge_conflict
+    ["check-symlinks"] = Builtins.check_symlinks
+    ["detect-private-key"] = Builtins.detect_private_key
+
+    // ── Spelling ─────────────────────────────────────────────────
+    ["typos"] = (Builtins.typos) {
+        exclude = vendored
+    }
+
+    // ── Editorconfig ─────────────────────────────────────────────
+    ["editorconfig-checker"] = (Builtins.editorconfig_checker) {
+        exclude = vendored
+    }
+
+    // ── Markdown (reads .markdownlint.yaml) ──────────────────────
+    ["markdown-lint"] {
+        glob = List("**/*.md")
+        exclude = List("node_modules/**", "CHANGELOG.md", ".claude/**", ".cursor/**")
+        check = "mise exec -- bunx markdownlint-cli2 {{files}}"
+        fix = "mise exec -- bunx markdownlint-cli2 --fix {{files}}"
+    }
+
+    // ── YAML ─────────────────────────────────────────────────────
+    ["yamlfmt"] = (Builtins.yamlfmt) {
+        exclude = List(".github/**", "node_modules/**", ".markdownlint.yaml", ".yamllint.yaml", ".prettierrc")
+    }
+    ["yamllint"] = (Builtins.yamllint) {
+        exclude = List(".github/**", "node_modules/**", ".markdownlint.yaml", ".yamllint.yaml")
+    }
+
+    // ── JS/TS/CSS formatting ─────────────────────────────────────
+    ["prettier"] = (Builtins.prettier) {
+        exclude = vendored + List("**/*.yaml", "**/*.yml", ".markdownlint.yaml", ".yamllint.yaml", ".prettierrc")
+    }
+    ["sort-package-json"] = (Builtins.sort_package_json) {
+        exclude = vendored
+    }
+
+    // ── Shell ────────────────────────────────────────────────────
+    ["shfmt"] = (Builtins.shfmt) {
+        check = "mise exec -- shfmt -d -i 4 -ci {{files}}"
+        fix = "mise exec -- shfmt -w -i 4 -ci {{files}}"
+    }
+    ["shellcheck"] = Builtins.shellcheck
+
+    // ── GitHub Actions ───────────────────────────────────────────
+    ["actionlint"] = (Builtins.actionlint) {
+        exclude = List("**/*.lock.yml")
+    }
+
+    ["mise"] = Builtins.mise
+}
+
+// ── Pre-push security & deep analysis ───────────────────────────────
+local push_steps = new Mapping<String, Step> {
+    // MCP skills security scan (toxic skill detection)
+    ["mcp-scan-skills"] {
+        check = "mise exec -- uvx mcp-scan@latest --skills"
+    }
+
+    // Full secret scan from base branch
+    ["trufflehog"] {
+        check = "mise exec -- trufflehog git file://. --since-commit origin/main --branch HEAD --only-verified --fail --no-update"
+    }
+}
+
+// ── Manual audit scans ──────────────────────────────────────────────
+local audit_steps = new Mapping<String, Step> {
+    ["audit-secrets"] {
+        check = "mise exec -- trufflehog git file://. --since-commit HEAD~10"
+    }
+}
+
+fail_fast = false
+
+hooks {
+    ["pre-commit"] {
+        fix = true
+        stash = "git"
+        steps = linters
+    }
+    ["pre-push"] {
+        steps = push_steps
+    }
+    ["fix"] {
+        fix = true
+        steps = linters
+    }
+    ["check"] {
+        steps = linters
+    }
+    ["audit"] {
+        steps = audit_steps
+    }
+}
