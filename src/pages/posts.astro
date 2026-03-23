@@ -66,6 +66,75 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
   </div>
 
   <style>
+    /* Entrance animations */
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes typewriterIn {
+      0% {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+      }
+      100% {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+      }
+    }
+
+    @keyframes gridDraw {
+      from { opacity: 0; }
+      to { opacity: 0.3; }
+    }
+
+    /* Year sections appear as you scroll */
+    .year-section {
+      animation: fadeSlideUp 0.5s cubic-bezier(0.25, 1, 0.5, 1) both;
+    }
+
+    .year-section:nth-child(1) { animation-delay: 0.2s; }
+    .year-section:nth-child(2) { animation-delay: 0.3s; }
+    .year-section:nth-child(3) { animation-delay: 0.4s; }
+    .year-section:nth-child(n+4) { animation-delay: 0.5s; }
+
+    .archive-title {
+      animation: typewriterIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.1s both;
+    }
+
+    .archive-grid-bg {
+      animation: gridDraw 1s ease-out 0.3s both;
+    }
+
+    /* Post count pulses once on entrance */
+    @keyframes countPop {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .post-count {
+      animation: countPop 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.5s both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .year-section,
+      .archive-title,
+      .archive-grid-bg,
+      .post-count {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        clip-path: none !important;
+      }
+    }
+
     .archive-container {
       max-width: 1600px;
       margin: 0 auto;
@@ -226,6 +295,17 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
     }
 
     .post-item:hover .post-date {
+      color: var(--sw-cyan);
+    }
+
+    /* Satisfying click feedback */
+    .post-item:active {
+      background: rgba(255, 88, 116, 0.1);
+      transform: scale(0.99);
+      transition-duration: 0.06s;
+    }
+
+    .post-item:active .post-title {
       color: var(--sw-cyan);
     }
 

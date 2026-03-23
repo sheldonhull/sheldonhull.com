@@ -201,7 +201,7 @@ hr {
     0 0 30px rgba(199, 146, 234, 0.2);
 }
 
-/* Liquid Glass Header Effect - TEMPORARILY SIMPLIFIED FOR TESTING */
+/* Liquid Glass Header Effect — refined glassmorphism */
 .liquid-glass-header {
   position: sticky;
   top: 0;
@@ -210,12 +210,18 @@ hr {
   z-index: 1000;
   width: 100%;
 
-  /* Minimal styling - just basic glass backdrop */
-  background: rgba(1, 22, 39, 0.85);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(1, 22, 39, 0.78);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
 
-  border-bottom: 1px solid rgba(127, 219, 202, 0.15);
+  border-bottom: 1px solid rgba(127, 219, 202, 0.12);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.liquid-glass-header:hover {
+  background: rgba(1, 22, 39, 0.88);
+  border-bottom-color: rgba(127, 219, 202, 0.22);
 }
 
 /* Mobile header adjustments */

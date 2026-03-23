@@ -40,190 +40,205 @@ const {
 
     <LiquidGlassHeader />
 
-    <!-- Click-triggered Spotlight (hidden by default) -->
-    <div class="spotlight-effect" aria-hidden="true"></div>
-    <div class="ripple-container" aria-hidden="true"></div>
-
     <main class="container mx-auto px-4 py-12 mt-12">
       <slot />
     </main>
 
-    <footer class="border-t mt-16" style="border-color: var(--sw-bg-tertiary); background: var(--sw-bg-secondary);">
+    <footer class="site-footer border-t mt-16" style="border-color: var(--sw-bg-tertiary); background: var(--sw-bg-secondary);">
       <div class="container mx-auto px-4 py-8 text-center text-sm" style="color: var(--sw-text-muted);">
-        <p>&copy; {new Date().getFullYear()} Sheldon Hull. All rights reserved.</p>
+        <p>
+          &copy; {new Date().getFullYear()} Sheldon Hull.
+          Built with <span class="footer-heart" title="Click me!">♥</span> and
+          <span class="footer-taco" title="My spirit animal">🌮</span>
+        </p>
       </div>
     </footer>
 
+    <!-- Konami code overlay (hidden until activated) -->
+    <div id="konami-overlay" class="konami-overlay" aria-hidden="true">
+      <div class="konami-content">
+        <p class="konami-text">⬆⬆⬇⬇⬅➡⬅➡🅱🅰</p>
+        <p class="konami-sub">You found the secret! Here's a taco: 🌮</p>
+      </div>
+    </div>
+
     <style>
-      .spotlight-effect {
+      /* Footer whimsy */
+      .footer-heart {
+        color: var(--sw-pink);
+        cursor: pointer;
+        display: inline-block;
+        transition: transform 0.2s ease;
+      }
+
+      .footer-heart:hover {
+        animation: heartbeat 0.6s ease-in-out;
+      }
+
+      @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.3); }
+        50% { transform: scale(1); }
+        75% { transform: scale(1.2); }
+      }
+
+      .footer-taco {
+        cursor: pointer;
+        display: inline-block;
+        transition: transform 0.3s ease;
+      }
+
+      .footer-taco:hover {
+        animation: tacoWiggle 0.5s ease-in-out;
+      }
+
+      @keyframes tacoWiggle {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-12deg); }
+        75% { transform: rotate(12deg); }
+      }
+
+      /* Konami code overlay */
+      .konami-overlay {
         position: fixed;
         inset: 0;
-        pointer-events: none;
-        z-index: 9999;
-        background-image: radial-gradient(
-          circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-          var(--spotlight-color-1, rgba(127, 219, 202, 0.35)),
-          var(--spotlight-color-2, rgba(199, 146, 234, 0.25)) 30%,
-          var(--spotlight-color-3, rgba(255, 88, 116, 0.15)) 50%,
-          transparent 75%
-        );
+        z-index: 99999;
+        background: rgba(1, 22, 39, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         opacity: 0;
-        transition: opacity 5s ease-out;
-        mix-blend-mode: screen;
-        will-change: opacity;
-        transform: translateZ(0);
+        pointer-events: none;
+        transition: opacity 0.4s ease;
       }
 
-      .spotlight-effect.active {
+      .konami-overlay.active {
         opacity: 1;
-        transition: opacity 0.1s ease-in;
+        pointer-events: auto;
       }
 
-      /* Disable spotlight effect on mobile */
-      @media (max-width: 767px) {
-        .spotlight-effect {
-          display: none !important;
+      .konami-content {
+        text-align: center;
+      }
+
+      .konami-text {
+        font-size: clamp(2rem, 5vw, 4rem);
+        letter-spacing: 0.1em;
+        animation: konamiGlow 2s ease-in-out infinite alternate;
+      }
+
+      .konami-sub {
+        font-size: 1.25rem;
+        color: var(--sw-cyan);
+        margin-top: 1rem;
+      }
+
+      @keyframes konamiGlow {
+        from {
+          text-shadow: 0 0 10px rgba(255, 88, 116, 0.5), 0 0 20px rgba(199, 146, 234, 0.3);
+        }
+        to {
+          text-shadow: 0 0 20px rgba(127, 219, 202, 0.5), 0 0 40px rgba(255, 88, 116, 0.3);
         }
       }
 
-      .ripple-container {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 10000;
-        overflow: hidden;
-      }
-
-      .neon-ripple {
-        position: absolute;
-        border-radius: 50%;
-        border: 5px solid;
-        pointer-events: none;
-        animation: rippleExpand 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        will-change: transform, opacity;
-        backdrop-filter: blur(4px) saturate(2);
-        transform: translateZ(0);
-      }
-
-      @keyframes rippleExpand {
-        0% {
-          width: 0;
-          height: 0;
-          opacity: 1;
-          filter: brightness(1.5);
-        }
-        50% {
-          opacity: 0.8;
-          filter: brightness(1.2);
-        }
-        100% {
-          width: 500px;
-          height: 500px;
-          opacity: 0;
-          filter: brightness(1);
+      @media (prefers-reduced-motion: reduce) {
+        .footer-heart:hover,
+        .footer-taco:hover {
+          animation: none !important;
         }
       }
     </style>
 
     <script>
-      // Update cursor position for click-triggered spotlight
-      function updateCursorPosition(clientX, clientY) {
-        const x = (clientX / window.innerWidth) * 100;
-        const y = (clientY / window.innerHeight) * 100;
+      // Console easter egg
+      console.log(
+        '%c⚡ sheldonhull.com %c\n' +
+        '%cMaking infrastructure dance since 2015.\n' +
+        'Built with Astro, Tailwind, and too much coffee.\n\n' +
+        'Curious? → https://github.com/sheldonhull/sheldonhull.com\n' +
+        'Psst... try the Konami code.',
+        'font-size: 20px; font-weight: bold; color: #7fdbca; text-shadow: 0 0 10px #7fdbca;',
+        '',
+        'font-size: 12px; color: #c792ea;'
+      );
 
-        document.documentElement.style.setProperty('--mouse-x', `${x}%`);
-        document.documentElement.style.setProperty('--mouse-y', `${y}%`);
-      }
+      // Konami code: ↑↑↓↓←→←→BA
+      const konamiSequence = [38,38,40,40,37,39,37,39,66,65];
+      let konamiIndex = 0;
 
-      // Click effect with glow and ripple
-      let clickCount = 0;
-      const maxClicks = 10;
-      let fadeTimeout;
+      document.addEventListener('keydown', (e) => {
+        if (e.keyCode === konamiSequence[konamiIndex]) {
+          konamiIndex++;
+          if (konamiIndex === konamiSequence.length) {
+            const overlay = document.getElementById('konami-overlay');
+            overlay?.classList.add('active');
+            konamiIndex = 0;
 
-      const colorSchemes = [
-        // Cyan theme
-        {
-          color1: 'rgba(127, 219, 202, 0.35)',
-          color2: 'rgba(199, 146, 234, 0.25)',
-          color3: 'rgba(255, 88, 116, 0.15)',
-          ripple: 'rgb(127, 219, 202)'
-        },
-        // Purple theme
-        {
-          color1: 'rgba(199, 146, 234, 0.35)',
-          color2: 'rgba(255, 88, 116, 0.25)',
-          color3: 'rgba(236, 196, 141, 0.15)',
-          ripple: 'rgb(199, 146, 234)'
-        },
-        // Pink theme
-        {
-          color1: 'rgba(255, 88, 116, 0.35)',
-          color2: 'rgba(236, 196, 141, 0.25)',
-          color3: 'rgba(127, 219, 202, 0.15)',
-          ripple: 'rgb(255, 88, 116)'
-        },
-        // Yellow theme
-        {
-          color1: 'rgba(236, 196, 141, 0.35)',
-          color2: 'rgba(127, 219, 202, 0.25)',
-          color3: 'rgba(199, 146, 234, 0.15)',
-          ripple: 'rgb(236, 196, 141)'
-        },
-        // Blue theme
-        {
-          color1: 'rgba(130, 170, 255, 0.35)',
-          color2: 'rgba(127, 219, 202, 0.25)',
-          color3: 'rgba(255, 88, 116, 0.15)',
-          ripple: 'rgb(130, 170, 255)'
+            // Dismiss on click or Escape
+            const dismiss = () => {
+              overlay?.classList.remove('active');
+              overlay?.removeEventListener('click', dismiss);
+              document.removeEventListener('keydown', escDismiss);
+            };
+            const escDismiss = (evt) => {
+              if (evt.key === 'Escape') dismiss();
+            };
+            overlay?.addEventListener('click', dismiss);
+            document.addEventListener('keydown', escDismiss);
+          }
+        } else {
+          konamiIndex = 0;
         }
-      ];
+      });
 
-      document.addEventListener('click', (e) => {
-        // Update spotlight position
-        updateCursorPosition(e.clientX, e.clientY);
+      // Footer heart click — spawns floating hearts
+      document.querySelector('.footer-heart')?.addEventListener('click', (e) => {
+        for (let i = 0; i < 5; i++) {
+          const heart = document.createElement('span');
+          heart.textContent = '♥';
+          heart.style.cssText = `
+            position: fixed;
+            left: ${e.clientX + (Math.random() - 0.5) * 40}px;
+            top: ${e.clientY}px;
+            color: var(--sw-pink);
+            font-size: ${14 + Math.random() * 12}px;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 1;
+            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+          `;
+          document.body.appendChild(heart);
+          requestAnimationFrame(() => {
+            heart.style.transform = `translateY(-${60 + Math.random() * 60}px) rotate(${(Math.random() - 0.5) * 40}deg)`;
+            heart.style.opacity = '0';
+          });
+          setTimeout(() => heart.remove(), 1000);
+        }
+      });
 
-        // Cycle through color schemes
-        const scheme = colorSchemes[clickCount % colorSchemes.length];
-        clickCount++;
-
-        // Update spotlight colors
-        document.documentElement.style.setProperty('--spotlight-color-1', scheme.color1);
-        document.documentElement.style.setProperty('--spotlight-color-2', scheme.color2);
-        document.documentElement.style.setProperty('--spotlight-color-3', scheme.color3);
-
-        // Show spotlight
-        const spotlight = document.querySelector('.spotlight-effect');
-        spotlight?.classList.add('active');
-
-        // Clear any existing fade timeout
-        if (fadeTimeout) clearTimeout(fadeTimeout);
-
-        // Fade out spotlight after 5 seconds
-        fadeTimeout = setTimeout(() => {
-          spotlight?.classList.remove('active');
-        }, 100);
-
-        // Create ripple effect
-        const ripple = document.createElement('div');
-        ripple.className = 'neon-ripple';
-        ripple.style.left = `${e.clientX}px`;
-        ripple.style.top = `${e.clientY}px`;
-        ripple.style.borderColor = scheme.ripple;
-        ripple.style.boxShadow = `
-          0 0 20px ${scheme.ripple},
-          0 0 40px ${scheme.ripple},
-          0 0 80px ${scheme.ripple},
-          0 0 120px ${scheme.ripple},
-          inset 0 0 30px ${scheme.ripple},
-          inset 0 0 60px ${scheme.ripple}
-        `;
-        ripple.style.transform = 'translate(-50%, -50%)';
-
-        const container = document.querySelector('.ripple-container');
-        container?.appendChild(ripple);
-
-        // Remove ripple after animation
-        setTimeout(() => ripple.remove(), 1200);
+      // Footer taco click — spawns floating tacos
+      document.querySelector('.footer-taco')?.addEventListener('click', (e) => {
+        for (let i = 0; i < 3; i++) {
+          const taco = document.createElement('span');
+          taco.textContent = '🌮';
+          taco.style.cssText = `
+            position: fixed;
+            left: ${e.clientX + (Math.random() - 0.5) * 30}px;
+            top: ${e.clientY}px;
+            font-size: ${16 + Math.random() * 10}px;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 1;
+            transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+          `;
+          document.body.appendChild(taco);
+          requestAnimationFrame(() => {
+            taco.style.transform = `translateY(-${50 + Math.random() * 50}px) rotate(${(Math.random() - 0.5) * 60}deg)`;
+            taco.style.opacity = '0';
+          });
+          setTimeout(() => taco.remove(), 1200);
+        }
       });
     </script>
   </body>

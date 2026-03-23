@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FAIcon from '../components/FAIcon.astro';
+
+const yearsCoding = new Date().getFullYear() - 2011;
 ---
 
 <BaseLayout
@@ -24,7 +26,7 @@ import FAIcon from '../components/FAIcon.astro';
           <div class="stat-icon-circle cyan">
             <FAIcon style="solid" icon="code" />
           </div>
-          <div class="stat-number neon-glow-cyan" style="color: var(--sw-cyan);">13+</div>
+          <div class="stat-number neon-glow-cyan" style="color: var(--sw-cyan);">{yearsCoding}+</div>
           <div class="stat-label">Years Coding</div>
         </div>
         <div class="stat-card">
@@ -454,6 +456,120 @@ import FAIcon from '../components/FAIcon.astro';
 </BaseLayout>
 
 <style>
+  /* Entrance animations */
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes markerPing {
+    0% {
+      box-shadow: 0 0 0 0 currentColor;
+    }
+    70% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+    100% {
+      box-shadow: 0 0 12px currentColor;
+    }
+  }
+
+  /* Stat cards stagger in */
+  .stat-card {
+    animation: fadeSlideUp 0.45s cubic-bezier(0.25, 1, 0.5, 1) both;
+  }
+  .stat-card:nth-child(1) { animation-delay: 0.15s; }
+  .stat-card:nth-child(2) { animation-delay: 0.25s; }
+  .stat-card:nth-child(3) { animation-delay: 0.35s; }
+  .stat-card:nth-child(4) { animation-delay: 0.45s; }
+  .stat-card:nth-child(5) { animation-delay: 0.55s; }
+  .stat-card:nth-child(6) { animation-delay: 0.65s; }
+
+  /* Timeline items slide in from left */
+  .timeline-item {
+    animation: slideInLeft 0.5s cubic-bezier(0.25, 1, 0.5, 1) both;
+  }
+  .timeline-item:nth-child(1) { animation-delay: 0.2s; }
+  .timeline-item:nth-child(2) { animation-delay: 0.35s; }
+  .timeline-item:nth-child(3) { animation-delay: 0.5s; }
+  .timeline-item:nth-child(4) { animation-delay: 0.65s; }
+
+  /* Timeline marker pings once on entrance */
+  .timeline-marker {
+    animation: markerPing 0.6s cubic-bezier(0.25, 1, 0.5, 1) both;
+  }
+  .timeline-item:nth-child(1) .timeline-marker { animation-delay: 0.4s; }
+  .timeline-item:nth-child(2) .timeline-marker { animation-delay: 0.55s; }
+  .timeline-item:nth-child(3) .timeline-marker { animation-delay: 0.7s; }
+  .timeline-item:nth-child(4) .timeline-marker { animation-delay: 0.85s; }
+
+  /* Highlight cards stagger in */
+  .highlight-card-substantial {
+    animation: fadeSlideUp 0.5s cubic-bezier(0.25, 1, 0.5, 1) both;
+  }
+  .highlight-card-substantial:nth-child(1) { animation-delay: 0.1s; }
+  .highlight-card-substantial:nth-child(2) { animation-delay: 0.2s; }
+  .highlight-card-substantial:nth-child(3) { animation-delay: 0.3s; }
+  .highlight-card-substantial:nth-child(4) { animation-delay: 0.4s; }
+
+  /* Smooth details expand */
+  .timeline-details[open] summary {
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-details summary {
+    list-style: none;
+    user-select: none;
+  }
+
+  .timeline-details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .timeline-details summary::before {
+    content: '▸ ';
+    display: inline;
+    transition: transform 0.2s ease;
+  }
+
+  .timeline-details[open] summary::before {
+    content: '▾ ';
+  }
+
+  /* CTA buttons press effect */
+  .cta-button:active {
+    transform: scale(0.96) translateY(1px) !important;
+    transition-duration: 0.08s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stat-card,
+    .timeline-item,
+    .timeline-marker,
+    .highlight-card-substantial {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+
   /* Stats Cards */
   .stat-card {
     padding: 1.5rem;

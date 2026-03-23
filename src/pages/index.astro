@@ -71,6 +71,100 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 
   <style>
+    /* Entrance animations — "powering on" like a neon sign */
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glitchIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-8px) skewX(-2deg);
+        filter: blur(4px);
+      }
+      40% {
+        opacity: 0.8;
+        transform: translateX(3px) skewX(1deg);
+        filter: blur(0);
+      }
+      60% {
+        opacity: 0.9;
+        transform: translateX(-1px) skewX(0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) skewX(0);
+      }
+    }
+
+    @keyframes scaleFlicker {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+        filter: brightness(0.5);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+        filter: brightness(1.4);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1);
+      }
+    }
+
+    .hero-avatar {
+      animation: scaleFlicker 0.6s cubic-bezier(0.25, 1, 0.5, 1) both,
+                 avatarPulse 4s ease-in-out 0.6s infinite;
+    }
+
+    .mega-name {
+      animation: glitchIn 0.7s cubic-bezier(0.25, 1, 0.5, 1) 0.15s both,
+                 megaGlow 4s ease-in-out 0.85s infinite;
+    }
+
+    .narrative-section {
+      animation: fadeSlideUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.4s both;
+    }
+
+    .action-links {
+      animation: fadeSlideUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.6s both;
+    }
+
+    .action-btn {
+      animation: fadeSlideUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
+    }
+    .action-btn:nth-child(1) { animation-delay: 0.6s; }
+    .action-btn:nth-child(2) { animation-delay: 0.72s; }
+    .action-btn:nth-child(3) { animation-delay: 0.84s; }
+
+    .tagline-section {
+      animation: fadeSlideUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.9s both;
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-avatar,
+      .mega-name,
+      .narrative-section,
+      .action-links,
+      .action-btn,
+      .tagline-section {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
     .creative-home {
       max-width: 1400px;
       margin: 0 auto;
@@ -357,9 +451,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     .btn-posts:hover {
-      transform: scale(1.05);
+      transform: scale(1.05) translateY(-1px);
       box-shadow: 0 0 30px rgba(255, 88, 116, 0.5);
       background: rgba(255, 88, 116, 0.9);
+    }
+
+    .btn-posts:active {
+      transform: scale(0.97) translateY(1px);
+      box-shadow: 0 0 15px rgba(255, 88, 116, 0.3);
+      transition-duration: 0.08s;
     }
 
     .btn-github {
@@ -370,9 +470,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     .btn-github:hover {
-      transform: scale(1.05);
+      transform: scale(1.05) translateY(-1px);
       box-shadow: 0 0 30px rgba(127, 219, 202, 0.4);
       background: rgba(127, 219, 202, 0.1);
+    }
+
+    .btn-github:active {
+      transform: scale(0.97) translateY(1px);
+      box-shadow: 0 0 15px rgba(127, 219, 202, 0.2);
+      transition-duration: 0.08s;
     }
 
     .btn-about {
@@ -383,9 +489,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     .btn-about:hover {
-      transform: scale(1.05);
+      transform: scale(1.05) translateY(-1px);
       box-shadow: 0 0 30px rgba(199, 146, 234, 0.4);
       background: rgba(199, 146, 234, 0.1);
+    }
+
+    .btn-about:active {
+      transform: scale(0.97) translateY(1px);
+      box-shadow: 0 0 15px rgba(199, 146, 234, 0.2);
+      transition-duration: 0.08s;
     }
 
     /* Tagline Section */
